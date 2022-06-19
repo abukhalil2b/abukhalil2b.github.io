@@ -1,0 +1,37 @@
+.button_contribute_container{
+    display: flex;
+    justify-content: center;
+    margin: 3% 0;
+}
+
+.button_contribute{
+    color:#fff;
+    background-color: #ffc83b;
+    border-radius: 7px;
+    font-weight: bold;
+    height: 40px;
+    width: 300px;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+}
+
+.hadith_container{
+    display: flex;
+    justify-content: center;
+}
+
+.hadith{
+    background-color: #fff;
+    width: 545px;
+    height: 80px;
+    box-shadow: 0px 0px 10px 1px grey;
+    border-radius: 7px;
+    margin-bottom: -35px;
+    z-index: 1;
+    text-align: center;
+}
+.hadith img{
+    width: 500px;
+}
+

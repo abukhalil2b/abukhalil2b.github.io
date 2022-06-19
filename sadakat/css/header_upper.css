@@ -1,0 +1,52 @@
+    @font-face {
+        font-family: 'helve';
+        src: url(../helve.woff);
+    }
+    body{
+        font-family: helve;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .header_container{
+        margin: auto;
+        width: 80%;
+        display: flex;
+        padding: 5px;
+        justify-content: space-between;
+    }
+    .logo_container{
+        
+    }
+    .logo_container img{
+        width: 140px;
+    }
+    .links_container{
+
+    }
+
+    .links_container ul li{
+        list-style: none;
+        display: inline;
+        margin: 5px;
+        font-size: 10px;
+    }
+
+    .links_container ul li a{
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+    }
+
+    .login_button{
+        color: #fff;
+        background-color: #ffc83b;
+        border-radius: 5px;
+        font-weight: bold;
+        height: 40px;
+        width:120px;
+        text-align: center;
+        display: block;
+        text-decoration: none;
+    }
