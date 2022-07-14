@@ -1,0 +1,9 @@
+.section_title_container{
+    align-items: center;
+    display: flex;
+}
+
+.section_title_container h2{
+    height: 82px;
+    font-size: 30px;
+}

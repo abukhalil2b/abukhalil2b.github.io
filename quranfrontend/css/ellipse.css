@@ -1,0 +1,15 @@
+.ellipse{
+    background-color: #ffc83b;
+    border-radius: 50%;
+    margin: 0 10px
+}
+
+.small_ellipse{
+    width: 10px;
+    height: 10px;
+}
+
+.mid_ellipse{
+    width: 20px;
+    height: 20px;
+}

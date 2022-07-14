@@ -1,0 +1,20 @@
+.static_card_container{
+    display: flex;
+    justify-content: space-around;
+}
+
+.static_card{
+    height: 145px;
+    width: 170px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.778);
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+}
+
+.static_card img{
+    width: 40px;
+    height: 35px;
+}

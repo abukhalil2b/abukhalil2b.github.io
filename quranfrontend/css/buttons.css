@@ -1,0 +1,44 @@
+.yel_button{
+    font-weight: bold;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #ffc83b;
+    text-align: center;
+    text-decoration: none;
+    line-height: 2;
+}
+
+.yel_button:hover{
+    background-color: #f3d280;
+}
+
+.login_button{
+    height: 40px;
+    width:120px;
+    display: block;
+}
+
+.register_button_container{
+    text-align: center;
+    margin-top: 7%;
+}
+
+.register_button{
+    height: 40px;
+    width:220px;
+    display: inline-block;
+}
+
+.more_button{
+    height: 40px;
+    width:120px;
+    display: block;
+}
+
+.charity_button{
+    height: 40px;
+    width:120px;
+    display: block;
+    border:none;
+    font-family: helve;
+}
