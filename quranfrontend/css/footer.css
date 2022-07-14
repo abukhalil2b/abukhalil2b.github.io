@@ -1,0 +1,33 @@
+.footer{
+    height: 200px;
+    background-color: #ffc83b;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer img{
+    width: 90px;
+    height: 90px;
+}
+
+.footer_logo_container{
+    display: flex;
+    align-items: center;
+}
+
+.footer_logo_container div{
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+.footer_links{
+    display: flex;
+    flex-direction: column;
+}
+
+.footer_links a{
+    color:white;
+    text-decoration: none;
+}

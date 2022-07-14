@@ -13,17 +13,26 @@
         justify-content: space-between;
         align-items: center;
     }
+
     .logo_container{
         display: flex;
         align-items: center;
     }
+    
     .logo_container img{
         width: 60px;
         height: 60px;
     }
+    
     .logo_container .logo_text{
         margin: 3px;
+        padding-bottom: 15px;
     }
+    
+    .logo_text div{
+        height:27px;
+    }
+
     .links_container{
 
     }
@@ -32,7 +41,6 @@
         list-style: none;
         display: inline;
         margin: 5px;
-        font-size: 10px;
     }
 
     .links_container ul li a{
