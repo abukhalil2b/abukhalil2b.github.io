@@ -2,3 +2,12 @@
     font-family: 'helve';
     src: url(../helve.woff);
 }
+
+.material-icons{
+    color:#ffc83b;
+}
+
+.alink{
+    text-decoration: none;
+    color: grey;
+}

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html dir="rtl">
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/header_upper.css">
 	<link rel="stylesheet" href="css/header_lower.css">
@@ -8,8 +12,9 @@
 	<link rel="stylesheet" href="css/button_contribute.css">
 	<link rel="stylesheet" href="css/body_upper.css">
 	<link rel="stylesheet" href="css/school.css">
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/buttons.css">
+	<link rel="stylesheet" href="css/footer.css">
+	<script src="./js/script.js" defer></script>
 	<title>Document</title>
 </head>
 <body>
@@ -21,7 +26,7 @@
 			<div class="links_container">
 				<ul>
 					<li>
-						<a href="الرئيسية">الرئيسية</a>
+						<a href="#">الرئيسية</a>
 					</li>
 					<li>
 						<a href="">عن البرنامج</a>
@@ -57,26 +62,37 @@
 
 		<div class="shif_container">
 			<div class="button_container">
-				<a href="" class="button_shif_action_active">
+				<a href="#" class="button_chairty_shift button_chairty_right button_chairty_active" id="jsSadakatButton">
 					الصدقات
 				</a>
-				<a href="" class="button_shif_action_deactive">
+				<a href="#" class="button_chairty_shift button_chairty_left " id="jsAcehoomButton">
 					الأسهم الوقفية
 				</a>				
 			</div>
 		</div>
-
 		<div class="static_card_container">
 			<div class="static_card">
-				<img src="img/number_charity.jpg" alt="">
+				<span class="material-icons">
+					volunteer_activism
+				</span>
+				<div>2767</div>
+				<div>عدد المتصدقين</div>
 			</div>
 
 			<div class="static_card">
-				<img src="img/number_charity.jpg" alt="">
+				<span class="material-icons">
+					monetization_on
+				</span>
+				<div>5000</div>
+				<div>  المبلغ الإجمالي </div>
 			</div>
 
 			<div class="static_card">
-				<img src="img/number_charity.jpg" alt="">
+				<span class="material-icons">
+					payments
+				</span>
+				<div>340</div>
+				<div>  المصروفات</div>
 			</div>
 		</div>
 
@@ -112,26 +128,152 @@
 				</div>
 
 				<div class="all_school_button">
-					<a href="">
-						جميع المدارس <span class="all_school_arrow">></span>
+					<a href="" class="alink">
+						جميع المدارس 
 					</a>
+					<span class="material-icons all_school_arrow">chevron_left</span>
 				</div>
 
 				<div class="school_card_container">
 					<div class="school_card">
-						<img src="img/school_card.jpg" alt="">
+						<img src="./img/dar.jpg" alt="">
+						<div class="school_card_shadow">
+							<h3 class="school_card_title">مدرسة إحسان لتدريس القرآن الكريم</h3>
+						</div>
+					
+						<table class="school_card_table">
+							<tr>
+								<td>التكلفة الإجمالية:</td>
+								<td>150 الفا ريال</td>
+							</tr>
+							<tr>
+								<td>عدد المتصدقين:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المبلغ الإجمالي:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المصروفات:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button class="yel_button school_card_button">أسهم</button>
+								</td>
+							</tr>
+						</table>
+						
 					</div>
 
 					<div class="school_card">
-						<img src="img/school_card.jpg" alt="">
+						<img src="./img/dar.jpg" alt="">
+						<div class="school_card_shadow">
+							<h3 class="school_card_title">مدرسة إحسان لتدريس القرآن الكريم</h3>
+						</div>
+					
+						<table class="school_card_table">
+							<tr>
+								<td>التكلفة الإجمالية:</td>
+								<td>150 الفا ريال</td>
+							</tr>
+							<tr>
+								<td>عدد المتصدقين:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المبلغ الإجمالي:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المصروفات:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button class="yel_button school_card_button">أسهم</button>
+								</td>
+							</tr>
+						</table>
 					</div>
 
 					<div class="school_card">
-						<img src="img/school_card.jpg" alt="">
+						<img src="./img/dar.jpg" alt="">
+						<div class="school_card_shadow">
+							<h3 class="school_card_title">مدرسة إحسان لتدريس القرآن الكريم</h3>
+						</div>
+					
+						<table class="school_card_table">
+							<tr>
+								<td>التكلفة الإجمالية:</td>
+								<td>150 الفا ريال</td>
+							</tr>
+							<tr>
+								<td>عدد المتصدقين:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المبلغ الإجمالي:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td> المصروفات:</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button class="yel_button school_card_button">أسهم</button>
+								</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
 
+		</div>
+	</div>
+
+
+	<!-- footer -->
+	<div class="footer">
+		<div class="footer_logo_container">
+			<img src="./img/logo-white.png" alt="logo">
+			<div>
+				<div>مشروع من طرف</div>
+				<div>
+					وزارة الأوقاف و الشؤون الدينية
+				</div>
+			</div>
+		</div>
+		<div class="footer_links">
+			<div>
+				<a href="#">عن البرنامج</a>
+			</div>
+			<div>
+				<a href="#">سياسة الخصوصية</a>
+			</div>
+			<div>
+				<a href="#">سياسة الإرجاع والاستبدال</a>
+			</div>
+		</div>
+
+		<div class="footer_links">
+			<div>
+				<a href="#">المدونة</a>
+			</div>
+			<div>
+				<a href="#">الأسئلة الشائعة</a>
+			</div>
+		</div>
+
+		<div class="footer_links">
+			<div>
+				<a href="#">الشروط و الأحكام</a>
+			</div>
+			<div> 
+				<a href="#">سياسة التسليم</a>
+			</div>
 		</div>
 	</div>
 </body>

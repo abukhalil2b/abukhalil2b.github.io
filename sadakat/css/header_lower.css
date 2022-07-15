@@ -13,6 +13,8 @@
     padding: 20px 0;
     text-align: center;
     font-weight: bold;
+    width: 80%;
+    margin: auto;
 }
 
 
@@ -26,10 +28,10 @@
     height: 42px;
     display: inline-flex;
 }
-.button_shif_action_active{
-    color: #fff;
-    background-color: #ffc83b;
-    border-radius: 5px;
+
+.button_chairty_shift{
+    color: #ffc83b;
+    background-color: #e3e3e3;
     font-weight: bold;
     height: 40px;
     width:120px;
@@ -38,14 +40,21 @@
     text-decoration: none;
 }
 
-.button_shif_action_deactive{
-    color: #ffc83b;
-    background-color: #e3e3e3;
-    border-top-left-radius: 5px;
+.button_chairty_active{
+    color: #fff;
+    background-color: #ffc83b;
     font-weight: bold;
     height: 40px;
     width:120px;
     text-align: center;
     display: block;
     text-decoration: none;
+}
+
+.button_chairty_right{
+    border-top-right-radius: 5px;
+}
+
+.button_chairty_left{
+    border-top-left-radius: 5px;
 }

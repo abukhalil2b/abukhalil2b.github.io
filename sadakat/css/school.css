@@ -4,9 +4,36 @@
 }
 .school_card{
     margin-top: 4%;
+    border-radius:5px;
+    background-color: #d9d9d9;
+    position: relative;
+    width: 300px;
+    height: 400px;
+    z-index: 0;
 }
 .school_card img{
     border-radius: 5px;
     width: 300px;
-    height: 400px;
+    height: 180px;
+    position: absolute;
+}
+.school_card_shadow{
+    position: absolute;
+    background:linear-gradient(#ffffff44,#0000009e);
+    width: 300px;
+    height:180px;
+    display: flex;
+    justify-content: center;
+}
+
+.school_card_title{
+    position: absolute;
+    bottom: 0;
+    color: white;
+}
+
+.school_card_table{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
 }

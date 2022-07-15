@@ -31,8 +31,9 @@
 
 .all_school_button{
     float: left;
+    display: flex;
 }
 .all_school_arrow{
-    font-weight: bold;
-    font-family: 'system-ui';
+    color:grey;
+    margin-top: 10px;
 }
