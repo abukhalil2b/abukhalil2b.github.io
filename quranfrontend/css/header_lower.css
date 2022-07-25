@@ -14,8 +14,7 @@
 .right_side_container .right_hero{
     width: 99%;
     color: white;
-    background: linear-gradient(rgb(0 0 0 / 60%),rgb(0 0 0 / 45%)),
-                url('../img/rightside.png') no-repeat center / cover;
+    position: relative;
 }
 
 .right_hero_content{
