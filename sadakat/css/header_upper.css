@@ -13,14 +13,9 @@
         padding: 5px;
         justify-content: space-between;
     }
-    .logo_container{
-        
-    }
-    .logo_container img{
-        width: 140px;
-    }
-    .links_container{
 
+    .logo{
+        width: 140px; 
     }
 
     .links_container ul li{

@@ -1,6 +1,7 @@
 @font-face {
     font-family: 'helve';
     src: url(../fonts/helve.woff);
+    font-display: fallback;
 }
 .primary_color{
     color: #006990;

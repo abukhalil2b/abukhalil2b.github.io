@@ -1,235 +1,250 @@
 <!DOCTYPE html>
 <html dir="rtl">
-<head>
-	
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/header_upper.css">
-	<link rel="stylesheet" href="css/header_lower.css">
-	<link rel="stylesheet" href="css/static.css">
-	<link rel="stylesheet" href="css/buttons.css">
-	<link rel="stylesheet" href="css/sponsors.css">
-	<link rel="stylesheet" href="css/ellipse.css">
-	<link rel="stylesheet" href="css/section_title.css">
-	<link rel="stylesheet" href="css/charity.css">
-	<link rel="stylesheet" href="css/qaboos.css">
-	<link rel="stylesheet" href="css/footer.css">
-	<link rel="stylesheet" href="css/clip.css">
-	<script defer src="./js/script.js"></script>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>quran front end</title>
-</head>
-<body>
-	<header>
-		<div class="header_container">
-			<div class="logo_container">
-				<img src="img/awqaf_logo.png" alt="">
-				<div class="logo_text">
-					<div>برنامج</div>
-					<div>تعليم القرآن الكريم</div>
-				</div>
-			</div>
-			<div class="links_container">
-				<ul>
-					<li>
-						<a href="#">الرئيسية</a>
-					</li>
-					<li>
-						<a href="#">عن البرنامج</a>
-					</li>
-					<li> 
-						<a href="#">السهم الوقفي للمدارس</a>
-					</li>
-					<li>
-						<a href="#">المسابقات</a>
-					</li>
-					<li>
-						<a href="#">المدونة</a>
-					</li>
-					<li>
-						<a href="#">اتصل بنا</a>
-					</li>
-				</ul>
-			</div>
-			<div class="login_button_container">
-				<a class="yel_button login_button" href="">تسجيل الدخول</a>
-			</div>
-		</div>
-	</header>
+  <head>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header_upper.css" />
+    <link rel="stylesheet" href="css/study_options.css" />
+    <link rel="stylesheet" href="css/static.css" />
+    <link rel="stylesheet" href="css/buttons.css" />
+    <link rel="stylesheet" href="css/sponsors.css" />
+    <link rel="stylesheet" href="css/ellipse.css" />
+    <link rel="stylesheet" href="css/section_title.css" />
+    <link rel="stylesheet" href="css/charity.css" />
+    <link rel="stylesheet" href="css/qaboos.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/clip.css" />
+    <script defer src="./js/script.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quran front end</title>
+  </head>
+  <body>
+    <header>
+      <div class="header_container">
+        <div class="logo_container">
+          <img src="img/awqaf_logo.png" alt="" />
+          <div class="logo_text">
+            <div>برنامج</div>
+            <div>تعليم القرآن الكريم</div>
+          </div>
+        </div>
+        <div class="links_container">
+          <ul>
+            <li>
+              <a href="#">الرئيسية</a>
+            </li>
+            <li>
+              <a href="#">عن البرنامج</a>
+            </li>
+            <li>
+              <a href="#">السهم الوقفي للمدارس</a>
+            </li>
+            <li>
+              <a href="#">المسابقات</a>
+            </li>
+            <li>
+              <a href="#">المدونة</a>
+            </li>
+            <li>
+              <a href="#">اتصل بنا</a>
+            </li>
+          </ul>
+        </div>
+        <div class="login_button_container">
+          <a class="yel_button login_button" href="">تسجيل الدخول</a>
+        </div>
+      </div>
+    </header>
 
-	<!-- study options -->
-	<div class="header_lower">
-		<div class="right_side_container">
-			<div class="right_hero">
-				<div class="right_hero_content">
-					<video id="clip1" loop src="./vid/quran.mp4" type="video/mp4" muted></video>
-					<h2>التعليم التقليدي</h2>
-					<p>نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي. نص </p>
-					<div class="static_card_container">
-						<div class="static_card">
-							<img src="./img/grad.png" alt="">
-							<h3>340</h3>
-							عدد المدارس
-						</div>
+    <!-- study options -->
+    <div class="study_options">
+      <div class="right_side_container">
+        <div id="rightClipControl"></div>
+        <div class="right_hero">
+          <video
+            id="rightClip"
+            loop
+            src="./vid/overlay_video.mp4"
+            type="video/mp4"
+            muted
+          ></video>
+          <h2>التعليم التقليدي</h2>
+          <p>
+            نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي نص
+            افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي. نص
+          </p>
+          <div class="static_card_container">
+            <div class="static_card">
+              <img src="./img/grad.png" alt="" />
+              <h3>340</h3>
+              عدد المدارس
+            </div>
 
-						<div class="static_card">
-							<img src="./img/wind.png" alt="">
-							<h3>5000</h3>
-							عدد المعلمين
-						</div>
+            <div class="static_card">
+              <img src="./img/wind.png" alt="" />
+              <h3>5000</h3>
+              عدد المعلمين
+            </div>
 
-						<div class="static_card">
-							<img src="./img/read.png" alt="">
-							<h3>2767</h3>
-							عدد الطلاب
-						</div>
-					</div>
+            <div class="static_card">
+              <img src="./img/read.png" alt="" />
+              <h3>2767</h3>
+              عدد الطلاب
+            </div>
+          </div>
 
-					<div class="register_button_container">
-						<a class="yel_button register_button" href="">  سجل الآن </a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="left_side_container">
-			<div class="left_hero">
-				<div class="left_hero_content">
-					<h2>التعليم الإلكتروني</h2>
-					<p>نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي. نص </p>
-					<div class="static_card_container">
-						<div class="static_card">
-							<img src="./img/grad.png" alt="">
-							<h3>340</h3>
-							عدد المدارس
-						</div>
+          <div class="register_button_container">
+            <a class="yel_button register_button" href=""> سجل الآن </a>
+          </div>
+        </div>
+      </div>
+      <div class="left_side_container">
+        <div id="leftClipControl"></div>
+        <div class="left_hero">
+          <video
+            id="leftClip"
+            loop
+            src="./vid/overlay_video.mp4"
+            type="video/mp4"
+            muted
+          ></video>
+          <h2>التعليم الإلكتروني</h2>
+          <p>
+            نص افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي نص
+            افتراضي نص افتراضي نص افتراضينص افتراضي نص افتراضي نص افتراضي. نص
+          </p>
+          <div class="static_card_container">
+            <div class="static_card">
+              <img src="./img/grad.png" alt="" />
+              <h3>340</h3>
+              عدد المدارس
+            </div>
 
-						<div class="static_card">
-							<img src="./img/wind.png" alt="">
-							<h3>5000</h3>
-							عدد المعلمين
-						</div>
+            <div class="static_card">
+              <img src="./img/wind.png" alt="" />
+              <h3>5000</h3>
+              عدد المعلمين
+            </div>
 
-						<div class="static_card">
-							<img src="./img/read.png" alt="">
-							<h3>2767</h3>
-							عدد الطلاب
-						</div>
-					</div>
+            <div class="static_card">
+              <img src="./img/read.png" alt="" />
+              <h3>2767</h3>
+              عدد الطلاب
+            </div>
+          </div>
 
-					<div class="register_button_container">
-						<a class="yel_button register_button" href="">  سجل الآن </a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- award -->
-	<div class="award_container">
-		<img src="./img/gold-medal.png" alt="">
-		<h4>البرنامج يفوز بجائزة أفضل موقع إلكتروني لخدمة القرآن الكريم</h4>
-		<a class="yel_button more_button" href=""> المزيد </a>
-	</div>
-	<!-- sponsors -->
-	<div class="sponsors_container">
-		<!-- sponsors title -->
-		<div class="section_title_container">
-			<div class="small_ellipse ellipse"></div>
-			<div class="mid_ellipse ellipse"></div>
-			<h2>الرعاة الذهبيون</h2>
-			<div class="mid_ellipse ellipse"></div>
-			<div class="small_ellipse ellipse"></div>
-		</div>
+          <div class="register_button_container">
+            <a class="yel_button register_button" href=""> سجل الآن </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- award -->
+    <div class="award_container">
+      <img src="./img/gold-medal.png" alt="" />
+      <h4>البرنامج يفوز بجائزة أفضل موقع إلكتروني لخدمة القرآن الكريم</h4>
+      <a class="yel_button more_button" href=""> المزيد </a>
+    </div>
+    <!-- sponsors -->
+    <div class="sponsors_container">
+      <!-- sponsors title -->
+      <div class="section_title_container">
+        <div class="small_ellipse ellipse"></div>
+        <div class="mid_ellipse ellipse"></div>
+        <h2>الرعاة الذهبيون</h2>
+        <div class="mid_ellipse ellipse"></div>
+        <div class="small_ellipse ellipse"></div>
+      </div>
 
-		<!-- sponsors images -->
-		<div class="sponsors_images_conatainer">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-		</div>
-	</div>
+      <!-- sponsors images -->
+      <div class="sponsors_images_conatainer">
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+      </div>
+    </div>
 
-	<div class="charity_container">
-		<!-- charity title -->
-		<div class="section_title_container">
-			<div class="small_ellipse ellipse"></div>
-			<div class="mid_ellipse ellipse"></div>
-			<h2> تصدق بصدقة جارية لخدمة الموقع الالكتروني </h2>
-			<div class="mid_ellipse ellipse"></div>
-			<div class="small_ellipse ellipse"></div>
-		</div>
+    <div class="charity_container">
+      <!-- charity title -->
+      <div class="section_title_container">
+        <div class="small_ellipse ellipse"></div>
+        <div class="mid_ellipse ellipse"></div>
+        <h2>تصدق بصدقة جارية لخدمة الموقع الالكتروني</h2>
+        <div class="mid_ellipse ellipse"></div>
+        <div class="small_ellipse ellipse"></div>
+      </div>
 
-		<div class="charity_input_container">
-			<h6>المبلغ</h6>
-			<input type="number">
-			<h6>ريال عماني</h6>
-			<button type="submit" class="yel_button charity_button">تصدق الآن</button>
-		</div>
+      <div class="charity_input_container">
+        <h6>المبلغ</h6>
+        <input type="number" />
+        <h6>ريال عماني</h6>
+        <button type="submit" class="yel_button charity_button">
+          تصدق الآن
+        </button>
+      </div>
+    </div>
 
-	</div>
+    <div class="qaboos">
+      <img src="./img/qaboos.png" alt="" />
+    </div>
 
-	<div class="qaboos">
-		<img src="./img/qaboos.png" alt="">
-	</div>
+    <!-- sponsors -->
+    <div class="sponsors_container">
+      <!-- sponsors title -->
+      <div class="section_title_container">
+        <div class="small_ellipse ellipse"></div>
+        <div class="mid_ellipse ellipse"></div>
+        <h2>الرعاة الفضيون</h2>
+        <div class="mid_ellipse ellipse"></div>
+        <div class="small_ellipse ellipse"></div>
+      </div>
 
-	<!-- sponsors -->
-	<div class="sponsors_container">
-		<!-- sponsors title -->
-		<div class="section_title_container">
-			<div class="small_ellipse ellipse"></div>
-			<div class="mid_ellipse ellipse"></div>
-			<h2>الرعاة الفضيون</h2>
-			<div class="mid_ellipse ellipse"></div>
-			<div class="small_ellipse ellipse"></div>
-		</div>
+      <!-- sponsors images -->
+      <div class="sponsors_images_conatainer">
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+        <img class="sponsors_images" src="./img/oman_post.png" alt="" />
+      </div>
+    </div>
 
-		<!-- sponsors images -->
-		<div class="sponsors_images_conatainer">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-			<img class="sponsors_images" src="./img/oman_post.png" alt="">
-		</div>
-	</div>
+    <!-- footer -->
+    <div class="footer">
+      <div class="footer_logo_container">
+        <img src="./img/logo-white.png" alt="logo" />
+        <div>
+          <div>مشروع من طرف</div>
+          <div>وزارة الأوقاف و الشؤون الدينية</div>
+        </div>
+      </div>
+      <div class="footer_links">
+        <div>
+          <a href="#">عن البرنامج</a>
+        </div>
+        <div>
+          <a href="#">سياسة الخصوصية</a>
+        </div>
+        <div>
+          <a href="#">سياسة الإرجاع والاستبدال</a>
+        </div>
+      </div>
 
-	<!-- footer -->
-	<div class="footer">
-		<div class="footer_logo_container">
-			<img src="./img/logo-white.png" alt="logo">
-			<div>
-				<div>مشروع من طرف</div>
-				<div>
-					وزارة الأوقاف و الشؤون الدينية
-				</div>
-			</div>
-		</div>
-		<div class="footer_links">
-			<div>
-				<a href="#">عن البرنامج</a>
-			</div>
-			<div>
-				<a href="#">سياسة الخصوصية</a>
-			</div>
-			<div>
-				<a href="#">سياسة الإرجاع والاستبدال</a>
-			</div>
-		</div>
+      <div class="footer_links">
+        <div>
+          <a href="#">المدونة</a>
+        </div>
+        <div>
+          <a href="#">الأسئلة الشائعة</a>
+        </div>
+      </div>
 
-		<div class="footer_links">
-			<div>
-				<a href="#">المدونة</a>
-			</div>
-			<div>
-				<a href="#">الأسئلة الشائعة</a>
-			</div>
-		</div>
-
-		<div class="footer_links">
-			<div>
-				<a href="#">الشروط و الأحكام</a>
-			</div>
-			<div> 
-				<a href="#">سياسة التسليم</a>
-			</div>
-		</div>
-	</div>
-</body>
+      <div class="footer_links">
+        <div>
+          <a href="#">الشروط و الأحكام</a>
+        </div>
+        <div>
+          <a href="#">سياسة التسليم</a>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

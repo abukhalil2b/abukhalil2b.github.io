@@ -1,4 +1,7 @@
-#clip1{
+#rightClip, #leftClip{
     position: absolute;
     z-index: -1;
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
 }
