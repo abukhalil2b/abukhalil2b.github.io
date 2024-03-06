@@ -1,0 +1,136 @@
+@font-face {
+    font-family: 'helve';
+    src: url(../fonts/helve.woff);
+}
+/* Global */
+.primaryColor{
+    color: #006990;
+}
+body{
+    margin: 0;padding: 0;
+    box-sizing: border-box;
+    font-family: 'helve';
+    direction: rtl;
+    color: #006990;
+    height: 100vh;
+    background: linear-gradient(#eeeeee8a, #93b8ff) no-repeat;
+}
+.alink{
+    text-decoration: none;
+    color:darkblue;
+    font-weight: bold;
+}
+
+/* student card */
+
+.student_card{
+    display: flex;
+    flex-direction: column;
+}
+
+.student_card .container{
+    padding: 10px 10%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.student_card .avatar{
+    width: 80px;
+    height: 80px;
+    border: 2px solid #006990;
+    border-radius: 50%;
+}
+
+.student_info{
+    line-height: 1.5;
+    width: 400px;
+}
+
+.student_info .name{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.spacer{
+    width: 100%;
+}
+.student_card .gear{
+    width: 20px;
+    cursor: pointer;
+}
+
+/*  student awards  */
+.student_award{
+    padding: 3% 0;
+}
+.student_award .container{
+    padding: 10px 10%;
+}
+.student_award .point,.jw{
+    font-size: 20px;
+}
+
+.student_award .jw_img{
+    width: 20px;
+    transform: rotate(45deg) translateY(5px);
+}
+
+.student_award .medal{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.student_award .medal img{
+    padding: 0 5px;
+}
+
+/* student mission */
+.student_mission .container{
+    padding: 10px 10%;
+}
+
+.student_mission .title{
+    background-color: #006990;
+    color: white;
+    font-size: 20px;
+}
+
+.student_mission .title .container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.student_mission .title .container a:hover{
+    color: white;
+    transform: scale(2px);
+}
+
+.student_mission .title .container .active{
+    color: white;
+    border-bottom: 3px solid white;
+}
+.memorized{
+    padding: 5px;
+}
+.memorized_juzs{
+    padding: 3px;
+    width: 60px;
+    height: 35px;
+    border: 1px solid #006990;
+    border-radius: 5px;
+}
+.juz_done{
+    background-color: #a2c2fd;
+}
+
+/* mobile screen */
+
+@media (max-width:480px){
+    .student_info .name ,.age ,.joined, .student_award .point,.jw,.medal{
+        font-size: 16px;
+
+    }
+
+}

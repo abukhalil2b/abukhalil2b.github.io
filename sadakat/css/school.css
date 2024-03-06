@@ -1,6 +1,6 @@
 .school_card_container{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .school_card{
     margin-top: 4%;

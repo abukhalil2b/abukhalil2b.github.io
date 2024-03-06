@@ -1,79 +1,72 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-    <link rel="stylesheet" href="./css/info.css" />
-    
+    <link rel="stylesheet" href="./css/profile.css" />
     <title>Document</title>
   </head>
-  <body dir="rtl">
-    <main class="info_main">
-      <div class="info_card">
-        <div class="info_card_header">
-          <img
-            class="info_avatar"
-            src="./img/omani_student.png"
-            alt=""
-          />
-          <span class="primary">اسم الطالب: </span>
-          <div> احمد سالم احمد سالم</div>
+  <body>
+    <div class="student_card">
+      <!-- student info -->
+      <div class="container">
+        <img class="avatar" src="./img/omani_student.png" alt="" />
+        <div class="student_info">
+          <div class="name">أحمد أحمد أحمد</div>
+          <div class="age">12 سنة</div>
+          <div class="joined">منذ 3 سنوات</div>
         </div>
-        <div class="info_card_body">
-            <div class="info_item">
-                <div class="primary">الجواهر التي تمتلكها</div>
-                <div>
-                    <svg width="25" height="25" viewBox="-269 396.1 56 50.3"><g fill="#E99400"><path d="M-246.6,439l-9-24.4c-0.1-0.4-0.5-0.6-0.9-0.6h-9.3c-0.8,0-1.3,0.9-0.8,1.6l19.5,23.7 C-246.9,439.5-246.5,439.3-246.6,439z"></path><path d="M-240.8,443.5l9.9-28.2c0.2-0.6-0.2-1.3-0.9-1.3h-18.5c-0.7,0-1.1,0.7-0.9,1.3l9.7,28.2 C-241.4,443.9-240.9,443.9-240.8,443.5z"></path><path d="M-216.1,414h-9.5c-0.4,0-0.8,0.3-0.9,0.6l-9.3,24.5c-0.2,0.4,0.4,0.7,0.7,0.4l19.7-24 C-214.9,414.9-215.3,414-216.1,414z"></path><path d="M-236.6,399.6l7.2,9.1c0.5,0.6,1.4,0.4,1.7-0.3l2.8-9.1c0.2-0.6-0.2-1.3-0.9-1.3h-10 C-236.7,398-237.1,398.9-236.6,399.6z"></path><path d="M-241.8,400.5l-6.9,8.9c-0.5,0.6-0.1,1.6,0.8,1.6h13.7c0.8,0,1.3-0.9,0.8-1.6l-6.9-8.9 C-240.6,400-241.4,400-241.8,400.5z"></path><path d="M-257.1,399.3l2.7,10.2c0.3,0.7,1.2,0.9,1.7,0.3l7.3-10.2c0.5-0.6,0.1-1.6-0.8-1.6h-10 C-256.9,398-257.3,398.7-257.1,399.3z"></path><path d="M-266.4,411h8.5c0.7,0,1.1-0.7,0.9-1.3l-2.5-7.6c-0.3-0.8-1.3-0.9-1.7-0.2l-6,7.6 C-267.7,410.2-267.2,411-266.4,411z"></path><path d="M-222.5,401.1l-2.6,8.6c-0.2,0.6,0.2,1.3,0.9,1.3h8.6c0.8,0,1.2-0.8,0.8-1.5l-6-8.6 C-221.2,400.2-222.2,400.3-222.5,401.1z"></path></g></svg>
-                    37  جوهرة
-                </div>
-            </div>
-            <div class="info_item">
-                <div class="primary"> السور التي تحفظها</div>
-                <div class="memo_sowars">
-                    <div class="selected"> النبأ</div>
-                    <div> النازعات</div>
-                </div>
-            </div>
-            <div class="info_item">
-                <div class="primary"> الأجزاء التي تحفظها</div>
-                <div class="memo_juzs">
-                    <div class="selected">1</div>
-                    <div>2</div>
-                    <div>3</div>
-                    <div>4</div>
-                </div>
-            </div>
-            <div class="info_item">
-                <div class="primary">الأوشحة التي تمتلكها</div>
-                <div>
-                    <img src="https://quran.mara.gov.om/system/images/000/000/004/original/hafid.png" alt="">
-                </div>
-            </div>
+        <div class="spacer"></div>
+        <img class="gear" src="./img/gear_icon.png" alt="" />
+      </div>
+    </div>
+    <!-- student awards -->
+    <div class="student_award">
+      <div class="container">
+        <div class="point">النقاط: <span>200 نقطة</span></div>
+        <div class="jw">
+          الجواهر:
+          <span>35</span>
+          <img class="jw_img" src="./img/jw_gold.svg" alt="" />
+        </div>
+        <div class="medal">
+          الأوسمة:
+          <img src="./img/medals/medal1.svg" alt="" />
+          <img src="./img/medals/medal2.svg" alt="" />
+          <img src="./img/medals/medal3.svg" alt="" />
+          <img src="./img/medals/medal4.svg" alt="" />
+          <a class="alink" href="#">المزيد ...</a>
         </div>
       </div>
-      <div class="info_card">
-        <div class="info_card_header">
-            تغير الرقم السري
-        </div>
-        <div class="info_card_body">
-            <input
-            id="jsInputPassword"
-          class="info_card_input input_password"
-          placeholder="الرقم السري"
-        />
-          </div>
+    </div>
 
-        <div class="info_card_footer">
-          <a class="alink" href="#">تغير  </a>
+    <!-- missions -->
+
+    <div class="student_mission">
+      <h3 class="title">
+        <div class="container">
+          <a class="alink" href="#">التلاوة</a>
+          <a class="alink active" href="#">الحفظ</a>
+          <a class="alink" href="#">القراءات</a>
+          <a class="alink" href="#">المتون</a>
+        </div>
+      </h3>
+      <div class="container">
+        <div class="">برنامج الحفظ الحالي: <span class="current_mission">الجزء الخامس</span></div>
+        <div class="memorized">الأجزاء المحفوظة: 
+          <span class="memorized_juzs juz_done">الجزء الأول</span>
+          <span class="memorized_juzs">الجزء الثاني</span>
+          <span class="memorized_juzs">الجزء الثالث</span>
+          <span class="memorized_juzs">الجزء الرابع</span>
+          <span class="memorized_juzs">الجزء الخامس</span>
+          <span class="memorized_juzs">الجزء السادس</span>
+          <span class="memorized_juzs">الجزء السابع</span>
+          <span class="memorized_juzs">الجزء الثامن</span>
+          <span class="memorized_juzs">الجزء التاسع</span>
+          <span class="memorized_juzs">الجزء العاشر</span>
         </div>
       </div>
-
-    </main>
-    <script src="./js/app.js"></script>
+    </div>
   </body>
-
 </html>

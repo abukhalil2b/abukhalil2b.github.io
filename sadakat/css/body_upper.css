@@ -1,9 +1,11 @@
 
 .body_upper_container{
-    margin: 6% 4%;
+    margin: 10% auto;
+    width: 85%;
 }
 .search_school_container{
     display: inline-flex;
+    padding-top: 3%;
 }
 .search_input{
     border-radius: 8px;
@@ -32,6 +34,8 @@
 .all_school_button{
     float: left;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .all_school_arrow{
     color:grey;
