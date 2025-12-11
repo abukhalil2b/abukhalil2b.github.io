@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio — Laravel & Full‑Stack Developer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Small custom styles */
+    body{font-family: 'Tajawal', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    .container{max-width:1000px;margin:24px auto;padding:18px}
+    .card{background:white;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,.08);padding:20px}
+    header nav a{cursor:pointer}
+    @media print{body{direction:rtl} nav .no-print{display:none}}
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="container">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-extrabold">[Your Name]</h1>
+        <p class="text-sm text-gray-600">Laravel & Full‑Stack Developer — Arabic RTL interfaces</p>
+      </div>
+      <div class="space-x-2 no-print">
+        <button id="showCV" class="px-4 py-2 bg-green-600 text-white rounded">سيرة ذاتية</button>
+        <button id="showQA" class="px-4 py-2 bg-blue-600 text-white rounded">أسئلة و أجوبة</button>
+        <a id="downloadBtn" class="px-4 py-2 bg-gray-800 text-white rounded" href="#" download="portfolio_cv_qa.html">تحميل HTML</a>
+      </div>
+    </div>
+
+    <!-- CV Page -->
+    <section id="cvPage" class="card">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-1">
+          <div class="mb-4">
+            <h2 class="text-xl font-bold">عنّي</h2>
+            <p class="text-sm text-gray-700">مطور ويب شغوف بتحويل الأفكار إلى تطبيقات تعمل. متخصص في Laravel، Alpine.js، وTailwind CSS. أحب بناء واجهات عربية RTL واضحة وقابلة للصيانة.</p>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="font-semibold">التواصل</h3>
+            <ul class="text-sm text-gray-700 leading-relaxed">
+              <li>البريد: <em>you@example.com</em></li>
+              <li>الموقع: <em>your-portfolio.example</em></li>
+              <li>Github: <em>github.com/yourname</em></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-semibold">اللغات</h3>
+            <p class="text-sm text-gray-700">العربية (متقدم) — الإنجليزية (جيد)</p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-2">المهارات الأساسية</h2>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div class="p-3 bg-gray-50 rounded">Laravel (Eloquent, Middleware, APIs)</div>
+              <div class="p-3 bg-gray-50 rounded">Alpine.js (x-data, x-model, x-show)</div>
+              <div class="p-3 bg-gray-50 rounded">Tailwind CSS — RTL design</div>
+              <div class="p-3 bg-gray-50 rounded">MySQL / MariaDB (schema, indexing)</div>
+              <div class="p-3 bg-gray-50 rounded">Ubuntu / Nginx deployment</div>
+              <div class="p-3 bg-gray-50 rounded">Caching & Performance (Redis, Cache::remember)</div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-2">مشاريع مختارة</h2>
+
+            <article class="mb-4">
+              <h3 class="font-semibold">Learning Management System (LMS)</h3>
+              <p class="text-sm text-gray-700">إدارة الدورات، الدروس، الاختبارات، وإدارة المتدربين. ميزات متقدمة: سحب وإفلات لترتيب الأسابيع/الدروس، تتبع التقدم، ودعم مدربين متعددين.</p>
+            </article>
+
+            <article class="mb-4">
+              <h3 class="font-semibold">Attendance System</h3>
+              <p class="text-sm text-gray-700">تصميم جداول الحضور وربط الحضور بالطلاب عبر جدول pivot، وتحويل العرض في الواجهة ليعتمد على استدعاءات API لتحسين الأداء.</p>
+            </article>
+
+            <article class="mb-4">
+              <h3 class="font-semibold">Mission Evaluation Platform</h3>
+              <p class="text-sm text-gray-700">عرض تقييم مهام الطلبة مع تفاعل باستخدام Alpine.js، وإمكانية حفظ ملاحظات المعلم والمنح نقاط لكل مهمة.</p>
+            </article>
+
+            <article class="mb-4">
+              <h3 class="font-semibold">Statistics Dashboard</h3>
+              <p class="text-sm text-gray-700">لوحات إحصاءات متقدمة بواجهات عربية واستخدام ApexCharts لعرض مؤشرات التعليم والزكاة والأوقاف.</p>
+            </article>
+
+            <article>
+              <h3 class="font-semibold">Deployment & DevOps</h3>
+              <p class="text-sm text-gray-700">نشر تطبيقات Laravel على DigitalOcean، إعداد Nginx وMariaDB، وتأمين الاتصالات مع SSL وتهيئة قواعد البيئة.</p>
+            </article>
+
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold mb-2">عادات التعلم</h2>
+            <ul class="list-disc list-inside text-sm text-gray-700">
+              <li>التعلم العملي: بناء ميزات فعلية للتعلم السريع.</li>
+              <li>تقسيم المشكلات: حَل المشاكل بخطوات صغيرة وقابلة للإدارة.</li>
+              <li>التحسين المتكرر: إعادة هيكلة وتحسين الكود بعد اختبار الميزة.</li>
+              <li>التجريب: تجربة أدوات جديدة وتطبيقها مباشرة على مشاريع صغيرة.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Q&A Page -->
+    <section id="qaPage" class="card mt-6" style="display:none">
+      <h2 class="text-2xl font-bold mb-4">أسئلة متوقعة و إجابات (جاهز للمقابلة)</h2>
+
+      <div class="space-y-4 text-sm text-gray-800">
+        <div>
+          <h3 class="font-semibold">Laravel & Backend</h3>
+          <p><strong>س:</strong> كيف تُحسّن استعلامات Laravel؟<br><strong>ج:</strong> أستخدم eager loading مع <code>with()</code>، أضيف فهارس في القاعدة، وأخزن النتائج المتكررة في الكاش باستخدام <code>Cache::remember()</code>. للأوامر المعقدة أكتب استعلامات raw محسّنة.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold">Alpine.js & Frontend</h3>
+          <p><strong>س:</strong> لماذا Alpine.js؟<br><strong>ج:</strong> خفيفة وبسيطة للاندماج داخل Blade دون إعداد بنية front-end كاملة — ممتازة لواجهات تفاعلية صغيرة ومتوسطة.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold">قاعدة البيانات و التصميم</h3>
+          <p><strong>س:</strong> كيف تمنع التكرارات؟<br><strong>ج:</strong> باعتماد قيد فريد في الميغريشن، والتحقق من صحة المدخلات قبل الحفظ، وإزالة التكرارات القديمة عبر استعلامات منظمة.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold">نشر وDevOps</h3>
+          <p><strong>س:</strong> كيف تنشر تطبيق Laravel؟<br><strong>ج:</strong> إعداد خادم Ubuntu، تثبيت PHP-FPM، تهيئة Nginx، إعداد .env، تنفيذ المهاجرات بأمر <code>--force</code>، وتخزين الكاش مؤقتاً عبر أوامر <code>artisan optimize</code>.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold">سلوك العمل و التعلم</h3>
+          <p><strong>س:</strong> كيف تتعلم تقنية جديدة؟<br><strong>ج:</strong> أطبقها فوراً في مشروع صغير، أواجه الأخطاء لأتعلم الحدود، ثم أدمجها تدريجياً في مشروع أكبر بعد التأكد.</p>
+        </div>
+
+        <hr>
+        <p class="text-xs text-gray-500">نصيحة: حفظ هذه الإجابات بصيغة قصيرة ومختصرة سيساعدك على استرجاعها بسهولة أثناء المقابلات.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // basic page switching + download function
+    const cvBtn = document.getElementById('showCV');
+    const qaBtn = document.getElementById('showQA');
+    const cvPage = document.getElementById('cvPage');
+    const qaPage = document.getElementById('qaPage');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    cvBtn.addEventListener('click', ()=>{cvPage.style.display='block'; qaPage.style.display='none'});
+    qaBtn.addEventListener('click', ()=>{cvPage.style.display='none'; qaPage.style.display='block'});
+
+    // prepare downloadable file from current HTML
+    downloadBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+      const url = URL.createObjectURL(blob);
+      downloadBtn.setAttribute('href', url);
+      downloadBtn.setAttribute('download', 'portfolio_cv_qa.html');
+      // auto click to start download
+      downloadBtn.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 10000);
+    });
+  </script>
+</body>
+</html>
