@@ -3,380 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حساب زكاة السنوات الماضية للذهب والفضة</title>
+    <title>حاسبة زكاة الذهب والفضة</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Flutter Color Mappings and Basic Styles */
         :root {
-            --k-primary-color: #0d47a1; /* Equivalent to a primary blue/deep orange for kPrimaryColor */
-            --k-active-card-colour: #2b2c45; /* Slightly lighter dark grey for better contrast */
-            --k-light-grey-color: #c0c0c0; /* Lighter grey for better visibility */
-            --header-bg-color: #e79686;
+            --primary: #0d47a1;
+            --primary-dark: #08306b;
+            --primary-light: #5472d3;
+            --accent: #e79686;
+            --surface: #1a1d2e;
+            --surface-light: #252838;
+            --surface-lighter: #2f3349;
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --gold: #ffd700;
+            --gold-light: #ffe57f;
+            --success: #4caf50;
+            --error: #ff5252;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: 'Tajawal', sans-serif; /* Applied Tajawal font */
-            background-color: #0a0e21; /* Dark background */
-            color: white;
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0a0e21 0%, #1a1d2e 100%);
+            color: var(--text-primary);
             line-height: 1.6;
-            font-size: 18px; /* Base font size increased */
+            min-height: 100vh;
         }
 
-        /* Directionality Wrapper */
-        .rtl-container {
-            direction: rtl;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* Header Styling */
-        .app-header {
-            background-color: var(--header-bg-color);
-            background-image: url('assets/img/btn_bg.png'); /* Placeholder */
-            background-size: cover;
-            background-position: center;
-            width: 100%;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative; /* For the home button */
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--accent) 0%, #d17262 100%);
+            padding: 30px 0;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
 
-        .header-text {
-            color: white;
-            font-size: 24px; /* Increased font size */
-            font-weight: 700;
-            text-align: center;
-            padding: 0 60px; /* Space for the home button */
-        }
-
-        .home-button {
+        .header::before {
+            content: '';
             position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
 
-        .home-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Card and Button Styling */
-        .reuse-card {
-            background-color: var(--k-active-card-colour);
-            border-radius: 10px;
-            margin: 10px;
-            padding: 25px; /* Increased padding */
-            cursor: pointer;
-            flex-grow: 1;
+        .header-content {
+            position: relative;
+            z-index: 1;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            text-align: center;
-            transition: background-color 0.3s;
         }
 
-        .reuse-card:hover {
-            background-color: #3f405c;
+        .header h1 {
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .icon-content i {
-            font-size: 60px; /* Increased icon size */
-            margin-bottom: 15px;
-        }
-
-        .icon-content label {
-            font-size: 18px; /* Increased font size */
-            font-weight: 500;
-        }
-
-        /* Input/Form Styling */
-        .form-group {
-            display: flex;
-            gap: 15px;
-            padding: 16px;
-        }
-
-        .text-input-wrapper {
-            flex-grow: 1;
-        }
-
-        .text-input {
-            width: 100%;
-            padding: 12px; /* Increased padding */
-            border-radius: 10px;
-            border: 1px solid var(--k-light-grey-color);
-            background-color: #fff;
-            color: black;
-            font-size: 20px; /* Increased font size */
-            text-align: center;
-            box-sizing: border-box;
-            direction: rtl;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--k-light-grey-color);
+        .home-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Index View - Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(13, 71, 161, 0.3);
+            border-color: var(--primary-light);
+        }
+
+        .card:hover::before {
+            opacity: 0.1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .card.info-card {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+        }
+
+        .card.info-card .card-icon {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Calculate View */
+        .calculate-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(13, 71, 161, 0.3);
+        }
+
+        .info-banner h2 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 20px;
+            border: 2px solid var(--surface-lighter);
+            border-radius: 12px;
+            background: var(--surface-light);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px rgba(84, 114, 211, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
         }
 
         .error-message {
-            color: #ff6347; /* Tomato red for errors */
+            color: var(--error);
             font-size: 14px;
-            height: 18px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 20px;
         }
 
-        .calculate-button {
+        .submit-btn {
             width: 100%;
-            padding: 18px; /* Increased padding */
-            margin: 0 16px 16px;
-            background-color: var(--k-primary-color);
-            color: white;
-            border: none; /* Changed to solid button style */
-            border-radius: 8px;
-            font-size: 20px; /* Increased font size */
+            padding: 18px;
+            font-size: 22px;
             font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 16px rgba(13, 71, 161, 0.3);
         }
 
-        .calculate-button:hover {
-            background-color: #0a3575;
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(13, 71, 161, 0.4);
         }
 
-        /* Result Table Styling */
-        .data-table-container {
-            overflow-x: auto;
-            margin: 16px;
-            flex-grow: 1;
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
-        .data-table {
+        /* Results View */
+        .results-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .table-wrapper {
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .results-table {
             width: 100%;
             border-collapse: collapse;
-            text-align: center;
         }
 
-        .data-table th,
-        .data-table td {
-            border: 1px solid #333;
-            padding: 10px;
+        .results-table thead {
+            background: linear-gradient(135deg, var(--surface-lighter) 0%, var(--surface-light) 100%);
         }
 
-        .data-table th {
-            background-color: #2b2c45;
+        .results-table th {
+            padding: 18px 16px;
             font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--surface);
         }
 
-        .data-table td {
+        .results-table td {
+            padding: 16px;
+            text-align: center;
             font-size: 17px;
+            border-bottom: 1px solid var(--surface-light);
+            transition: background 0.2s ease;
         }
 
-        /* Total Section Styling */
-        .total-container {
-            background-color: var(--k-active-card-colour);
-            height: 160px; /* Increased height */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
+        .results-table tbody tr:hover {
+            background: var(--surface-light);
+            cursor: pointer;
         }
 
-        .total-text {
-            color: var(--k-light-grey-color);
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .truncate {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 0 auto;
+        }
+
+        /* Total Summary */
+        .total-summary {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px var(--shadow);
+            border: 2px solid var(--surface-lighter);
+        }
+
+        .total-label {
             font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
             font-weight: 500;
         }
 
-        .total-amount {
-            color: #ffe082; /* Light gold color for emphasis */
-            font-size: 32px; /* Significantly increased font size */
+        .total-value {
+            font-size: 48px;
             font-weight: 700;
-            margin-top: 5px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 4px rgba(255, 215, 0, 0.2);
         }
 
-        .replay-button {
-            background: none;
-            border: none;
-            color: var(--k-light-grey-color);
-            font-size: 35px; /* Increased icon size */
+        .recalculate-btn {
+            background: var(--surface-lighter);
+            border: 2px solid var(--primary-light);
+            color: var(--text-primary);
+            padding: 14px 32px;
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: color 0.3s;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .replay-button:hover {
-            color: white;
+        .recalculate-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(13, 71, 161, 0.3);
         }
 
-        /* Toast/Snackbar Styles (simple implementation) */
+        /* Toast Notification */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background: var(--surface-light);
+            color: var(--text-primary);
+            padding: 16px 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px var(--shadow);
             z-index: 1000;
             font-size: 16px;
+            border: 1px solid var(--surface-lighter);
+            backdrop-filter: blur(10px);
+            max-width: 90%;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .home-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .card {
+                padding: 30px 20px;
+            }
+
+            .form-card {
+                padding: 24px;
+            }
+
+            .total-value {
+                font-size: 36px;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
-<body x-data="app()" class="rtl-container">
+<body x-data="zakatApp()" x-cloak>
+    <!-- Toast Notification -->
+    <div x-show="toast.show" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-y-4"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="toast" 
+         x-text="toast.message">
+    </div>
 
-    <template x-if="toast.show">
-        <div class="toast" x-text="toast.message" x-transition.opacity></div>
-    </template>
-
-    <div class="app-container" style="min-height: 100vh; display: flex; flex-direction: column;">
-
-        <div x-show="view === 'index'" style="flex-grow: 1; display: flex; flex-direction: column;">
-            <div class="app-header">
-                <div class="header-text">حساب زكاة السنوات الماضية للذهب والفضة</div>
-            </div>
-
-            <div style="flex-grow: 1; display: flex; flex-direction: column;">
-                <div style="display: flex; flex-direction: row; flex-grow: 1;">
-                    <div class="reuse-card" @click="goToCalculate(17, 85)">
-                        <div class="icon-content">
-                            <i class="fa-solid fa-calculator"></i>
-                            <label>حساب الزكاة على قول المقدار 85 جرام</label>
-                        </div>
-                    </div>
-                    <div class="reuse-card" @click="goToCalculate(16, 80)">
-                        <div class="icon-content">
-                            <i class="fa-solid fa-calculator"></i>
-                            <label>حساب الزكاة على قول المقدار 80 جرام</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="reuse-card" @click="goToCalculate(28, 595)">
-                    <div class="icon-content">
-                        <i class="fa-solid fa-calculator"></i>
-                        <label>حساب زكاة الفضة</label>
-                    </div>
-                </div>
-
-                <div class="reuse-card" @click="launchURL('https://oman.gold-price-today.com/')">
-                    <div class="icon-content">
-                        <i class="fa-solid fa-info-circle"></i>
-                        <label>معرفة سعر الذهب اليوم</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div x-show="view === 'calculate'" style="flex-grow: 1; display: flex; flex-direction: column;">
-            <div class="app-header" style="background-color: var(--k-primary-color);">
-                <div class="header-text" x-text="'وزن الذهب يجب أن لايقل عن ' + calc.nissap + ' جرام'"></div>
-                <button class="home-button" @click="view = 'index'">الرئيسية</button>
-            </div>
-
-            <div style="padding-top: 15px; flex-grow: 1;">
-                <form @submit.prevent="validateAndCalculate" x-ref="calcForm">
-                    <div class="form-group">
-                        <div class="text-input-wrapper">
-                            <label for="weight" class="input-label">وزن الذهب (جرام)</label>
-                            <input
-                                id="weight"
-                                type="text"
-                                inputmode="decimal"
-                                class="text-input"
-                                x-model="calc.inputMiqdar"
-                                @input="validateMiqdar($event.target.value)"
-                                maxlength="6"
-                            >
-                            <div class="error-message" x-text="calc.miqdarError"></div>
-                        </div>
-
-                        <div class="text-input-wrapper">
-                            <label for="years" class="input-label">السنوات</label>
-                            <input
-                                id="years"
-                                type="text"
-                                inputmode="numeric"
-                                class="text-input"
-                                x-model="calc.inputYear"
-                                @input="validateYear($event.target.value)"
-                                maxlength="2"
-                            >
-                            <div class="error-message" x-text="calc.yearError"></div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="calculate-button">احسب</button>
-                </form>
-            </div>
-        </div>
-
-        <div x-show="view === 'result'" style="flex-grow: 1; display: flex; flex-direction: column;">
-            <div class="app-header" style="background-color: var(--k-primary-color);">
-                <div class="header-text">نتائج حساب الزكاة</div>
-                <button class="home-button" @click="view = 'index'">الرئيسية</button>
-            </div>
-
-            <div class="data-table-container" style="flex-grow: 1;">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>السنة</th>
-                            <th>المقدار (جرام)</th>
-                            <th>الفريضة</th>
-                            <th>الزكاة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="result in calc.results" :key="result.year">
-                            <tr @click="showToast('المقدار في بداية السنة ' + result.year + ': ' + result.miqdar + ' جرام')">
-                                <td x-text="result.year"></td>
-                                <td>
-                                    <div style="max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0 auto;" x-text="result.miqdar"></div>
-                                </td>
-                                <td x-text="result.farida"></td>
-                                <td x-text="result.zakah"></td>
-                            </tr>
-                        </template>
-                        <template x-if="calc.results.length === 0">
-                            <tr>
-                                <td></td><td></td><td></td><td></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="total-container">
-                <div class="total-text">إجمالي الزكاة الواجبة على السنوات الماضية (جرام)</div>
-                <div class="total-amount" x-text="calc.total.toFixed(4)"></div>
-                <button class="replay-button" @click="goToCalculate(calc.dividerAmount, calc.nissap)">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                    <span style="font-size: 16px; margin-right: 5px;">إعادة الحساب</span>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>حساب زكاة السنوات الماضية للذهب والفضة</h1>
+                <button x-show="view !== 'index'" 
+                        @click="view = 'index'" 
+                        class="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span>الرئيسية</span>
                 </button>
             </div>
         </div>
+    </header>
 
-    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Index View -->
+            <div x-show="view === 'index'" class="fade-in">
+                <div class="cards-grid">
+                    <div class="card" @click="goToCalculate(17, 85)">
+                        <div class="card-content">
+                            <i class="fas fa-balance-scale card-icon"></i>
+                            <h3 class="card-title">حساب الزكاة على قول المقدار 85 جرام</h3>
+                        </div>
+                    </div>
+
+                    <div class="card" @click="goToCalculate(16, 80)">
+                        <div class="card-content">
+                            <i class="fas fa-weight card-icon"></i>
+                            <h3 class="card-title">حساب الزكاة على قول المقدار 80 جرام</h3>
+                        </div>
+                    </div>
+
+                    <div class="card" @click="goToCalculate(28, 595)">
+                        <div class="card-content">
+                            <i class="fas fa-coins card-icon"></i>
+                            <h3 class="card-title">حساب زكاة الفضة</h3>
+                        </div>
+                    </div>
+
+                    <div class="card info-card" @click="launchURL('https://oman.gold-price-today.com/')">
+                        <div class="card-content">
+                            <i class="fas fa-chart-line card-icon"></i>
+                            <h3 class="card-title">معرفة سعر الذهب اليوم</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate View -->
+            <div x-show="view === 'calculate'" class="fade-in">
+                <div class="calculate-container">
+                    <div class="info-banner">
+                        <h2>
+                            <i class="fas fa-info-circle"></i>
+                            <span x-text="'وزن الذهب يجب أن لا يقل عن ' + calc.nissap + ' جرام'"></span>
+                        </h2>
+                    </div>
+
+                    <div class="form-card">
+                        <form @submit.prevent="validateAndCalculate">
+                            <div class="form-group">
+                                <label for="weight" class="form-label">
+                                    <i class="fas fa-weight-hanging"></i>
+                                    وزن الذهب (جرام)
+                                </label>
+                                <div class="input-wrapper">
+                                    <input
+                                        id="weight"
+                                        type="text"
+                                        inputmode="decimal"
+                                        class="form-input"
+                                        :class="{ 'error': calc.miqdarError }"
+                                        x-model="calc.inputMiqdar"
+                                        @input="validateMiqdar($event.target.value)"
+                                        maxlength="10"
+                                        placeholder="أدخل الوزن"
+                                    >
+                                </div>
+                                <div class="error-message">
+                                    <template x-if="calc.miqdarError">
+                                        <span>
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span x-text="calc.miqdarError"></span>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="years" class="form-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    عدد السنوات
+                                </label>
+                                <div class="input-wrapper">
+                                    <input
+                                        id="years"
+                                        type="text"
+                                        inputmode="numeric"
+                                        class="form-input"
+                                        :class="{ 'error': calc.yearError }"
+                                        x-model="calc.inputYear"
+                                        @input="validateYear($event.target.value)"
+                                        maxlength="2"
+                                        placeholder="أدخل عدد السنوات"
+                                    >
+                                </div>
+                                <div class="error-message">
+                                    <template x-if="calc.yearError">
+                                        <span>
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span x-text="calc.yearError"></span>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-calculator"></i>
+                                احسب الزكاة
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div x-show="view === 'result'" class="fade-in">
+                <div class="results-container">
+                    <div class="table-wrapper">
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>السنة</th>
+                                    <th>المقدار (جرام)</th>
+                                    <th>الفريضة</th>
+                                    <th>الزكاة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="result in calc.results" :key="result.year">
+                                    <tr @click="showToast('المقدار في بداية السنة ' + result.year + ': ' + result.miqdar + ' جرام')">
+                                        <td x-text="result.year"></td>
+                                        <td>
+                                            <div class="truncate" x-text="result.miqdar"></div>
+                                        </td>
+                                        <td x-text="result.farida"></td>
+                                        <td x-text="result.zakah"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="total-summary">
+                        <div class="total-label">إجمالي الزكاة الواجبة على السنوات الماضية</div>
+                        <div class="total-value" x-text="calc.total.toFixed(4) + ' جرام'"></div>
+                        <button class="recalculate-btn" @click="goToCalculate(calc.dividerAmount, calc.nissap)">
+                            <i class="fas fa-redo-alt"></i>
+                            <span>إعادة الحساب</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // Dart/Flutter logic translated to JavaScript
-
-        // Simulating the CalculateModel from Dart
         class CalculateModel {
             constructor(year, miqdar, farida, zakah) {
                 this.year = year;
@@ -386,7 +672,6 @@
             }
         }
 
-        // Simulating the CalculatController from Dart (Central Logic)
         const CalculatController = {
             total: 0,
             inputYear: 0,
@@ -394,39 +679,26 @@
             nissap: 0,
             dividerAmount: 1,
 
-            /**
-             * Performs the Zakat calculation logic (Zakat al-Hawl on Gold/Silver).
-             * @returns {Array<CalculateModel>} The list of calculation results per year.
-             */
             calculate: function() {
-                let miqdar, farida, zakah;
                 let totalZakah = 0;
-                let currentMiqdar = this.inputMiqdar; // Start with the user's initial weight
+                let currentMiqdar = this.inputMiqdar;
                 let calculationList = [];
 
                 for (let i = 1; i <= this.inputYear; i++) {
-                    // Check Nissab before calculating
                     if (currentMiqdar < this.nissap) {
-                        break; // Stop calculation if the remaining amount is below the minimum threshold
+                        break;
                     }
 
-                    miqdar = currentMiqdar; // Miqdar at the start of the current year (Year i)
+                    let miqdar = currentMiqdar;
+                    let farida = Math.floor(miqdar / this.dividerAmount) * this.dividerAmount;
+                    let zakah = farida / 40;
 
-                    // Calculate 'Farida' (Taxable Amount): The amount that has completed the Nissab
-                    // It must be a multiple of the 'dividerAmount' (17 for 85g, 16 for 80g, 28 for 595g)
-                    // farida = ((miqdar ~/ dividerAmount) * dividerAmount);
-                    farida = (Math.floor(miqdar / this.dividerAmount) * this.dividerAmount);
-
-                    // Calculate Zakah (2.5% or 1/40th)
-                    zakah = farida / 40;
-
-                    // Subtract the zakah paid for this year from the remaining miqdar for the next year
                     currentMiqdar = currentMiqdar - zakah;
                     totalZakah = totalZakah + zakah;
 
                     calculationList.push(new CalculateModel(
                         i,
-                        miqdar.toFixed(4), // Formatting to 4 decimal places for display
+                        miqdar.toFixed(4),
                         farida.toFixed(4),
                         zakah.toFixed(4)
                     ));
@@ -437,18 +709,16 @@
             }
         };
 
-        // Alpine.js Application Component
-        function app() {
+        function zakatApp() {
             return {
-                view: 'index', // 'index', 'calculate', 'result'
+                view: 'index',
                 calc: {
                     nissap: 0,
                     dividerAmount: 1,
-                    inputYear: null,
-                    inputMiqdar: null,
+                    inputYear: '',
+                    inputMiqdar: '',
                     total: 0,
                     results: [],
-                    // Validation states
                     miqdarError: '',
                     yearError: '',
                 },
@@ -458,11 +728,6 @@
                     timeout: null
                 },
 
-                // --- Navigation and Setup Functions ---
-
-                /**
-                 * Maps to Get.to(()=>CalculatView(...)); in Dart
-                 */
                 goToCalculate(dividerAmount, nissap) {
                     this.calc.dividerAmount = dividerAmount;
                     this.calc.nissap = nissap;
@@ -471,47 +736,34 @@
                 },
 
                 resetForm() {
-                    // Reset inputs and errors
-                    this.calc.inputYear = null;
-                    this.calc.inputMiqdar = null;
+                    this.calc.inputYear = '';
+                    this.calc.inputMiqdar = '';
                     this.calc.miqdarError = '';
                     this.calc.yearError = '';
                 },
 
-                // --- Utility Functions ---
-
-                /**
-                 * Maps to _launchURL() in Dart
-                 */
                 launchURL(url) {
                     window.open(url, '_blank');
                 },
 
-                /**
-                 * Maps to showToast("message") or showSnackBar("message") in Dart
-                 */
                 showToast(message) {
                     this.toast.message = message;
                     this.toast.show = true;
                     clearTimeout(this.toast.timeout);
                     this.toast.timeout = setTimeout(() => {
                         this.toast.show = false;
-                    }, 3000); // Hide after 3 seconds
+                    }, 3000);
                 },
 
-                // --- Validation and Logic ---
-
                 validateMiqdar(value) {
-                    // Clean input for validation (allow only numbers and dots)
                     const cleanedValue = value.replace(/[^0-9.]/g, '');
-                    // Update model only with cleaned value
                     this.calc.inputMiqdar = cleanedValue;
 
                     const parsedValue = parseFloat(cleanedValue);
                     if (cleanedValue === '') {
                         this.calc.miqdarError = 'الرجاء إدخال وزن الذهب';
                         return false;
-                    } else if (isNaN(parsedValue)) {
+                    } else if (isNaN(parsedValue) || parsedValue <= 0) {
                         this.calc.miqdarError = 'قيمة غير صالحة';
                         return false;
                     } else if (parsedValue < this.calc.nissap) {
@@ -523,9 +775,7 @@
                 },
 
                 validateYear(value) {
-                    // Clean input for validation (allow only digits)
                     const cleanedValue = value.replace(/[^0-9]/g, '');
-                     // Update model only with cleaned value
                     this.calc.inputYear = cleanedValue;
 
                     const parsedValue = parseInt(cleanedValue);
@@ -535,15 +785,17 @@
                     } else if (isNaN(parsedValue) || parsedValue <= 0) {
                         this.calc.yearError = 'يجب أن تكون سنة واحدة على الأقل';
                         return false;
+                    } else if (parsedValue > 50) {
+                        this.calc.yearError = 'العدد كبير جداً';
+                        return false;
                     }
                     this.calc.yearError = '';
                     return true;
                 },
 
                 validateAndCalculate() {
-                    // Force latest model updates for validation
-                    const miqdarValid = this.validateMiqdar(this.calc.inputMiqdar || '');
-                    const yearValid = this.validateYear(this.calc.inputYear || '');
+                    const miqdarValid = this.validateMiqdar(this.calc.inputMiqdar);
+                    const yearValid = this.validateYear(this.calc.inputYear);
 
                     if (miqdarValid && yearValid) {
                         this.performCalculation();
@@ -553,17 +805,14 @@
                 },
 
                 performCalculation() {
-                    // Update the controller with the view's validated inputs
                     CalculatController.inputYear = parseInt(this.calc.inputYear);
                     CalculatController.inputMiqdar = parseFloat(this.calc.inputMiqdar);
                     CalculatController.nissap = this.calc.nissap;
                     CalculatController.dividerAmount = this.calc.dividerAmount;
 
-                    // Run the core logic
                     this.calc.results = CalculatController.calculate();
                     this.calc.total = CalculatController.total;
 
-                    // Navigate to the result view
                     this.view = 'result';
                 }
             }
