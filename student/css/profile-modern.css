@@ -1,0 +1,1142 @@
+/* ====================================
+   صفحة الملف الشخصي الحديثة
+   Modern Profile Page Styles
+   ==================================== */
+
+/* ====== الصفحة الأساسية - Main Page ====== */
+.profile-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: var(--spacing-lg);
+    direction: rtl;
+}
+
+/* ====== حاوية المحتوى - Content Container ====== */
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+/* ====== بطاقة معلومات الطالب - Student Info Card ====== */
+.student-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.student-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--gradient-primary);
+}
+
+.student-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+/* ====== صورة الطالب - Student Avatar ====== */
+.student-avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.student-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    object-fit: cover;
+    transition: all var(--transition-normal);
+}
+
+.student-avatar:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: var(--shadow-xl);
+}
+
+.avatar-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--gradient-gold);
+    border-radius: 50%;
+    border: 3px solid var(--color-bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: var(--shadow-md);
+    animation: float 2s ease-in-out infinite;
+}
+
+/* ====== معلومات الطالب - Student Info ====== */
+.student-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.student-name {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.verified-badge {
+    font-size: 24px;
+    color: var(--color-success);
+}
+
+.student-details {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-sm);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    font-size: 15px;
+}
+
+.detail-item .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--color-primary);
+}
+
+/* ====== زر الإعدادات - Settings Button ====== */
+.settings-button {
+    margin-right: auto;
+    width: 48px;
+    height: 48px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 50%;
+    color: var(--color-text-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+}
+
+.settings-button:hover {
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ====== بطاقة معلومات القاعة الدراسية - Classroom Card ====== */
+.classroom-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.6s ease-out 0.2s both;
+    position: relative;
+}
+
+.classroom-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #9D4EDD 0%, #7209B7 100%);
+}
+
+.classroom-header {
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.08) 0%, rgba(114, 9, 183, 0.08) 100%);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    border-bottom: 2px solid rgba(157, 78, 221, 0.1);
+}
+
+.classroom-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #9D4EDD 0%, #7209B7 100%);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(157, 78, 221, 0.3);
+    flex-shrink: 0;
+    animation: float 3s ease-in-out infinite;
+}
+
+.classroom-main-icon {
+    font-size: 40px;
+    color: var(--color-text-white);
+}
+
+.classroom-title-wrapper {
+    flex: 1;
+}
+
+.classroom-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    background: linear-gradient(135deg, #9D4EDD 0%, #7209B7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.classroom-subtitle {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.classroom-body {
+    padding: var(--spacing-xl);
+}
+
+.classroom-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.classroom-info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.05) 0%, rgba(114, 9, 183, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 2px solid rgba(157, 78, 221, 0.1);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.classroom-info-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(157, 78, 221, 0.3);
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.08) 0%, rgba(114, 9, 183, 0.08) 100%);
+}
+
+.classroom-info-item.full-width {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.info-icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.info-icon-box.teacher {
+    background: linear-gradient(135deg, #3A86FF 0%, #0077B6 100%);
+}
+
+.info-icon-box.students {
+    background: linear-gradient(135deg, #06D6A0 0%, #00B4D8 100%);
+}
+
+.info-icon-box.days {
+    background: linear-gradient(135deg, #F4A261 0%, #E76F51 100%);
+}
+
+.info-icon-box .material-symbols-outlined {
+    font-size: 28px;
+    color: var(--color-text-white);
+}
+
+.info-content {
+    flex: 1;
+}
+
+.info-label {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.study-days {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-sm);
+}
+
+.day-badge {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid rgba(157, 78, 221, 0.2);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.day-badge:hover {
+    border-color: rgba(157, 78, 221, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.day-badge.active {
+    background: linear-gradient(135deg, #9D4EDD 0%, #7209B7 100%);
+    color: var(--color-text-white);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+}
+
+.day-badge.active:hover {
+    box-shadow: 0 6px 16px rgba(157, 78, 221, 0.4);
+}
+
+/* ====== بطاقة الترتيب والمنافسة - Ranking Card ====== */
+.ranking-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.6s ease-out 0.3s both;
+    position: relative;
+}
+
+.ranking-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.ranking-header {
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 165, 0, 0.08) 100%);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.1);
+}
+
+.ranking-header .material-symbols-outlined {
+    font-size: 36px;
+    color: #FFA500;
+    animation: float 3s ease-in-out infinite;
+}
+
+.ranking-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ranking-body {
+    padding: var(--spacing-xl);
+}
+
+/* ====== الآية القرآنية - Quran Verse ====== */
+.quran-verse {
+    background: linear-gradient(135deg, rgba(0, 119, 134, 0.08) 0%, rgba(6, 95, 70, 0.08) 100%);
+    border: 2px solid rgba(0, 119, 134, 0.2);
+    border-right: 4px solid #007786;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    margin: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+    text-align: center;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.verse-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #007786;
+    font-family: 'Traditional Arabic', 'Arabic Typesetting', 'Amiri', 'Scheherazade', serif;
+    line-height: 2.2;
+    margin-bottom: var(--spacing-sm);
+    direction: rtl;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.verse-reference {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* ====== أقسام الترتيب - Rank Sections ====== */
+.rank-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.rank-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    transition: width var(--transition-normal);
+}
+
+.rank-section:hover {
+    transform: translateX(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.rank-section:hover::before {
+    width: 12px;
+}
+
+.classroom-rank {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.classroom-rank::before {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.overall-rank {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(169, 169, 169, 0.1) 100%);
+    border: 2px solid rgba(192, 192, 192, 0.3);
+}
+
+.overall-rank::before {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+}
+
+/* ====== شارات الترتيب - Rank Badges ====== */
+.rank-badge-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rank-badge {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    animation: float 3s ease-in-out infinite;
+}
+
+.rank-badge.first {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.rank-badge.second {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+}
+
+.rank-number {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--color-text-white);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.crown-icon,
+.medal-icon {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 32px;
+    animation: float 2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* ====== تفاصيل الترتيب - Rank Details ====== */
+.rank-details {
+    flex: 1;
+}
+
+.rank-label {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+}
+
+.rank-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.rank-stats {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(0, 119, 182, 0.05);
+    border-radius: var(--radius-sm);
+}
+
+.stat-item .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--color-primary);
+}
+
+/* ====== معاينة القاعات - Classrooms Preview ====== */
+.classrooms-preview {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 2px solid rgba(255, 215, 0, 0.1);
+}
+
+.preview-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.preview-title .material-symbols-outlined {
+    font-size: 24px;
+    color: #FFA500;
+}
+
+.classrooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.classroom-mini {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-secondary);
+    border: 2px solid rgba(0, 119, 182, 0.1);
+    text-align: center;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.classroom-mini:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(0, 119, 182, 0.3);
+}
+
+.classroom-mini.active {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-color: #FFD700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.mini-icon {
+    font-size: 36px;
+    margin-bottom: var(--spacing-xs);
+    animation: float 3s ease-in-out infinite;
+}
+
+.mini-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.mini-students {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.view-leaderboard {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: #FFA500;
+    font-weight: 700;
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.view-leaderboard:hover {
+    background: rgba(255, 165, 0, 0.1);
+    transform: translateX(-4px);
+}
+
+.view-leaderboard .material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* ====== بطاقة الجوائز - Awards Card ====== */
+.awards-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+/* ====== عنصر الجائزة - Award Item ====== */
+.award-item {
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.05) 0%, rgba(72, 202, 228, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.award-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.award-item:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-lg);
+}
+
+.award-item:hover::before {
+    opacity: 1;
+}
+
+.award-icon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-sm);
+    animation: float 3s ease-in-out infinite;
+}
+
+.award-label {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.award-value {
+    font-size: 32px;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.award-value.gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ====== قسم الأوسمة - Medals Section ====== */
+.medals-section {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid rgba(0, 119, 182, 0.1);
+}
+
+.medals-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.medals-carousel {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    padding: var(--spacing-sm) 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.medals-carousel::-webkit-scrollbar {
+    height: 6px;
+}
+
+.medals-carousel::-webkit-scrollbar-track {
+    background: rgba(0, 119, 182, 0.1);
+    border-radius: 3px;
+}
+
+.medals-carousel::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 3px;
+}
+
+.medal-item {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+}
+
+.medal-item:hover {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: var(--shadow-lg);
+}
+
+.medal-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.view-all-link:hover {
+    background: rgba(0, 119, 182, 0.1);
+    transform: translateX(-4px);
+}
+
+/* ====== قسم المهام - Missions Section ====== */
+.missions-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+/* ====== نظام Tabs - Tabs System ====== */
+.missions-tabs {
+    display: flex;
+    background: var(--color-primary);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.missions-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 120px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border-bottom: 3px solid transparent;
+    position: relative;
+}
+
+.tab-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-white);
+}
+
+.tab-button.active {
+    color: var(--color-text-white);
+    border-bottom-color: var(--color-text-white);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--color-text-white);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* ====== محتوى المهام - Missions Content ====== */
+.missions-content {
+    padding: var(--spacing-xl);
+}
+
+.mission-current {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.05) 0%, rgba(72, 202, 228, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border-right: 4px solid var(--color-primary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.mission-current-icon {
+    font-size: 40px;
+    color: var(--color-primary);
+}
+
+.mission-current-info {
+    flex: 1;
+}
+
+.mission-current-label {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.mission-current-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* ====== شبكة الأجزاء - Juz Grid ====== */
+.juz-grid-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.juz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.juz-item {
+    padding: var(--spacing-md);
+    border: 2px solid rgba(0, 119, 182, 0.2);
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    background: var(--color-bg-secondary);
+}
+
+.juz-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+}
+
+.juz-item.completed {
+    background: var(--gradient-success);
+    color: var(--color-text-white);
+    border-color: var(--color-success);
+    box-shadow: 0 4px 12px rgba(6, 214, 160, 0.3);
+}
+
+.juz-item.completed::after {
+    content: '✓';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.juz-item.in-progress {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-color: var(--color-gold);
+    color: var(--color-gold-dark);
+    font-weight: 700;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ====== Progress Bar ====== */
+.progress-section {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 2px solid rgba(0, 119, 182, 0.1);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.progress-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.progress-percentage {
+    font-size: 20px;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.progress-bar-container {
+    height: 12px;
+    background: rgba(0, 119, 182, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+    transition: width 1s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ====== Responsive Design ====== */
+@media (max-width: 768px) {
+    .profile-page {
+        padding: var(--spacing-md);
+    }
+
+    .student-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .student-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .student-name {
+        font-size: 24px;
+        justify-content: center;
+    }
+
+    .student-details {
+        justify-content: center;
+    }
+
+    .settings-button {
+        margin: 0 auto;
+    }
+
+    .classroom-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .classroom-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .classroom-main-icon {
+        font-size: 32px;
+    }
+
+    .classroom-title {
+        font-size: 24px;
+    }
+
+    .classroom-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .classroom-info-item {
+        padding: var(--spacing-md);
+    }
+
+    .info-icon-box {
+        width: 45px;
+        height: 45px;
+    }
+
+    .info-icon-box .material-symbols-outlined {
+        font-size: 24px;
+    }
+
+    .day-badge {
+        font-size: 13px;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .rank-section {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--spacing-lg);
+    }
+
+    .rank-badge {
+        width: 80px;
+        height: 80px;
+    }
+
+    .rank-number {
+        font-size: 40px;
+    }
+
+    .rank-value {
+        font-size: 24px;
+    }
+
+    .classrooms-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .awards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .juz-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: var(--spacing-sm);
+    }
+
+    .tab-button {
+        min-width: 100px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 14px;
+    }
+}

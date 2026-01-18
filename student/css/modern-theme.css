@@ -1,0 +1,273 @@
+/* ====================================
+   نظام التصميم الحديث - Modern Design System
+   ==================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap');
+
+/* ====== المتغيرات الأساسية - Core Variables ====== */
+:root {
+  /* الألوان الأساسية - Primary Colors */
+  --color-primary: #0077B6;
+  --color-primary-dark: #005F8F;
+  --color-primary-light: #48CAE4;
+  --color-primary-lighter: #90E0EF;
+  
+  /* الألوان الثانوية - Secondary Colors */
+  --color-secondary: #F4A261;
+  --color-accent: #E76F51;
+  --color-success: #06D6A0;
+  --color-warning: #FFD60A;
+  --color-danger: #EF476F;
+  
+  /* الذهبي والجواهر - Gold & Gems */
+  --color-gold: #FFD700;
+  --color-gold-dark: #FFA500;
+  --color-gem-purple: #9D4EDD;
+  --color-gem-blue: #3A86FF;
+  
+  /* الخلفيات والسطوح - Backgrounds */
+  --color-bg-primary: #F8F9FA;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-card: rgba(255, 255, 255, 0.95);
+  --color-bg-glass: rgba(255, 255, 255, 0.15);
+  
+  /* النصوص - Text Colors */
+  --color-text-primary: #212529;
+  --color-text-secondary: #495057;
+  --color-text-light: #6C757D;
+  --color-text-white: #FFFFFF;
+  
+  /* التدرجات - Gradients */
+  --gradient-primary: linear-gradient(135deg, #0077B6 0%, #48CAE4 100%);
+  --gradient-secondary: linear-gradient(135deg, #F4A261 0%, #E76F51 100%);
+  --gradient-success: linear-gradient(135deg, #06D6A0 0%, #00B4D8 100%);
+  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  --gradient-purple: linear-gradient(135deg, #9D4EDD 0%, #7209B7 100%);
+  
+  /* الظلال - Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px rgba(0, 119, 182, 0.3);
+  
+  /* الانتقالات - Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* الحدود - Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* المسافات - Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+}
+
+/* ====== إعدادات أساسية - Base Settings ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ====== Utility Classes ====== */
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ====== Animations ====== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 119, 182, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 119, 182, 0.6);
+  }
+}
+
+/* ====== Animated Background ====== */
+.animated-bg {
+  background: linear-gradient(-45deg, #0077B6, #48CAE4, #90E0EF, #ADE8F4);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+/* ====== Components Base ====== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-text-white);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+.card-glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ====== Input Styles ====== */
+.input-modern {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 2px solid rgba(0, 119, 182, 0.2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  transition: all var(--transition-normal);
+  outline: none;
+}
+
+.input-modern:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.1);
+  transform: scale(1.02);
+}
+
+.input-modern::placeholder {
+  color: var(--color-text-light);
+}
+
+/* ====== Responsive Design ====== */
+@media (max-width: 768px) {
+  :root {
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+  }
+  
+  .btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+/* ====== RTL Support ====== */
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}

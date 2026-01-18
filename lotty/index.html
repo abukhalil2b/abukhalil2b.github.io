@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام القرعة </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .islamic-pattern {
+            background-color: #1a5f4f;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px);
+        }
+        
+        .golden-border {
+            border: 3px solid #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .islamic-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            border: 2px solid #d4af37;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .winner-glow {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(212, 175, 55, 0.8); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 to-teal-50 min-h-screen">
+    <div x-data="lotteryApp()" class="container mx-auto px-4 py-8">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="islamic-pattern text-white py-8 rounded-3xl shadow-2xl mb-6">
+                <h1 class="text-4xl font-bold mb-2"> نظام القرعة  </h1>
+            </div>
+        </div>
+
+       
+
+        <!-- Manage Numbers Page -->
+        <div x-show="currentPage === 'manage-numbers'" class="max-w-5xl mx-auto">
+            <div class="islamic-card shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-6 text-center border-b-4 border-emerald-600 pb-4">
+                    إدارة أرقام المشاركين
+                </h2>
+                
+                <!-- Add Numbers Section -->
+                <div class="mb-8 bg-emerald-50 p-6 rounded-xl border-2 border-emerald-200">
+                    <h3 class="text-xl font-bold text-emerald-700 mb-4">➕ إضافة أرقام جديدة</h3>
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="number" x-model="startRange" placeholder="من (مثال: 1)" 
+                               class="flex-1 min-w-[150px] px-4 py-3 border-2 border-emerald-300 rounded-lg focus:outline-none focus:border-emerald-600 text-lg">
+                        <input type="number" x-model="endRange" placeholder="إلى (مثال: 100)" 
+                               class="flex-1 min-w-[150px] px-4 py-3 border-2 border-emerald-300 rounded-lg focus:outline-none focus:border-emerald-600 text-lg">
+                        <button @click="addNumberRange()" 
+                                class="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition shadow-lg">
+                            إضافة نطاق
+                        </button>
+                    </div>
+                    <div class="flex gap-4 flex-wrap">
+                        <input type="number" x-model="singleNumber" placeholder="إضافة رقم واحد" 
+                               class="flex-1 min-w-[200px] px-4 py-3 border-2 border-emerald-300 rounded-lg focus:outline-none focus:border-emerald-600 text-lg">
+                        <button @click="addSingleNumber()" 
+                                class="px-8 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-lg font-bold hover:from-teal-700 hover:to-cyan-700 transition shadow-lg">
+                            إضافة رقم
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="availableNumbers.length"></div>
+                        <div class="text-lg font-semibold">الأرقام المتاحة</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="numberWinners.length"></div>
+                        <div class="text-lg font-semibold">الفائزون</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="availableNumbers.length + numberWinners.length"></div>
+                        <div class="text-lg font-semibold">المجموع الكلي</div>
+                    </div>
+                </div>
+
+                <!-- Available Numbers -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-emerald-700 mb-4">📋 الأرقام المتاحة للقرعة</h3>
+                    <div class="max-h-80 overflow-y-auto border-4 border-emerald-200 rounded-xl p-6 bg-white">
+                        <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3">
+                            <template x-for="num in availableNumbers" :key="num">
+                                <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-800 px-4 py-3 rounded-lg text-center font-bold text-lg shadow-md hover:scale-110 transition" x-text="num"></div>
+                            </template>
+                        </div>
+                        <div x-show="availableNumbers.length === 0" class="text-gray-400 text-center py-12 text-xl">
+                            لا توجد أرقام متاحة. قم بإضافة أرقام للبدء!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Winners History -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-green-700 mb-4">🏆 سجل الفائزين بالأرقام</h3>
+                    <div class="max-h-80 overflow-y-auto border-4 border-green-200 rounded-xl p-6 bg-white">
+                        <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3">
+                            <template x-for="num in numberWinners" :key="num">
+                                <div class="bg-gradient-to-br from-green-100 to-green-200 text-green-800 px-4 py-3 rounded-lg text-center font-bold text-lg shadow-md" x-text="num"></div>
+                            </template>
+                        </div>
+                        <div x-show="numberWinners.length === 0" class="text-gray-400 text-center py-12 text-xl">
+                            لم يتم السحب بعد!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <button @click="resetNumbers()" 
+                        class="w-full px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-bold text-xl hover:from-red-700 hover:to-red-800 transition shadow-xl">
+                    🔄 إعادة تعيين جميع الأرقام
+                </button>
+            </div>
+        </div>
+
+        <!-- Draw Numbers Page -->
+        <div x-show="currentPage === 'draw-numbers'" class="max-w-4xl mx-auto">
+            <div class="islamic-card shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-6 text-center border-b-4 border-emerald-600 pb-4">
+                    قرعة الأرقام
+                </h2>
+                
+                <!-- Draw Display -->
+                <div class="mb-8">
+                    <div class="islamic-pattern rounded-3xl p-16 text-center mb-6 shadow-2xl" :class="!isDrawingNumbers && currentNumberWinner ? 'winner-glow' : ''">
+                        <div x-show="!isDrawingNumbers && !currentNumberWinner" class="text-white text-3xl font-bold">
+                            🎲 جاهز لبدء القرعة! 🎲
+                        </div>
+                        <div x-show="isDrawingNumbers" class="text-white">
+                            <div class="text-8xl font-bold mb-4 animate-pulse" x-text="displayNumber"></div>
+                            <div class="text-2xl font-semibold">⏳ جاري السحب...</div>
+                        </div>
+                        <div x-show="!isDrawingNumbers && currentNumberWinner" class="text-white">
+                            <div class="text-3xl mb-4 font-bold">✨ الرقم المسحوب ✨</div>
+                            <div class="text-9xl font-bold mb-4 golden-text" x-text="currentNumberWinner"></div>
+                            <div class="text-2xl font-bold">🎊 الرقم الفائز! 🎊</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons After Draw -->
+                    <div x-show="!isDrawingNumbers && currentNumberWinner" class="mb-6">
+                        <div class="bg-yellow-50 border-4 border-yellow-400 rounded-xl p-6 mb-6 text-center">
+                            <p class="text-xl font-bold text-yellow-800 mb-2">⚠️ هل المشارك صاحب الرقم حاضر؟</p>
+                            <p class="text-gray-700">اختر الإجراء المناسب قبل السحب التالي</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <button @click="confirmNumberWinner(true)" 
+                                    class="px-8 py-8 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold text-xl transition shadow-2xl border-4 border-green-300">
+                                <div class="text-5xl mb-3">✅</div>
+                                <div class="text-2xl mb-2"> حفظ واستبعاد</div>
+                                <div class="text-sm opacity-90">سيتم حفظ الرقم وإزالته من القرعات القادمة</div>
+                            </button>
+
+                            <button @click="confirmNumberWinner(false)" 
+                                    class="px-8 py-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-2xl font-bold text-xl transition shadow-2xl border-4 border-orange-300">
+                                <div class="text-5xl mb-3">❌</div>
+                                <div class="text-2xl mb-2"> إعادة السحب</div>
+                                <div class="text-sm opacity-90">سيبقى الرقم متاحاً في السحوبات القادمة</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Start Draw Button -->
+                    <div x-show="!currentNumberWinner">
+                        <button @click="startNumberDraw()" 
+                                :disabled="isDrawingNumbers || availableNumbers.length === 0"
+                                :class="availableNumbers.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700'"
+                                class="w-full px-8 py-8 text-white rounded-2xl font-bold text-2xl transition shadow-2xl disabled:opacity-50 border-4 border-emerald-300">
+                            <div class="text-5xl mb-2">🎯</div>
+                            <span x-show="!isDrawingNumbers">ابدأ القرعة</span>
+                            <span x-show="isDrawingNumbers">⏳ جاري السحب...</span>
+                        </button>
+
+                        <div x-show="availableNumbers.length === 0" class="text-center text-red-600 mt-6 font-bold text-xl bg-red-50 p-4 rounded-lg border-2 border-red-300">
+                            ⚠️ لا توجد أرقام متاحة! الرجاء إضافة أرقام من صفحة الإدارة.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Names Page -->
+        <div x-show="currentPage === 'manage-names'" class="max-w-5xl mx-auto">
+            <div class="islamic-card shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-6 text-center border-b-4 border-amber-600 pb-4">
+                    إدارة أسماء المشاركين
+                </h2>
+                
+                <!-- Add Names Section -->
+                <div class="mb-8 bg-amber-50 p-6 rounded-xl border-2 border-amber-200">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">➕ إضافة أسماء جديدة</h3>
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="text" x-model="newName" @keyup.enter="addName()" placeholder="اكتب اسم المشارك" 
+                               class="flex-1 min-w-[250px] px-4 py-3 border-2 border-amber-300 rounded-lg focus:outline-none focus:border-amber-600 text-lg">
+                        <button @click="addName()" 
+                                class="px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg font-bold hover:from-amber-700 hover:to-orange-700 transition shadow-lg">
+                            إضافة اسم
+                        </button>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-amber-200">
+                        <label class="block text-amber-700 font-semibold mb-2">أو أضف عدة أسماء (كل اسم في سطر):</label>
+                        <textarea x-model="bulkNames" rows="4" placeholder="محمد&#10;أحمد&#10;فاطمة&#10;عائشة" 
+                                  class="w-full px-4 py-3 border-2 border-amber-300 rounded-lg focus:outline-none focus:border-amber-600 text-lg"></textarea>
+                        <button @click="addBulkNames()" 
+                                class="mt-3 px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg font-bold hover:from-orange-700 hover:to-red-700 transition shadow-md">
+                            إضافة جميع الأسماء
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="availableNames.length"></div>
+                        <div class="text-lg font-semibold">الأسماء المتاحة</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="nameWinners.length"></div>
+                        <div class="text-lg font-semibold">الفائزون</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white p-6 rounded-xl text-center shadow-xl">
+                        <div class="text-5xl font-bold mb-2" x-text="availableNames.length + nameWinners.length"></div>
+                        <div class="text-lg font-semibold">المجموع الكلي</div>
+                    </div>
+                </div>
+
+                <!-- Available Names -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-amber-700 mb-4">📋 الأسماء المتاحة للقرعة</h3>
+                    <div class="max-h-80 overflow-y-auto border-4 border-amber-200 rounded-xl p-6 bg-white">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <template x-for="(name, index) in availableNames" :key="index">
+                                <div class="bg-gradient-to-br from-purple-100 to-purple-200 text-purple-800 px-6 py-4 rounded-lg text-center font-bold text-lg shadow-md hover:scale-105 transition flex items-center justify-between">
+                                    <span x-text="name"></span>
+                                    <button @click="removeName(index)" class="text-red-600 hover:text-red-800 font-bold text-xl">×</button>
+                                </div>
+                            </template>
+                        </div>
+                        <div x-show="availableNames.length === 0" class="text-gray-400 text-center py-12 text-xl">
+                            لا توجد أسماء متاحة. قم بإضافة أسماء للبدء!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Winners History -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-green-700 mb-4">🏆 سجل الفائزين بالأسماء</h3>
+                    <div class="max-h-80 overflow-y-auto border-4 border-green-200 rounded-xl p-6 bg-white">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <template x-for="(name, index) in nameWinners" :key="index">
+                                <div class="bg-gradient-to-br from-green-100 to-green-200 text-green-800 px-6 py-4 rounded-lg text-center font-bold text-lg shadow-md" x-text="name"></div>
+                            </template>
+                        </div>
+                        <div x-show="nameWinners.length === 0" class="text-gray-400 text-center py-12 text-xl">
+                            لم يتم السحب بعد!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <button @click="resetNames()" 
+                        class="w-full px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-bold text-xl hover:from-red-700 hover:to-red-800 transition shadow-xl">
+                    🔄 إعادة تعيين جميع الأسماء
+                </button>
+            </div>
+        </div>
+
+        <!-- Draw Names Page -->
+        <div x-show="currentPage === 'draw-names'" class="max-w-4xl mx-auto">
+            <div class="islamic-card shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-6 text-center border-b-4 border-amber-600 pb-4">
+                    قرعة الأسماء
+                </h2>
+                
+                <!-- Draw Display -->
+                <div class="mb-8">
+                    <div class="islamic-pattern rounded-3xl p-16 text-center mb-6 shadow-2xl" :class="!isDrawingNames && currentNameWinner ? 'winner-glow' : ''">
+                        <div x-show="!isDrawingNames && !currentNameWinner" class="text-white text-3xl font-bold">
+                            🎲 جاهز لبدء قرعة الأسماء! 🎲
+                        </div>
+                        <div x-show="isDrawingNames" class="text-white">
+                            <div class="text-6xl font-bold mb-4 animate-pulse" x-text="displayName"></div>
+                            <div class="text-2xl font-semibold">⏳ جاري السحب...</div>
+                        </div>
+                        <div x-show="!isDrawingNames && currentNameWinner" class="text-white">
+                            <div class="text-3xl mb-4 font-bold">✨ الاسم المسحوب ✨</div>
+                            <div class="text-7xl font-bold mb-4 golden-text" x-text="currentNameWinner"></div>
+                            <div class="text-2xl font-bold">🎊 الاسم الفائز! 🎊</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons After Draw -->
+                    <div x-show="!isDrawingNames && currentNameWinner" class="mb-6">
+                        <div class="bg-yellow-50 border-4 border-yellow-400 rounded-xl p-6 mb-6 text-center">
+                            <p class="text-xl font-bold text-yellow-800 mb-2">⚠️ هل المشارك حاضر؟</p>
+                            <p class="text-gray-700">اختر الإجراء المناسب قبل السحب التالي</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <button @click="confirmNameWinner(true)" 
+                                    class="px-8 py-8 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-2xl font-bold text-xl transition shadow-2xl border-4 border-pink-300">
+                                <div class="text-5xl mb-3">✅</div>
+                                <div class="text-2xl mb-2">حاضر - حفظ واستبعاد</div>
+                                <div class="text-sm opacity-90">سيتم حفظ الاسم وإزالته من القرعات القادمة</div>
+                            </button>
+
+                            <button @click="confirmNameWinner(false)" 
+                                    class="px-8 py-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-2xl font-bold text-xl transition shadow-2xl border-4 border-orange-300">
+                                <div class="text-5xl mb-3">❌</div>
+                                <div class="text-2xl mb-2">غائب - إعادة السحب</div>
+                                <div class="text-sm opacity-90">سيبقى الاسم متاحاً في السحوبات القادمة</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Start Draw Button -->
+                    <div x-show="!currentNameWinner">
+                        <button @click="startNameDraw()" 
+                                :disabled="isDrawingNames || availableNames.length === 0"
+                                :class="availableNames.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700'"
+                                class="w-full px-8 py-8 text-white rounded-2xl font-bold text-2xl transition shadow-2xl disabled:opacity-50 border-4 border-amber-300">
+                            <div class="text-5xl mb-2">🎁</div>
+                            <span x-show="!isDrawingNames">ابدأ القرعة</span>
+                            <span x-show="isDrawingNames">⏳ جاري السحب...</span>
+                        </button>
+
+                        <div x-show="availableNames.length === 0" class="text-center text-red-600 mt-6 font-bold text-xl bg-red-50 p-4 rounded-lg border-2 border-red-300">
+                            ⚠️ لا توجد أسماء متاحة! الرجاء إضافة أسماء من صفحة الإدارة.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ <!-- Navigation -->
+        <div class="flex justify-center mt-8 mb-8 flex-wrap gap-3">
+            <button @click="currentPage = 'manage-numbers'" 
+                    :class="currentPage === 'manage-numbers' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white scale-105' : 'bg-white text-emerald-700 hover:bg-emerald-50'"
+                    class="px-6 py-3 rounded-xl font-bold shadow-lg transition-all golden-border">
+                📊 إدارة الأرقام
+            </button>
+            <button @click="currentPage = 'draw-numbers'" 
+                    :class="currentPage === 'draw-numbers' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white scale-105' : 'bg-white text-emerald-700 hover:bg-emerald-50'"
+                    class="px-6 py-3 rounded-xl font-bold shadow-lg transition-all golden-border">
+                🎯 قرعة الأرقام
+            </button>
+            <button @click="currentPage = 'manage-names'" 
+                    :class="currentPage === 'manage-names' ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white scale-105' : 'bg-white text-amber-700 hover:bg-amber-50'"
+                    class="px-6 py-3 rounded-xl font-bold shadow-lg transition-all golden-border">
+                👥 إدارة الأسماء
+            </button>
+            <button @click="currentPage = 'draw-names'" 
+                    :class="currentPage === 'draw-names' ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white scale-105' : 'bg-white text-amber-700 hover:bg-amber-50'"
+                    class="px-6 py-3 rounded-xl font-bold shadow-lg transition-all golden-border">
+                🎁 قرعة الأسماء
+            </button>
+        </div>
+        <!-- Footer -->
+        <div class="text-center mt-12 text-gray-600">
+        </div>
+    </div>
+
+    <script>
+        function lotteryApp() {
+            return {
+                currentPage: 'manage-numbers',
+                
+                // Numbers data
+                availableNumbers: [],
+                numberWinners: [],
+                startRange: '',
+                endRange: '',
+                singleNumber: '',
+                isDrawingNumbers: false,
+                displayNumber: '',
+                currentNumberWinner: null,
+                
+                // Names data
+                availableNames: [],
+                nameWinners: [],
+                newName: '',
+                bulkNames: '',
+                isDrawingNames: false,
+                displayName: '',
+                currentNameWinner: null,
+
+                init() {
+                    this.loadData();
+                },
+
+                loadData() {
+                    const stored = localStorage.getItem('lotteryData');
+                    if (stored) {
+                        const data = JSON.parse(stored);
+                        this.availableNumbers = data.availableNumbers || [];
+                        this.numberWinners = data.numberWinners || [];
+                        this.availableNames = data.availableNames || [];
+                        this.nameWinners = data.nameWinners || [];
+                    }
+                },
+
+                saveData() {
+                    localStorage.setItem('lotteryData', JSON.stringify({
+                        availableNumbers: this.availableNumbers,
+                        numberWinners: this.numberWinners,
+                        availableNames: this.availableNames,
+                        nameWinners: this.nameWinners
+                    }));
+                },
+
+                // Numbers functions
+                addNumberRange() {
+                    const start = parseInt(this.startRange);
+                    const end = parseInt(this.endRange);
+                    
+                    if (isNaN(start) || isNaN(end)) {
+                        alert('الرجاء إدخال أرقام صحيحة');
+                        return;
+                    }
+                    
+                    if (start > end) {
+                        alert('رقم البداية يجب أن يكون أقل من أو يساوي رقم النهاية');
+                        return;
+                    }
+
+                    for (let i = start; i <= end; i++) {
+                        if (!this.availableNumbers.includes(i) && !this.numberWinners.includes(i)) {
+                            this.availableNumbers.push(i);
+                        }
+                    }
+                    
+                    this.availableNumbers.sort((a, b) => a - b);
+                    this.saveData();
+                    this.startRange = '';
+                    this.endRange = '';
+                },
+
+                addSingleNumber() {
+                    const num = parseInt(this.singleNumber);
+                    
+                    if (isNaN(num)) {
+                        alert('الرجاء إدخال رقم صحيح');
+                        return;
+                    }
+                    
+                    if (this.availableNumbers.includes(num)) {
+                        alert('الرقم موجود بالفعل في الأرقام المتاحة');
+                        return;
+                    }
+                    
+                    if (this.numberWinners.includes(num)) {
+                        alert('الرقم تم سحبه كفائز من قبل');
+                        return;
+                    }
+
+                    this.availableNumbers.push(num);
+                    this.availableNumbers.sort((a, b) => a - b);
+                    this.saveData();
+                    this.singleNumber = '';
+                },
+
+                startNumberDraw() {
+                    if (this.availableNumbers.length === 0) {
+                        alert('لا توجد أرقام متاحة للسحب!');
+                        return;
+                    }
+
+                    this.isDrawingNumbers = true;
+                    let count = 0;
+                    const maxCount = 40;
+                    const interval = 80;
+
+                    const drawInterval = setInterval(() => {
+                        const randomIndex = Math.floor(Math.random() * this.availableNumbers.length);
+                        this.displayNumber = this.availableNumbers[randomIndex];
+                        count++;
+
+                        if (count >= maxCount) {
+                            clearInterval(drawInterval);
+                            this.finalizeNumberDraw();
+                        }
+                    }, interval);
+                },
+
+                finalizeNumberDraw() {
+                    const randomIndex = Math.floor(Math.random() * this.availableNumbers.length);
+                    const winner = this.availableNumbers[randomIndex];
+                    
+                    this.currentNumberWinner = winner;
+                    this.isDrawingNumbers = false;
+                },
+
+                confirmNumberWinner(saveWinner) {
+                    if (saveWinner) {
+                        // المشارك حاضر - حفظ الرقم وإزالته
+                        this.numberWinners.push(this.currentNumberWinner);
+                        const index = this.availableNumbers.indexOf(this.currentNumberWinner);
+                        if (index > -1) {
+                            this.availableNumbers.splice(index, 1);
+                        }
+                        this.saveData();
+                    }
+                    // في كلا الحالتين، إعادة تعيين الفائز الحالي للسماح بقرعة جديدة
+                    this.currentNumberWinner = null;
+                },
+
+                resetNumbers() {
+                    if (confirm('هل أنت متأكد من إعادة تعيين جميع الأرقام؟ سيتم حذف جميع الأرقام والفائزين.')) {
+                        this.availableNumbers = [];
+                        this.numberWinners = [];
+                        this.currentNumberWinner = null;
+                        this.saveData();
+                    }
+                },
+
+                // Names functions
+                addName() {
+                    const name = this.newName.trim();
+                    
+                    if (!name) {
+                        alert('الرجاء إدخال اسم');
+                        return;
+                    }
+                    
+                    if (this.availableNames.includes(name)) {
+                        alert('الاسم موجود بالفعل');
+                        return;
+                    }
+                    
+                    if (this.nameWinners.includes(name)) {
+                        alert('هذا الاسم تم سحبه كفائز من قبل');
+                        return;
+                    }
+
+                    this.availableNames.push(name);
+                    this.saveData();
+                    this.newName = '';
+                },
+
+                addBulkNames() {
+                    const names = this.bulkNames.split('\n').map(n => n.trim()).filter(n => n);
+                    
+                    if (names.length === 0) {
+                        alert('الرجاء إدخال أسماء');
+                        return;
+                    }
+
+                    let addedCount = 0;
+                    names.forEach(name => {
+                        if (!this.availableNames.includes(name) && !this.nameWinners.includes(name)) {
+                            this.availableNames.push(name);
+                            addedCount++;
+                        }
+                    });
+
+                    this.saveData();
+                    this.bulkNames = '';
+                    alert(`تم إضافة ${addedCount} اسم بنجاح`);
+                },
+
+                removeName(index) {
+                    if (confirm('هل تريد حذف هذا الاسم؟')) {
+                        this.availableNames.splice(index, 1);
+                        this.saveData();
+                    }
+                },
+
+                startNameDraw() {
+                    if (this.availableNames.length === 0) {
+                        alert('لا توجد أسماء متاحة للسحب!');
+                        return;
+                    }
+
+                    this.isDrawingNames = true;
+                    let count = 0;
+                    const maxCount = 40;
+                    const interval = 80;
+
+                    const drawInterval = setInterval(() => {
+                        const randomIndex = Math.floor(Math.random() * this.availableNames.length);
+                        this.displayName = this.availableNames[randomIndex];
+                        count++;
+
+                        if (count >= maxCount) {
+                            clearInterval(drawInterval);
+                            this.finalizeNameDraw();
+                        }
+                    }, interval);
+                },
+
+                finalizeNameDraw() {
+                    const randomIndex = Math.floor(Math.random() * this.availableNames.length);
+                    const winner = this.availableNames[randomIndex];
+                    
+                    this.currentNameWinner = winner;
+                    this.isDrawingNames = false;
+                },
+
+                confirmNameWinner(saveWinner) {
+                    if (saveWinner) {
+                        // المشارك حاضر - حفظ الاسم وإزالته
+                        this.nameWinners.push(this.currentNameWinner);
+                        const index = this.availableNames.indexOf(this.currentNameWinner);
+                        if (index > -1) {
+                            this.availableNames.splice(index, 1);
+                        }
+                        this.saveData();
+                    }
+                    // في كلا الحالتين، إعادة تعيين الفائز الحالي للسماح بقرعة جديدة
+                    this.currentNameWinner = null;
+                },
+
+                resetNames() {
+                    if (confirm('هل أنت متأكد من إعادة تعيين جميع الأسماء؟ سيتم حذف جميع الأسماء والفائزين.')) {
+                        this.availableNames = [];
+                        this.nameWinners = [];
+                        this.currentNameWinner = null;
+                        this.saveData();
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
