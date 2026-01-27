@@ -4,89 +4,222 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="متجر زهور فاخر - توصيل مجاني للطلبات فوق 100 ريال">
     <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/flower.css">
-    <title>FLOWER</title>
+    <title>متجر الزهور - Flower Shop</title>
 </head>
 <body>
 
+    <!-- Header & Navigation -->
     <header>
         <nav class="nav">
             <div class="logo">
-               <img src="img/logo.png" alt="" width="45">
+               <img src="img/logo.png" alt="Flower Shop Logo" width="50">
             </div>
             <ul>
-                <li><a href="#">الرئيسية</a></li>
-                <li><a href="#">المتجر</a></li>
-                <li><a href="#">الاتصال بنا</a></li>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="#products">المتجر</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
                 <li><a href="#" class="btn">تسجيل الدخول</a></li>
             </ul>
-            <div class="cart_container">
+            <div class="cart_container" onclick="window.location.href='cart.html'">
                 <i class="fa fa-cart-plus cart_icon" aria-hidden="true"></i>
-                <span>1</span>
+                <span style="display: none;">0</span>
             </div>
         </nav>
     </header>
 
-    <!-- top hero -->
+    <!-- Hero Section -->
     <section class="hero-section">
-        <img class="hero_img" src="./img/hero_section.png" alt="">
+        <img class="hero_img" src="./img/hero_section.png" alt="Flowers Background">
         <div class="search_container">
-            <input placeholder="البحث" class="input_search">
+            <input placeholder="ابحث عن الزهور المفضلة لديك..." class="input_search">
             <i class="fa fa-search search_icon"></i>
         </div>
         <h2 class="hero_text1">
-            <span>زهور</span> 
-            للمناسبات الخاصة
+            <span>زهور فاخرة</span> 
+            لكل مناسباتك الخاصة
         </h2>
-        <h3 class="hero_text2"> التوصيل مجاني لمن يطلب أكثر من <span class="price">100</span> ريال</h3>
+        <h3 class="hero_text2">
+            🎁 التوصيل مجاني لمن يطلب أكثر من <span class="price">100</span> ريال
+        </h3>
     </section>
 
-    <section class="item_section">
-        <div class="item_card">
-            <img src="./img/item1.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Categories Section -->
+    <section class="container" style="margin: 3rem auto;">
+        <h2 class="section-title">تصفح حسب الفئة</h2>
+        <div class="categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+            <button class="category-filter active" data-category="all" style="padding: 1rem; background: linear-gradient(135deg, #ff4d6d 0%, #c9184a 100%); color: white; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                جميع المنتجات
+            </button>
+            <button class="category-filter" data-category="roses" style="padding: 1rem; background: white; color: #c9184a; border: 2px solid #ffe4e9; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                الورود
+            </button>
+            <button class="category-filter" data-category="mixed" style="padding: 1rem; background: white; color: #c9184a; border: 2px solid #ffe4e9; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                باقات مشكلة
+            </button>
+            <button class="category-filter" data-category="orchids" style="padding: 1rem; background: white; color: #c9184a; border: 2px solid #ffe4e9; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                الأوركيد
+            </button>
+            <button class="category-filter" data-category="tulips" style="padding: 1rem; background: white; color: #c9184a; border: 2px solid #ffe4e9; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                التوليب
+            </button>
         </div>
+    </section>
 
-        <div class="item_card">
-            <img src="./img/logo.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Featured Products Section -->
+    <section class="container">
+        <h2 class="section-title">⭐ المنتجات الأكثر مبيعاً</h2>
+        <div class="item_section" id="productsList">
+            <!-- Products will be loaded here by JavaScript -->
         </div>
+    </section>
 
-        <div class="item_card">
-            <img src="./img/item1.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Special Offers Section -->
+    <section class="container" style="margin: 4rem auto; padding: 3rem 1.5rem; background: linear-gradient(135deg, rgba(255,77,109,0.05) 0%, rgba(201,24,74,0.05) 100%); border-radius: 24px;">
+        <h2 class="section-title">🎉 عروض خاصة</h2>
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <p style="font-size: 1.3rem; color: #666; margin-bottom: 1.5rem;">
+                احصل على خصم <strong style="color: #ff4d6d; font-size: 2rem;">30%</strong> على جميع الباقات المشكلة
+            </p>
+            <p style="font-size: 1.1rem; color: #999;">
+                العرض ساري حتى نهاية الشهر - لا تفوت الفرصة!
+            </p>
         </div>
+    </section>
 
-        <div class="item_card">
-            <img src="./img/logo.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Testimonials Section -->
+    <section class="container" style="margin: 4rem auto;">
+        <h2 class="section-title">💬 آراء عملائنا</h2>
+        <div id="testimonialsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+            <!-- Testimonials will be loaded by JavaScript -->
         </div>
+    </section>
 
-        <div class="item_card">
-            <img src="./img/item1.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Why Choose Us Section -->
+    <section class="container" style="margin: 4rem auto;">
+        <h2 class="section-title">لماذا نحن؟</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div style="background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 16px rgba(255,77,109,0.1);">
+                <i class="fa fa-truck" style="font-size: 3rem; color: #ff4d6d; margin-bottom: 1rem;"></i>
+                <h3 style="margin-bottom: 0.5rem; color: #2d2d2d;">توصيل سريع</h3>
+                <p style="color: #666;">نوصل طلبك في نفس اليوم</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 16px rgba(255,77,109,0.1);">
+                <i class="fa fa-shield" style="font-size: 3rem; color: #ff4d6d; margin-bottom: 1rem;"></i>
+                <h3 style="margin-bottom: 0.5rem; color: #2d2d2d;">ضمان الجودة</h3>
+                <p style="color: #666;">زهور طازجة 100%</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 16px rgba(255,77,109,0.1);">
+                <i class="fa fa-heart" style="font-size: 3rem; color: #ff4d6d; margin-bottom: 1rem;"></i>
+                <h3 style="margin-bottom: 0.5rem; color: #2d2d2d;">تغليف فاخر</h3>
+                <p style="color: #666;">تنسيق احترافي مميز</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 16px rgba(255,77,109,0.1);">
+                <i class="fa fa-phone" style="font-size: 3rem; color: #ff4d6d; margin-bottom: 1rem;"></i>
+                <h3 style="margin-bottom: 0.5rem; color: #2d2d2d;">دعم 24/7</h3>
+                <p style="color: #666;">نحن هنا لخدمتك دائماً</p>
+            </div>
         </div>
+    </section>
 
-        <div class="item_card">
-            <img src="./img/logo.png" alt="">
-            <h5>45 RO</h5>
-            <hr>
-            <a class="item_card_btn" href="">أضف الى السلة</a>
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); color: white; padding: 3rem 1.5rem 1.5rem; margin-top: 4rem;">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">عن المتجر</h3>
+                    <p style="color: #ccc; line-height: 1.8;">
+                        متجر متخصص في بيع أجمل وأفخم أنواع الزهور الطبيعية. نوفر لك تشكيلة واسعة من الباقات المناسبة لجميع المناسبات.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">روابط سريعة</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #ccc;">الرئيسية</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#products" style="color: #ccc;">المتجر</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="about.html" style="color: #ccc;">من نحن</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="contact.html" style="color: #ccc;">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">تواصل معنا</h3>
+                    <p style="color: #ccc; margin-bottom: 0.5rem;"><i class="fa fa-phone"></i> 90157772</p>
+                    <p style="color: #ccc; margin-bottom: 0.5rem;"><i class="fa fa-envelope"></i> info@flowershop.om</p>
+                    <p style="color: #ccc;"><i class="fa fa-map-marker"></i> South Mubailah, Block 10</p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">تابعنا</h3>
+                    <div style="display: flex; gap: 1rem; font-size: 1.5rem;">
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-instagram"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-facebook"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-twitter"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; padding-top: 2rem; border-top: 1px solid #444; color: #999;">
+                <p>&copy; 2026 متجر الزهور. جميع الحقوق محفوظة.</p>
+            </div>
         </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/products.js"></script>
+    <script src="./js/app.js"></script>
+    
+    <style>
+        .category-filter:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(255,77,109,0.2);
+        }
         
-    </section>
-
+        .category-filter.active {
+            background: linear-gradient(135deg, #ff4d6d 0%, #c9184a 100%) !important;
+            color: white !important;
+            border-color: transparent !important;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(255,77,109,0.1);
+            transition: 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(255,77,109,0.15);
+        }
+        
+        .testimonial-text {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 1rem 0;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #ffe4e9;
+        }
+        
+        .testimonial-author strong {
+            color: #2d2d2d;
+        }
+        
+        .testimonial-author .date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+    </style>
 
 </body>
 </html>

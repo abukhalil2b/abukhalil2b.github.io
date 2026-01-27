@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/flower.css">
+    <title>من نحن - Flower Shop</title>
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.95) 0%, rgba(201, 24, 74, 0.95) 100%);
+            color: white;
+            padding: 5rem 1.5rem;
+            text-align: center;
+        }
+
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .about-section {
+            padding: 4rem 1.5rem;
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            color: #ff4d6d;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-image {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(255, 77, 109, 0.2);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(255, 77, 109, 0.1);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(255, 77, 109, 0.2);
+        }
+
+        .value-card i {
+            font-size: 3rem;
+            color: #ff4d6d;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h3 {
+            color: #2d2d2d;
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header & Navigation -->
+    <header>
+        <nav class="nav">
+            <div class="logo">
+                <img src="img/logo.png" alt="Flower Shop Logo" width="50">
+            </div>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="index.html#products">المتجر</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="cart_container" onclick="window.location.href='cart.html'">
+                <i class="fa fa-cart-plus cart_icon" aria-hidden="true"></i>
+                <span style="display: none;">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <h1>من نحن</h1>
+        <p>🌸 متجر متخصص في بيع أجمل وأفخم أنواع الزهور الطبيعية لجميع المناسبات</p>
+    </section>
+
+    <!-- Our Story -->
+    <section class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>قصتنا</h2>
+                <p>
+                    بدأت رحلتنا من حب بسيط للزهور وشغف عميق بإدخال البهجة إلى قلوب الناس.
+                    منذ تأسيسنا، كنا نؤمن بأن الزهور ليست مجرد هدية، بل هي لغة عالمية تعبر عن
+                    المشاعر الصادقة والمحبة النقية.
+                </p>
+                <p>
+                    نحن نختار كل زهرة بعناية فائقة من أفضل المزارع المحلية والعالمية،
+                    ونحرص على أن تصل إليكم طازجة ومنسقة بأسلوب احترافي يليق بمناسباتكم الخاصة.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="./img/hero_section.png" alt="Flower Shop">
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Mission -->
+    <section class="about-section" style="background: #fff5f7;">
+        <div class="about-content" style="flex-direction: row-reverse;">
+            <div class="about-text">
+                <h2>رسالتنا</h2>
+                <p>
+                    نسعى لأن نكون الوجهة الأولى لكل من يبحث عن زهور فاخرة وخدمة متميزة.
+                    رسالتنا هي نشر الجمال والسعادة من خلال باقاتنا الرائعة التي تحمل
+                    معها أطيب الأمنيات وأجمل المشاعر.
+                </p>
+                <p>
+                    نلتزم بتقديم أعلى معايير الجودة في كل ما نقدمه، ونحرص على رضاكم
+                    الكامل من لحظة اختيار الباقة حتى وصولها إلى الشخص العزيز.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="./img/item1.png" alt="Our Mission">
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">قيمنا</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fa fa-heart"></i>
+                    <h3>الشغف</h3>
+                    <p>نحب ما نقوم به ونضع قلوبنا في كل باقة نصممها</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa fa-star"></i>
+                    <h3>الجودة</h3>
+                    <p>نختار أجود أنواع الزهور ونحرص على طزاجتها</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa fa-users"></i>
+                    <h3>رضا العملاء</h3>
+                    <p>سعادتكم هي هدفنا الأول ونجاحكم هو نجاحنا</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa fa-leaf"></i>
+                    <h3>الاستدامة</h3>
+                    <p>نهتم بالبيئة ونستخدم ممارسات مستدامة</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa fa-trophy"></i>
+                    <h3>الإبداع</h3>
+                    <p>نبتكر تصاميم فريدة تناسب ذوقكم الرفيع</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa fa-clock-o"></i>
+                    <h3>الالتزام</h3>
+                    <p>نلتزم بمواعيد التسليم ونحترم وقتكم</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+        style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); color: white; padding: 3rem 1.5rem 1.5rem; margin-top: 0;">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">عن المتجر</h3>
+                    <p style="color: #ccc; line-height: 1.8;">
+                        متجر متخصص في بيع أجمل وأفخم أنواع الزهور الطبيعية. نوفر لك تشكيلة واسعة من الباقات المناسبة
+                        لجميع المناسبات.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">روابط سريعة</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #ccc;">الرئيسية</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#products" style="color: #ccc;">المتجر</a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><a href="about.html" style="color: #ccc;">من نحن</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="contact.html" style="color: #ccc;">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">تواصل معنا</h3>
+                    <p style="color: #ccc; margin-bottom: 0.5rem;"><i class="fa fa-phone"></i> 90157772</p>
+                    <p style="color: #ccc; margin-bottom: 0.5rem;"><i class="fa fa-envelope"></i> info@flowershop.om</p>
+                    <p style="color: #ccc;"><i class="fa fa-map-marker"></i> South Mubailah, Block 10</p>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #ff4d6d;">تابعنا</h3>
+                    <div style="display: flex; gap: 1rem; font-size: 1.5rem;">
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-instagram"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-facebook"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-twitter"></i></a>
+                        <a href="#" style="color: #ff4d6d;"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; padding-top: 2rem; border-top: 1px solid #444; color: #999;">
+                <p>&copy; 2026 متجر الزهور. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/products.js"></script>
+    <script src="./js/app.js"></script>
+
+</body>
+
+</html>
