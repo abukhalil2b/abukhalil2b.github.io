@@ -1,9 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
 @font-face {
     font-family: 'helve';
     src: url(../fonts/helve.woff);
 }
-*{
+
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header_container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .links_container ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .links_container ul li {
+        font-size: 0.9rem;
+    }
 }

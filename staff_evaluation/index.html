@@ -909,30 +909,42 @@
                 </div>
 
                 <h3 style="margin: 2rem 0 1rem; color: #2563eb;">تفاصيل كل موظف:</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الموظف</th>
-                            <th>مجموع النقاط</th>
-                            <th>عدد التقييمات</th>
-                            <th>المتوسط</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${Object.keys(stats).sort().map(name => {
-                            const s = stats[name];
-                            const avg = (s.total / s.count).toFixed(1);
-                            return `
-                                <tr>
-                                    <td><strong>${name}</strong></td>
-                                    <td>${s.total}</td>
-                                    <td>${s.count}</td>
-                                    <td><span class="rating-display rating-${Math.round(avg)}">${avg}</span></td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
+                ${Object.keys(stats).sort().map(name => {
+                    const s = stats[name];
+                    const avg = (s.total / s.count).toFixed(1);
+                    return `
+                        <div style="background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; border-right: 4px solid #2563eb;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                                <h4 style="color: #1e293b; font-size: 1.25rem; margin: 0;">${name}</h4>
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <span style="background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem;">
+                                        مجموع: ${s.total}
+                                    </span>
+                                    <span style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem;">
+                                        تقييمات: ${s.count}
+                                    </span>
+                                    <span class="rating-display rating-${Math.round(avg)}" style="font-size: 0.875rem;">
+                                        متوسط: ${avg}
+                                    </span>
+                                </div>
+                            </div>
+                            ${s.notes.length > 0 ? `
+                                <div style="margin-top: 1rem;">
+                                    <h5 style="color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;">📝 جميع الملاحظات (${s.notes.length}):</h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0;">
+                                        ${s.notes.map((note, idx) => `
+                                            <li style="background: white; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-right: 3px solid #22c55e; font-size: 0.95rem;">
+                                                <span style="color: #64748b; font-size: 0.8rem;">${idx + 1}.</span> ${note}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            ` : `
+                                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">لا توجد ملاحظات مسجلة</p>
+                            `}
+                        </div>
+                    `;
+                }).join('')}
             `;
             
             showToast('تم إنشاء التقرير');

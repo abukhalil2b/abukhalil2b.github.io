@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المهام اليومية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            direction: rtl;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 2rem 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header p {
+            opacity: 0.9;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .date-display {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .add-task {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .task-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .priority-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .priority-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .priority-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .priority-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .priority-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .priority-btn.high.active {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .priority-btn.medium.active {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+        .priority-btn.low.active {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .tasks-list {
+            margin-top: 1rem;
+            min-height: 200px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+            border-right: 4px solid #667eea;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .task-item:hover {
+            background: #f1f5f9;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-item.completed {
+            border-right-color: #22c55e;
+            background: #f0fdf4;
+            opacity: 0.8;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .task-item.priority-high {
+            border-right-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .task-item.priority-medium {
+            border-right-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .task-item.priority-low {
+            border-right-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .task-checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+
+        .task-checkbox:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.1);
+        }
+
+        .task-item.completed .task-checkbox {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .task-text {
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .priority-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        .priority-badge.high {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .priority-badge.medium {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .priority-badge.low {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-edit,
+        .task-delete {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .task-edit {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .task-edit:hover {
+            background: #0284c7;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .task-delete {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .task-delete:hover {
+            background: #ef4444;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .clear-completed,
+        .sort-btn {
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 12px;
+            color: #64748b;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clear-completed:hover,
+        .sort-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .search-box {
+            margin-top: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.success { background: #22c55e; }
+        .toast.error { background: #ef4444; }
+        .toast.info { background: #3b82f6; }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        .btn-cancel {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #475569;
+        }
+
+        .btn-save {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #5568d3;
+        }
+
+        .progress-ring {
+            margin: 1rem auto;
+            width: 120px;
+            height: 120px;
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: -90px;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #667eea;
+        }
+
+        .progress-label {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.5rem; }
+            .add-task { flex-direction: column; }
+            .btn { width: 100%; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .priority-selector { flex-wrap: wrap; }
+            .action-buttons { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" x-data="taskManager()">
+        <div class="header">
+            <h1>📋 المهام اليومية</h1>
+            <p>نظم يومك وأنجز مهامك بكفاءة</p>
+            <div class="date-display" x-text="currentDate"></div>
+        </div>
+
+        <div class="card">
+            <!-- Progress Ring -->
+            <div x-show="tasks.length > 0">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                    <circle
+                        class="progress-ring__circle"
+                        :stroke="completionRate === 100 ? '#22c55e' : '#667eea'"
+                        stroke-width="8"
+                        fill="transparent"
+                        r="52"
+                        cx="60"
+                        cy="60"
+                        :stroke-dasharray="`${2 * Math.PI * 52}`"
+                        :stroke-dashoffset="`${2 * Math.PI * 52 * (1 - completionRate / 100)}`"
+                    />
+                    <circle
+                        stroke="#e2e8f0"
+                        stroke-width="8"
+                        fill="transparent"
+                        r="52"
+                        cx="60"
+                        cy="60"
+                    />
+                </svg>
+                <div class="progress-text" x-text="`${Math.round(completionRate)}%`"></div>
+                <div class="progress-label">نسبة الإنجاز</div>
+            </div>
+
+            <!-- Add Task Form -->
+            <div class="add-task">
+                <input 
+                    type="text" 
+                    x-model="newTaskText"
+                    @keyup.enter="addTask"
+                    class="task-input" 
+                    placeholder="أضف مهمة جديدة..."
+                >
+                <button class="btn btn-primary" @click="addTask">➕ إضافة</button>
+            </div>
+
+            <!-- Priority Selector -->
+            <div class="priority-selector">
+                <span class="priority-label">الأولوية:</span>
+                <button 
+                    class="priority-btn low"
+                    :class="{ 'active': newTaskPriority === 'low' }"
+                    @click="newTaskPriority = 'low'"
+                >
+                    🔵 منخفضة
+                </button>
+                <button 
+                    class="priority-btn medium"
+                    :class="{ 'active': newTaskPriority === 'medium' }"
+                    @click="newTaskPriority = 'medium'"
+                >
+                    🟡 متوسطة
+                </button>
+                <button 
+                    class="priority-btn high"
+                    :class="{ 'active': newTaskPriority === 'high' }"
+                    @click="newTaskPriority = 'high'"
+                >
+                    🔴 عالية
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat" @click="currentFilter = 'all'; updateFilter()">
+                    <div class="stat-value" x-text="tasks.length"></div>
+                    <div class="stat-label">المهام</div>
+                </div>
+                <div class="stat" @click="currentFilter = 'completed'; updateFilter()">
+                    <div class="stat-value" x-text="completedCount" style="color: #22c55e;"></div>
+                    <div class="stat-label">مكتملة</div>
+                </div>
+                <div class="stat" @click="currentFilter = 'pending'; updateFilter()">
+                    <div class="stat-value" x-text="pendingCount" style="color: #f59e0b;"></div>
+                    <div class="stat-label">قيد الانتظار</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" x-text="highPriorityCount" style="color: #ef4444;"></div>
+                    <div class="stat-label">عالية الأولوية</div>
+                </div>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="filter-btns">
+                <button 
+                    class="filter-btn"
+                    :class="{ 'active': currentFilter === 'all' }"
+                    @click="currentFilter = 'all'; updateFilter()"
+                >
+                    الكل
+                </button>
+                <button 
+                    class="filter-btn"
+                    :class="{ 'active': currentFilter === 'pending' }"
+                    @click="currentFilter = 'pending'; updateFilter()"
+                >
+                    قيد الانتظار
+                </button>
+                <button 
+                    class="filter-btn"
+                    :class="{ 'active': currentFilter === 'completed' }"
+                    @click="currentFilter = 'completed'; updateFilter()"
+                >
+                    مكتملة
+                </button>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    x-model="searchQuery"
+                    class="search-input" 
+                    placeholder="🔍 ابحث في المهام..."
+                >
+            </div>
+
+            <!-- Tasks List -->
+            <div class="tasks-list">
+                <template x-if="filteredTasks.length === 0">
+                    <div class="empty-state">
+                        <div class="empty-icon" x-text="currentFilter === 'completed' ? '🎉' : '📝'"></div>
+                        <p x-text="emptyMessage"></p>
+                    </div>
+                </template>
+
+                <template x-for="task in filteredTasks" :key="task.id">
+                    <div 
+                        class="task-item"
+                        :class="{
+                            'completed': task.completed,
+                            'priority-high': task.priority === 'high' && !task.completed,
+                            'priority-medium': task.priority === 'medium' && !task.completed,
+                            'priority-low': task.priority === 'low' && !task.completed
+                        }"
+                        x-transition
+                    >
+                        <div class="task-checkbox" @click="toggleTask(task.id)">
+                            <span x-show="task.completed">✓</span>
+                        </div>
+                        <div class="task-content">
+                            <span class="task-text" x-text="task.text"></span>
+                            <div class="task-meta">
+                                <span 
+                                    class="priority-badge"
+                                    :class="task.priority"
+                                    x-text="getPriorityLabel(task.priority)"
+                                ></span>
+                                <span x-text="formatTime(task.createdAt)"></span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-edit" @click="editTask(task)">✏️</button>
+                            <button class="task-delete" @click="deleteTask(task.id)">×</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="clear-completed" @click="clearCompleted">
+                    🗑️ مسح المهام المكتملة
+                </button>
+                <button class="sort-btn" @click="toggleSort">
+                    <span x-text="sortOrder === 'desc' ? '↓ الأحدث أولاً' : '↑ الأقدم أولاً'"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div x-show="editingTask" class="modal" @click.self="editingTask = null">
+            <div class="modal-content">
+                <h3 class="modal-title">✏️ تعديل المهمة</h3>
+                <input 
+                    type="text" 
+                    x-model="editText"
+                    class="modal-input"
+                    placeholder="نص المهمة"
+                >
+                <div class="priority-selector" style="justify-content: center; margin-bottom: 1rem;">
+                    <button 
+                        class="priority-btn low"
+                        :class="{ 'active': editPriority === 'low' }"
+                        @click="editPriority = 'low'"
+                    >
+                        🔵 منخفضة
+                    </button>
+                    <button 
+                        class="priority-btn medium"
+                        :class="{ 'active': editPriority === 'medium' }"
+                        @click="editPriority = 'medium'"
+                    >
+                        🟡 متوسطة
+                    </button>
+                    <button 
+                        class="priority-btn high"
+                        :class="{ 'active': editPriority === 'high' }"
+                        @click="editPriority = 'high'"
+                    >
+                        🔴 عالية
+                    </button>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" @click="editingTask = null">إلغاء</button>
+                    <button class="btn btn-save" @click="saveEdit">حفظ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div 
+            x-show="toast.show"
+            x-transition
+            class="toast"
+            :class="toast.type"
+            x-text="toast.message"
+        ></div>
+    </div>
+
+    <script>
+        function taskManager() {
+            return {
+                tasks: JSON.parse(localStorage.getItem('daily_tasks_alpine')) || [],
+                newTaskText: '',
+                newTaskPriority: 'medium',
+                currentFilter: 'all',
+                searchQuery: '',
+                sortOrder: 'desc',
+                editingTask: null,
+                editText: '',
+                editPriority: 'medium',
+                currentDate: '',
+                toast: {
+                    show: false,
+                    message: '',
+                    type: 'success'
+                },
+
+                init() {
+                    this.updateDate();
+                    setInterval(() => this.updateDate(), 60000);
+                },
+
+                updateDate() {
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    this.currentDate = new Date().toLocaleDateString('ar-SA', options);
+                },
+
+                get completedCount() {
+                    return this.tasks.filter(t => t.completed).length;
+                },
+
+                get pendingCount() {
+                    return this.tasks.filter(t => !t.completed).length;
+                },
+
+                get highPriorityCount() {
+                    return this.tasks.filter(t => t.priority === 'high' && !t.completed).length;
+                },
+
+                get completionRate() {
+                    if (this.tasks.length === 0) return 0;
+                    return (this.completedCount / this.tasks.length) * 100;
+                },
+
+                get filteredTasks() {
+                    let filtered = this.tasks;
+
+                    // Filter by status
+                    if (this.currentFilter === 'completed') {
+                        filtered = filtered.filter(t => t.completed);
+                    } else if (this.currentFilter === 'pending') {
+                        filtered = filtered.filter(t => !t.completed);
+                    }
+
+                    // Filter by search query
+                    if (this.searchQuery.trim()) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(t => 
+                            t.text.toLowerCase().includes(query) ||
+                            this.getPriorityLabel(t.priority).includes(query)
+                        );
+                    }
+
+                    // Sort
+                    return filtered.sort((a, b) => {
+                        // First sort by completion status
+                        if (a.completed !== b.completed) {
+                            return a.completed ? 1 : -1;
+                        }
+                        
+                        // Then by priority
+                        const priorityOrder = { high: 0, medium: 1, low: 2 };
+                        if (!a.completed && !b.completed) {
+                            const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+                            if (priorityDiff !== 0) return priorityDiff;
+                        }
+                        
+                        // Finally by date
+                        const dateA = new Date(a.createdAt);
+                        const dateB = new Date(b.createdAt);
+                        return this.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+                    });
+                },
+
+                get emptyMessage() {
+                    if (this.searchQuery.trim()) {
+                        return 'لا توجد نتائج للبحث';
+                    }
+                    if (this.currentFilter === 'completed') {
+                        return 'لم تكمل أي مهمة بعد';
+                    }
+                    if (this.currentFilter === 'pending') {
+                        return 'لا توجد مهام قيد الانتظار';
+                    }
+                    return 'لا توجد مهام. أضف مهمة جديدة!';
+                },
+
+                addTask() {
+                    if (!this.newTaskText.trim()) {
+                        this.showToast('أدخل نص المهمة', 'error');
+                        return;
+                    }
+
+                    this.tasks.push({
+                        id: Date.now(),
+                        text: this.newTaskText.trim(),
+                        completed: false,
+                        priority: this.newTaskPriority,
+                        createdAt: new Date().toISOString()
+                    });
+
+                    this.saveTasks();
+                    this.newTaskText = '';
+                    this.newTaskPriority = 'medium';
+                    this.showToast('✓ تمت إضافة المهمة');
+                },
+
+                toggleTask(id) {
+                    const task = this.tasks.find(t => t.id === id);
+                    if (task) {
+                        task.completed = !task.completed;
+                        this.saveTasks();
+                        this.showToast(task.completed ? 'تم إكمال المهمة ✓' : 'تم إلغاء الإكمال', 'info');
+                    }
+                },
+
+                deleteTask(id) {
+                    this.tasks = this.tasks.filter(t => t.id !== id);
+                    this.saveTasks();
+                    this.showToast('تم حذف المهمة');
+                },
+
+                editTask(task) {
+                    this.editingTask = task.id;
+                    this.editText = task.text;
+                    this.editPriority = task.priority;
+                },
+
+                saveEdit() {
+                    if (!this.editText.trim()) {
+                        this.showToast('أدخل نص المهمة', 'error');
+                        return;
+                    }
+
+                    const task = this.tasks.find(t => t.id === this.editingTask);
+                    if (task) {
+                        task.text = this.editText.trim();
+                        task.priority = this.editPriority;
+                        this.saveTasks();
+                        this.showToast('✓ تم تحديث المهمة');
+                    }
+                    this.editingTask = null;
+                },
+
+                clearCompleted() {
+                    const completedCount = this.tasks.filter(t => t.completed).length;
+                    if (completedCount === 0) {
+                        this.showToast('لا توجد مهام مكتملة', 'error');
+                        return;
+                    }
+                    this.tasks = this.tasks.filter(t => !t.completed);
+                    this.saveTasks();
+                    this.showToast(`تم حذف ${completedCount} مهمة مكتملة`);
+                },
+
+                toggleSort() {
+                    this.sortOrder = this.sortOrder === 'desc' ? 'asc' : 'desc';
+                },
+
+                updateFilter() {
+                    // Just for triggering reactive updates
+                },
+
+                getPriorityLabel(priority) {
+                    const labels = {
+                        high: 'عالية',
+                        medium: 'متوسطة',
+                        low: 'منخفضة'
+                    };
+                    return labels[priority];
+                },
+
+                formatTime(timestamp) {
+                    const date = new Date(timestamp);
+                    const now = new Date();
+                    const diff = now - date;
+                    const hours = Math.floor(diff / 3600000);
+                    
+                    if (hours < 1) {
+                        return 'الآن';
+                    } else if (hours < 24) {
+                        return `منذ ${hours} ساعة`;
+                    } else {
+                        const days = Math.floor(hours / 24);
+                        return `منذ ${days} يوم`;
+                    }
+                },
+
+                saveTasks() {
+                    localStorage.setItem('daily_tasks_alpine', JSON.stringify(this.tasks));
+                },
+
+                showToast(message, type = 'success') {
+                    this.toast = { show: true, message, type };
+                    setTimeout(() => {
+                        this.toast.show = false;
+                    }, 3000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

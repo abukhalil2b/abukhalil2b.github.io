@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
 @font-face {
     font-family: 'helve';
     src: url(../helve.woff);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
 }
 
 .material-icons{
@@ -10,4 +20,26 @@
 .alink{
     text-decoration: none;
     color: grey;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header_container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .links_container ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .links_container ul li {
+        font-size: 0.9rem;
+    }
+    
+    .login_button {
+        margin-top: 1rem;
+    }
 }

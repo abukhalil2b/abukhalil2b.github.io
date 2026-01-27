@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المصروفات الشهرية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+            min-height: 100vh;
+            direction: rtl;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 2rem 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .month-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .month-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+        }
+
+        .month-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .current-month {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .total-display {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .total-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30%, -30%); }
+        }
+
+        .total-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+        }
+
+        .total-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-stat {
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border: 3px solid transparent;
+        }
+
+        .category-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .category-stat.selected {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(15, 118, 110, 0.3);
+            border-color: #0f766e;
+        }
+
+        .category-stat.fuel { background: #fef3c7; }
+        .category-stat.fruits { background: #dcfce7; }
+        .category-stat.home { background: #dbeafe; }
+        .category-stat.other { background: #f3e8ff; }
+
+        .category-stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-stat-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .category-stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .category-stat-count {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .selected-category-indicator {
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .selected-category-indicator button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .selected-category-indicator button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .quick-add-section {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .quick-add-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .quick-amount-btn {
+            padding: 0.75rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0f766e;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-amount-btn:hover {
+            background: #0f766e;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .add-expense {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(15, 118, 110, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .expenses-list {
+            margin-top: 1.5rem;
+        }
+
+        .expenses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .expenses-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .sort-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sort-btn:hover {
+            border-color: #0f766e;
+            color: #0f766e;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        .expense-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .expense-item:hover {
+            background: #f1f5f9;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .expense-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .expense-icon.fuel { background: #fef3c7; }
+        .expense-icon.fruits { background: #dcfce7; }
+        .expense-icon.home { background: #dbeafe; }
+        .expense-icon.other { background: #f3e8ff; }
+
+        .expense-details {
+            flex: 1;
+        }
+
+        .expense-category {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .expense-desc {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .expense-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f766e;
+        }
+
+        .expense-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .expense-edit,
+        .expense-delete {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .expense-edit {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .expense-edit:hover {
+            background: #0284c7;
+            color: white;
+        }
+
+        .expense-delete {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .expense-delete:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .toast.success { background: #22c55e; }
+        .toast.error { background: #ef4444; }
+        .toast.info { background: #3b82f6; }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title.delete { color: #ef4444; }
+        .modal-title.edit { color: #0284c7; }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        .btn-cancel {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #475569;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-info {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #0369a1;
+        }
+
+        .edit-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .edit-category-btn {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .edit-category-btn:hover {
+            border-color: #0f766e;
+        }
+
+        .edit-category-btn.selected {
+            border-color: #0f766e;
+            background: rgba(15, 118, 110, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.5rem; }
+            .form-row { flex-direction: column; }
+            .category-stats { grid-template-columns: repeat(2, 1fr); }
+            .total-amount { font-size: 2.5rem; }
+            .quick-amounts { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" x-data="expensesApp()">
+        <div class="header">
+            <h1>💰 المصروفات الشهرية</h1>
+            <p>تتبع مصروفاتك الشهرية بسهولة</p>
+            <div class="month-selector">
+                <button class="month-btn" @click="changeMonth(-1)">◀ السابق</button>
+                <span class="current-month" x-text="currentMonthDisplay"></span>
+                <button class="month-btn" @click="changeMonth(1)" :disabled="isCurrentMonth">التالي ▶</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="total-display">
+                <div class="total-label">إجمالي المصروفات</div>
+                <div class="total-amount"><span x-text="totalAmount.toFixed(2)"></span> ر.ع</div>
+            </div>
+
+            <div class="section-title">📊 اختر التصنيف للإضافة</div>
+
+            <div class="category-stats">
+                <template x-for="cat in categories" :key="cat.id">
+                    <div 
+                        class="category-stat" 
+                        :class="[cat.id, selectedCategory === cat.id ? 'selected' : '']"
+                        @click="selectCategory(cat.id)"
+                    >
+                        <div class="category-stat-icon" x-text="cat.icon"></div>
+                        <div class="category-stat-amount" x-text="getCategoryTotal(cat.id).toFixed(2)"></div>
+                        <div class="category-stat-label" x-text="cat.name"></div>
+                        <div class="category-stat-count" x-text="getCategoryCount(cat.id) + ' مصروف'"></div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Selected Category Indicator -->
+            <template x-if="selectedCategory">
+                <div class="selected-category-indicator">
+                    <span>
+                        <span x-text="getCategoryIcon(selectedCategory)"></span>
+                        تم اختيار: <strong x-text="getCategoryName(selectedCategory)"></strong>
+                    </span>
+                    <button @click="selectedCategory = null">✕ إلغاء</button>
+                </div>
+            </template>
+
+            <div class="quick-add-section">
+                <div class="quick-add-title">⚡ إضافة سريعة</div>
+                <div class="quick-amounts">
+                    <button class="quick-amount-btn" @click="quickAdd(5)">5 ر.ع</button>
+                    <button class="quick-amount-btn" @click="quickAdd(10)">10 ر.ع</button>
+                    <button class="quick-amount-btn" @click="quickAdd(20)">20 ر.ع</button>
+                    <button class="quick-amount-btn" @click="quickAdd(50)">50 ر.ع</button>
+                </div>
+            </div>
+
+            <div class="add-expense">
+                <div class="form-row">
+                    <input 
+                        type="number" 
+                        x-model="newAmount" 
+                        class="form-input" 
+                        placeholder="المبلغ" 
+                        step="0.01"
+                        @keyup.enter="addExpense"
+                    >
+                </div>
+                <input 
+                    type="text" 
+                    x-model="newDesc" 
+                    class="form-input" 
+                    placeholder="الوصف (اختياري)"
+                    @keyup.enter="addExpense"
+                >
+                <button 
+                    class="btn btn-primary" 
+                    @click="addExpense"
+                    :disabled="!selectedCategory || !newAmount"
+                >
+                    ➕ إضافة مصروف
+                </button>
+            </div>
+
+            <div class="expenses-list">
+                <div class="expenses-header">
+                    <div class="expenses-title">📋 المصروفات (<span x-text="filteredExpenses.length"></span>)</div>
+                    <button class="sort-btn" @click="toggleSort">
+                        <span x-text="sortOrder === 'desc' ? '↓' : '↑'"></span>
+                        <span x-text="sortOrder === 'desc' ? 'الأحدث' : 'الأقدم'"></span>
+                    </button>
+                </div>
+                
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        x-model="searchTerm" 
+                        class="search-input" 
+                        placeholder="🔍 ابحث في المصروفات..."
+                    >
+                </div>
+
+                <template x-if="filteredExpenses.length === 0">
+                    <div class="empty-state">
+                        <div class="empty-icon">💸</div>
+                        <p x-text="searchTerm ? 'لا توجد نتائج للبحث' : 'لا توجد مصروفات لهذا الشهر'"></p>
+                    </div>
+                </template>
+
+                <template x-for="expense in filteredExpenses" :key="expense.id">
+                    <div class="expense-item">
+                        <div class="expense-icon" :class="expense.category" x-text="getCategoryIcon(expense.category)"></div>
+                        <div class="expense-details">
+                            <div class="expense-category">
+                                <span x-text="getCategoryName(expense.category)"></span> • 
+                                <span x-text="formatExpenseDate(expense.date)"></span>
+                            </div>
+                            <div class="expense-desc" x-text="expense.desc"></div>
+                        </div>
+                        <div class="expense-amount" x-text="expense.amount.toFixed(2)"></div>
+                        <div class="expense-actions">
+                            <button class="expense-edit" @click="openEditModal(expense)" title="تعديل">✏️</button>
+                            <button class="expense-delete" @click="openDeleteModal(expense.id)" title="حذف">×</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <template x-if="showDeleteModal">
+            <div class="modal" @click.self="showDeleteModal = false">
+                <div class="modal-content">
+                    <h3 class="modal-title delete">⚠️ تأكيد الحذف</h3>
+                    <p>هل أنت متأكد من حذف هذا المصروف؟</p>
+                    <div class="modal-buttons">
+                        <button class="btn btn-cancel" @click="showDeleteModal = false">إلغاء</button>
+                        <button class="btn btn-danger" @click="confirmDelete">حذف</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Edit Modal -->
+        <template x-if="showEditModal">
+            <div class="modal" @click.self="showEditModal = false">
+                <div class="modal-content">
+                    <h3 class="modal-title edit">✏️ تعديل المصروف</h3>
+                    <div style="text-align: right; margin-top: 1rem;">
+                        <input 
+                            type="number" 
+                            x-model="editAmount" 
+                            class="form-input" 
+                            placeholder="المبلغ" 
+                            step="0.01" 
+                            style="margin-bottom: 0.75rem;"
+                        >
+                        <div class="edit-categories">
+                            <template x-for="cat in categories" :key="cat.id">
+                                <button 
+                                    class="edit-category-btn"
+                                    :class="editCategory === cat.id ? 'selected' : ''"
+                                    @click="editCategory = cat.id"
+                                >
+                                    <span x-text="cat.icon"></span>
+                                    <span x-text="cat.name"></span>
+                                </button>
+                            </template>
+                        </div>
+                        <input 
+                            type="text" 
+                            x-model="editDesc" 
+                            class="form-input" 
+                            placeholder="الوصف"
+                        >
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn btn-cancel" @click="showEditModal = false">إلغاء</button>
+                        <button class="btn btn-info" @click="confirmEdit">حفظ</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Toast -->
+        <template x-if="toast.show">
+            <div class="toast" :class="toast.type" x-text="toast.message"></div>
+        </template>
+    </div>
+
+    <script>
+        function expensesApp() {
+            return {
+                // Data
+                expenses: JSON.parse(localStorage.getItem('monthly_expenses')) || {},
+                currentDate: new Date(),
+                selectedCategory: null,
+                newAmount: '',
+                newDesc: '',
+                searchTerm: '',
+                sortOrder: 'desc',
+                
+                // Modals
+                showDeleteModal: false,
+                showEditModal: false,
+                expenseToDelete: null,
+                expenseToEdit: null,
+                editAmount: '',
+                editCategory: '',
+                editDesc: '',
+                
+                // Toast
+                toast: { show: false, message: '', type: 'success' },
+                
+                // Categories
+                categories: [
+                    { id: 'fuel', name: 'الوقود', icon: '⛽' },
+                    { id: 'fruits', name: 'الفواكه', icon: '🍎' },
+                    { id: 'home', name: 'المنزل', icon: '🏠' },
+                    { id: 'other', name: 'أخرى', icon: '📦' }
+                ],
+
+                // Computed
+                get monthKey() {
+                    return `${this.currentDate.getFullYear()}-${String(this.currentDate.getMonth() + 1).padStart(2, '0')}`;
+                },
+
+                get currentMonthDisplay() {
+                    const options = { year: 'numeric', month: 'long' };
+                    return this.currentDate.toLocaleDateString('ar-SA', options);
+                },
+
+                get isCurrentMonth() {
+                    const now = new Date();
+                    return this.currentDate.getFullYear() >= now.getFullYear() && 
+                           this.currentDate.getMonth() >= now.getMonth();
+                },
+
+                get monthExpenses() {
+                    return this.expenses[this.monthKey] || [];
+                },
+
+                get totalAmount() {
+                    return this.monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+                },
+
+                get filteredExpenses() {
+                    let filtered = [...this.monthExpenses];
+                    
+                    if (this.searchTerm) {
+                        const term = this.searchTerm.toLowerCase();
+                        filtered = filtered.filter(e => 
+                            e.desc.toLowerCase().includes(term) ||
+                            this.getCategoryName(e.category).toLowerCase().includes(term) ||
+                            e.amount.toString().includes(term)
+                        );
+                    }
+                    
+                    filtered.sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        return this.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+                    });
+                    
+                    return filtered;
+                },
+
+                // Methods
+                init() {
+                    // Auto-save on changes
+                    this.$watch('expenses', () => this.saveExpenses(), { deep: true });
+                },
+
+                saveExpenses() {
+                    localStorage.setItem('monthly_expenses', JSON.stringify(this.expenses));
+                },
+
+                showToast(message, type = 'success') {
+                    this.toast = { show: true, message, type };
+                    setTimeout(() => this.toast.show = false, 3000);
+                },
+
+                selectCategory(categoryId) {
+                    this.selectedCategory = this.selectedCategory === categoryId ? null : categoryId;
+                },
+
+                getCategoryTotal(categoryId) {
+                    return this.monthExpenses
+                        .filter(e => e.category === categoryId)
+                        .reduce((sum, e) => sum + e.amount, 0);
+                },
+
+                getCategoryCount(categoryId) {
+                    return this.monthExpenses.filter(e => e.category === categoryId).length;
+                },
+
+                getCategoryName(categoryId) {
+                    const cat = this.categories.find(c => c.id === categoryId);
+                    return cat ? cat.name : '';
+                },
+
+                getCategoryIcon(categoryId) {
+                    const cat = this.categories.find(c => c.id === categoryId);
+                    return cat ? cat.icon : '';
+                },
+
+                formatExpenseDate(dateStr) {
+                    const date = new Date(dateStr);
+                    return `${date.getDate()}/${date.getMonth() + 1}`;
+                },
+
+                changeMonth(delta) {
+                    const newDate = new Date(this.currentDate);
+                    newDate.setMonth(newDate.getMonth() + delta);
+                    this.currentDate = newDate;
+                    this.selectedCategory = null;
+                },
+
+                quickAdd(amount) {
+                    this.newAmount = amount;
+                    this.showToast(`تم تعيين المبلغ: ${amount} ر.ع`, 'info');
+                },
+
+                addExpense() {
+                    const amount = parseFloat(this.newAmount);
+                    
+                    if (!this.selectedCategory) {
+                        this.showToast('اختر تصنيف أولاً', 'error');
+                        return;
+                    }
+                    
+                    if (!amount || amount <= 0) {
+                        this.showToast('أدخل مبلغ صحيح', 'error');
+                        return;
+                    }
+
+                    if (!this.expenses[this.monthKey]) {
+                        this.expenses[this.monthKey] = [];
+                    }
+
+                    this.expenses[this.monthKey].push({
+                        id: Date.now(),
+                        amount: amount,
+                        category: this.selectedCategory,
+                        desc: this.newDesc.trim() || this.getCategoryName(this.selectedCategory),
+                        date: new Date().toISOString()
+                    });
+
+                    this.newAmount = '';
+                    this.newDesc = '';
+                    this.showToast('✓ تمت إضافة المصروف');
+                },
+
+                toggleSort() {
+                    this.sortOrder = this.sortOrder === 'desc' ? 'asc' : 'desc';
+                },
+
+                openDeleteModal(id) {
+                    this.expenseToDelete = id;
+                    this.showDeleteModal = true;
+                },
+
+                confirmDelete() {
+                    if (this.expenses[this.monthKey]) {
+                        this.expenses[this.monthKey] = this.expenses[this.monthKey].filter(e => e.id !== this.expenseToDelete);
+                        this.showToast('✓ تم حذف المصروف');
+                    }
+                    this.showDeleteModal = false;
+                    this.expenseToDelete = null;
+                },
+
+                openEditModal(expense) {
+                    this.expenseToEdit = expense.id;
+                    this.editAmount = expense.amount;
+                    this.editCategory = expense.category;
+                    this.editDesc = expense.desc;
+                    this.showEditModal = true;
+                },
+
+                confirmEdit() {
+                    const amount = parseFloat(this.editAmount);
+                    
+                    if (!amount || amount <= 0) {
+                        this.showToast('أدخل مبلغ صحيح', 'error');
+                        return;
+                    }
+
+                    const expense = this.expenses[this.monthKey].find(e => e.id === this.expenseToEdit);
+                    if (expense) {
+                        expense.amount = amount;
+                        expense.category = this.editCategory;
+                        expense.desc = this.editDesc.trim() || this.getCategoryName(this.editCategory);
+                        this.showToast('✓ تم تحديث المصروف');
+                    }
+                    
+                    this.showEditModal = false;
+                    this.expenseToEdit = null;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
