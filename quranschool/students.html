@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>إدارة الطلاب - نظام الحلقات</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/data.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#065F46",
+                        "primary-light": "#10B981",
+                        "primary-dark": "#064E3B",
+                        "background-light": "#f7f7f6",
+                        "background-dark": "#1d1a15",
+                        "accent": "#059669",
+                        "charcoal": "#2D3748"
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif']
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: #2D3748;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(6, 95, 70, 0.08);
+            border-right: 4px solid #065F46;
+            color: #065F46 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #065F46;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-charcoal dark:text-gray-200 antialiased">
+    <div x-data="studentsApp()" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-[#0a150e] border-l border-primary/10 dark:border-gray-800 flex flex-col fixed h-full right-0 z-20">
+            <div class="p-6 flex flex-col items-center gap-2 border-b border-primary/10 dark:border-gray-800">
+                <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-4xl">auto_stories</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl leading-tight text-primary">نظام الحلقات</h1>
+                    <p class="text-[10px] text-primary-light font-medium">مؤسسة مستهيل الوقفية</p>
+                    <p class="text-[8px] text-primary-light">سلطنة عمان</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">القائمة الرئيسية</div>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="dashboard.html">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>لوحة التحكم</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg sidebar-active font-bold" href="students.html">
+                    <span class="material-symbols-outlined">school</span>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="teachers.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>المعلمون</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="branches.html">
+                    <span class="material-symbols-outlined">mosque</span>
+                    <span>الأفرع والحلقات</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="tasks.html">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span>مهام الحفظ والتلاوة</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>إدارة المسابقات</span>
+                </a>
+                
+                <div class="pt-6">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">النظام</div>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>التقارير</span>
+                    </a>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-primary/10 dark:border-gray-800">
+                <div class="bg-primary/10 p-3 rounded-xl border border-primary/20">
+                    <p class="text-xs font-bold text-primary mb-1 text-center">تحتاج مساعدة؟</p>
+                    <p class="text-[10px] text-primary-light mb-2 text-center">تواصل مع الدعم الفني للمدرسة</p>
+                    <button class="w-full py-1.5 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-primary-dark transition-colors">مركز الدعم</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 mr-64">
+            <!-- Header -->
+            <header class="h-20 bg-white/80 dark:bg-[#0a150e]/80 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10 dark:border-gray-800 px-8 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center overflow-hidden">
+                        <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                            <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                            <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                            <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                            <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <p class="text-sm font-bold leading-none text-primary">أحمد</p>
+                        <p class="text-[10px] text-primary-light mt-1">مدير النظام العام</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6 flex-1 justify-end">
+                    <div class="relative max-w-md w-full">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary-light text-xl">search</span>
+                        <input x-model="searchQuery" class="w-full pr-10 pl-4 py-2.5 bg-primary/5 dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary-light" placeholder="بحث عن طالب..." type="text"/>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-8">
+                <!-- Page Title -->
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight mb-2 text-primary">إدارة الطلاب</h2>
+                        <p class="text-primary-light flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">school</span>
+                            إضافة وتعديل بيانات الطلاب
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="showAddModal = true" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">person_add</span>
+                            إضافة طالب جديد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">إجمالي الطلاب</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="students.length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">group</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">الطلاب النشطون</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="students.filter(s => s.status === 'active').length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">check_circle</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">المسجلون هذا الشهر</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="getThisMonthCount()"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">person_add</span>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                        <h4 class="font-bold text-primary">قائمة الطلاب</h4>
+                        <span class="text-xs text-primary-light" x-text="'عدد النتائج: ' + filteredStudents().length"></span>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-white/5 text-primary-light">
+                                    <th class="px-6 py-3 font-medium">#</th>
+                                    <th class="px-6 py-3 font-medium">اسم الطالب</th>
+                                    <th class="px-6 py-3 font-medium">رقم الهوية</th>
+                                    <th class="px-6 py-3 font-medium">تاريخ الميلاد</th>
+                                    <th class="px-6 py-3 font-medium">رقم التواصل</th>
+                                    <th class="px-6 py-3 font-medium">ولي الأمر</th>
+                                    <th class="px-6 py-3 font-medium">الفرع</th>
+                                    <th class="px-6 py-3 font-medium">الحالة</th>
+                                    <th class="px-6 py-3 font-medium">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-primary/10 dark:divide-gray-800">
+                                <template x-for="(student, index) in filteredStudents()" :key="student.id">
+                                    <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-charcoal" x-text="index + 1"></td>
+                                        <td class="px-6 py-4 font-bold text-charcoal">
+                                            <div class="flex items-center gap-3">
+                                                <div class="size-8 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center" x-html="getGenderIcon(student.gender)"></div>
+                                                <span x-text="student.name"></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-charcoal" x-text="student.nationalId"></td>
+                                        <td class="px-6 py-4 text-charcoal" x-text="student.birthDate"></td>
+                                        <td class="px-6 py-4 text-charcoal" x-text="student.phone"></td>
+                                        <td class="px-6 py-4 text-charcoal">
+                                            <div class="flex flex-col">
+                                                <span x-text="student.guardianName"></span>
+                                                <span class="text-xs text-primary-light" x-text="student.guardianPhone"></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-charcoal" x-text="student.branch"></td>
+                                        <td class="px-6 py-4">
+                                            <span :class="student.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-2 py-1 text-[10px] font-bold rounded-full" x-text="student.status === 'active' ? 'نشط' : 'غير نشط'"></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-2">
+                                                <button @click="editStudent(student)" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                                    <span class="material-symbols-outlined text-lg">edit</span>
+                                                </button>
+                                                <button @click="deleteStudent(student.id)" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                                    <span class="material-symbols-outlined text-lg">delete</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr x-show="filteredStudents().length === 0">
+                                    <td colspan="9" class="px-6 py-12 text-center text-primary-light">
+                                        <span class="material-symbols-outlined text-4xl mb-2 block">inbox</span>
+                                        لا توجد بيانات
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add/Edit Modal -->
+        <div x-show="showAddModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="closeModal()">
+            <div class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
+                <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#0d1b12]">
+                    <h3 class="text-lg font-bold text-primary" x-text="editMode ? 'تعديل بيانات الطالب' : 'إضافة طالب جديد'"></h3>
+                    <button @click="closeModal()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="saveStudent()" class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Personal Info Section -->
+                        <div class="md:col-span-2">
+                            <h4 class="text-sm font-bold text-primary mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined">person</span>
+                                البيانات الشخصية
+                            </h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الاسم الكامل <span class="text-red-500">*</span></label>
+                            <input x-model="form.name" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أدخل اسم الطالب الكامل"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">رقم الهوية <span class="text-red-500">*</span></label>
+                            <input x-model="form.nationalId" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أدخل رقم الهوية"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">تاريخ الميلاد <span class="text-red-500">*</span></label>
+                            <input x-model="form.birthDate" type="date" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الجنس</label>
+                            <select x-model="form.gender" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="male">ذكر</option>
+                                <option value="female">أنثى</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">رقم التواصل <span class="text-red-500">*</span></label>
+                            <input x-model="form.phone" type="tel" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: 96800000000"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">العنوان</label>
+                            <input x-model="form.address" type="text" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="المنطقة / الولاية"/>
+                        </div>
+                        
+                        <!-- Guardian Info Section -->
+                        <div class="md:col-span-2 pt-4 border-t border-primary/10">
+                            <h4 class="text-sm font-bold text-primary mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined">family_restroom</span>
+                                بيانات ولي الأمر
+                            </h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">اسم ولي الأمر <span class="text-red-500">*</span></label>
+                            <input x-model="form.guardianName" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أدخل اسم ولي الأمر"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">رقم هاتف ولي الأمر <span class="text-red-500">*</span></label>
+                            <input x-model="form.guardianPhone" type="tel" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: 96800000000"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">صلة القرابة</label>
+                            <select x-model="form.guardianRelation" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="father">الأب</option>
+                                <option value="mother">الأم</option>
+                                <option value="brother">الأخ</option>
+                                <option value="uncle">العم</option>
+                                <option value="other">آخر</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Academic Info Section -->
+                        <div class="md:col-span-2 pt-4 border-t border-primary/10">
+                            <h4 class="text-sm font-bold text-primary mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined">school</span>
+                                البيانات الدراسية
+                            </h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الفرع (الجامع) <span class="text-red-500">*</span></label>
+                            <select x-model="form.branch" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="">اختر الفرع</option>
+                                <template x-for="branch in branches" :key="branch.id">
+                                    <option :value="branch.name" x-text="branch.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الحلقة</label>
+                            <select x-model="form.halqa" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="">اختر الحلقة</option>
+                                <template x-for="halqa in getHalqas()" :key="halqa">
+                                    <option :value="halqa" x-text="halqa"></option>
+                                </template>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الحالة</label>
+                            <select x-model="form.status" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="active">نشط</option>
+                                <option value="inactive">غير نشط</option>
+                            </select>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-charcoal mb-2">ملاحظات</label>
+                            <textarea x-model="form.notes" rows="3" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أي ملاحظات إضافية..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 pt-4 border-t border-primary/10">
+                        <button type="button" @click="closeModal()" class="px-6 py-2.5 bg-gray-100 dark:bg-white/5 text-charcoal rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
+                            إلغاء
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+                            <span x-text="editMode ? 'حفظ التعديلات' : 'إضافة الطالب'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function studentsApp() {
+            return {
+                showAddModal: false,
+                editMode: false,
+                editId: null,
+                searchQuery: '',
+                students: [],
+                branches: [],
+                form: {
+                    name: '',
+                    nationalId: '',
+                    birthDate: '',
+                    gender: 'male',
+                    phone: '',
+                    address: '',
+                    guardianName: '',
+                    guardianPhone: '',
+                    guardianRelation: 'father',
+                    branch: '',
+                    halqa: '',
+                    status: 'active',
+                    notes: ''
+                },
+                
+                init() {
+                    this.loadStudents();
+                    this.loadBranches();
+                },
+                
+                loadStudents() {
+                    const data = localStorage.getItem('quranschool_students');
+                    this.students = data ? JSON.parse(data) : (DEFAULT_DATA?.students || []);
+                    if (!data && DEFAULT_DATA?.students) {
+                        localStorage.setItem('quranschool_students', JSON.stringify(DEFAULT_DATA.students));
+                    }
+                },
+                
+                loadBranches() {
+                    const data = localStorage.getItem('quranschool_branches');
+                    this.branches = data ? JSON.parse(data) : (DEFAULT_DATA?.branches || []);
+                    if (!data && DEFAULT_DATA?.branches) {
+                        localStorage.setItem('quranschool_branches', JSON.stringify(DEFAULT_DATA.branches));
+                    }
+                },
+                
+                getGenderIcon(gender) {
+                    if (gender === 'female') {
+                        return `<svg class="w-full h-full" viewBox="0 0 100 100" fill="none">
+                            <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                            <circle cx="50" cy="35" r="18" fill="#065F46"/>
+                            <path d="M50 55 C25 55 20 80 20 95 L80 95 C80 80 75 55 50 55" fill="#065F46"/>
+                            <ellipse cx="50" cy="28" rx="12" ry="8" fill="#065F46"/>
+                            <path d="M30 30 Q50 15 70 30" stroke="#065F46" stroke-width="8" fill="none"/>
+                        </svg>`;
+                    }
+                    return `<svg class="w-full h-full" viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                        <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                        <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                        <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                        <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                    </svg>`;
+                },
+                
+                saveStudents() {
+                    localStorage.setItem('quranschool_students', JSON.stringify(this.students));
+                },
+                
+                filteredStudents() {
+                    if (!this.searchQuery) return this.students;
+                    const query = this.searchQuery.toLowerCase();
+                    return this.students.filter(s => 
+                        s.name.toLowerCase().includes(query) ||
+                        s.nationalId.includes(query) ||
+                        s.guardianName.toLowerCase().includes(query)
+                    );
+                },
+                
+                getHalqas() {
+                    const branch = this.branches.find(b => b.name === this.form.branch);
+                    return branch ? branch.halqas : [];
+                },
+                
+                getThisMonthCount() {
+                    const now = new Date();
+                    const thisMonth = now.getMonth();
+                    const thisYear = now.getFullYear();
+                    return this.students.filter(s => {
+                        const date = new Date(s.createdAt);
+                        return date.getMonth() === thisMonth && date.getFullYear() === thisYear;
+                    }).length;
+                },
+                
+                resetForm() {
+                    this.form = {
+                        name: '',
+                        nationalId: '',
+                        birthDate: '',
+                        gender: 'male',
+                        phone: '',
+                        address: '',
+                        guardianName: '',
+                        guardianPhone: '',
+                        guardianRelation: 'father',
+                        branch: '',
+                        halqa: '',
+                        status: 'active',
+                        notes: ''
+                    };
+                },
+                
+                saveStudent() {
+                    if (this.editMode) {
+                        const index = this.students.findIndex(s => s.id === this.editId);
+                        if (index !== -1) {
+                            this.students[index] = { ...this.form, id: this.editId, updatedAt: new Date().toISOString() };
+                        }
+                    } else {
+                        const newStudent = {
+                            ...this.form,
+                            id: Date.now(),
+                            createdAt: new Date().toISOString()
+                        };
+                        this.students.push(newStudent);
+                    }
+                    this.saveStudents();
+                    this.closeModal();
+                },
+                
+                editStudent(student) {
+                    this.editMode = true;
+                    this.editId = student.id;
+                    this.form = { ...student };
+                    this.showAddModal = true;
+                },
+                
+                deleteStudent(id) {
+                    if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+                        this.students = this.students.filter(s => s.id !== id);
+                        this.saveStudents();
+                    }
+                },
+                
+                closeModal() {
+                    this.showAddModal = false;
+                    this.editMode = false;
+                    this.editId = null;
+                    this.resetForm();
+                }
+            };
+        }
+    </script>
+</body>
+</html>

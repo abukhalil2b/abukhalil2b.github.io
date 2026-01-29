@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>لوحة التحكم - إدارة الفروع والحلقات</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#065F46",
+                        "primary-light": "#10B981",
+                        "primary-dark": "#064E3B",
+                        "background-light": "#f7f7f6",
+                        "background-dark": "#1d1a15",
+                        "accent": "#059669",
+                        "charcoal": "#2D3748"
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif']
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: #2D3748;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(6, 95, 70, 0.08);
+            border-right: 4px solid #065F46;
+            color: #065F46 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #065F46;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(6, 95, 70, 0.2);
+        }
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #065F46 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .notification-badge {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(10px);
+        }
+        .has-tooltip:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-background-light dark:bg-background-dark text-charcoal dark:text-gray-200 antialiased" x-data="dashboardApp()" x-init="init()">
+    <!-- Toast Container -->
+    <div class="fixed top-4 left-4 z-50 space-y-2" id="toast-container"></div>
+    
+    <!-- Mobile Overlay -->
+    <div x-show="sidebarOpen" 
+         x-transition:enter="transition-opacity ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click="sidebarOpen = false"
+         class="fixed inset-0 bg-black/50 z-30 lg:hidden">
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
+               class="w-72 bg-white dark:bg-[#0a150e] border-l border-primary/10 dark:border-gray-800 flex flex-col fixed h-full right-0 z-40 transition-transform duration-300 lg:translate-x-0">
+            <!-- Logo Section -->
+            <div class="p-6 flex flex-col items-center gap-3 border-b border-primary/10 dark:border-gray-800">
+                <div class="size-14 bg-gradient-to-br from-primary to-primary-light rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/30 animate-float">
+                    <span class="material-symbols-outlined text-4xl">auto_stories</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl leading-tight gradient-text">نظام الحلقات</h1>
+                    <p class="text-[10px] text-primary-light font-medium mt-1">مؤسسة مستهيل الوقفية</p>
+                    <p class="text-[8px] text-gray-400">سلطنة عمان</p>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto scrollbar-hide">
+                <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-3">القائمة الرئيسية</div>
+                
+                <a @click.prevent="navigateTo('dashboard')" 
+                   :class="currentPage === 'dashboard' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="font-medium">لوحة التحكم</span>
+                </a>
+                
+                <a @click.prevent="navigateTo('students')"
+                   :class="currentPage === 'students' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">school</span>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a @click.prevent="navigateTo('teachers')"
+                   :class="currentPage === 'teachers' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>المعلمون</span>
+                </a>
+                
+                <a @click.prevent="navigateTo('branches')"
+                   :class="currentPage === 'branches' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">mosque</span>
+                    <span>الأفرع والحلقات</span>
+                </a>
+                
+                <a @click.prevent="navigateTo('tasks')"
+                   :class="currentPage === 'tasks' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span>مهام الحفظ والتلاوة</span>
+                </a>
+                
+                <a @click.prevent="navigateTo('competitions')"
+                   :class="currentPage === 'competitions' ? 'sidebar-active' : ''"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                   href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>إدارة المسابقات</span>
+                </a>
+                
+                <!-- Branches Section -->
+                <div class="pt-4">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-3">الفروع والمساجد</div>
+                    
+                    <template x-for="(branch, index) in branches.slice(0, 3)" :key="index">
+                        <div class="space-y-1 mb-2">
+                            <a @click.prevent="toggleBranch(index)"
+                               class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all cursor-pointer group"
+                               href="#">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-primary">mosque</span>
+                                    <span class="text-sm font-medium" x-text="branch.name"></span>
+                                </div>
+                                <span :class="expandedBranches.includes(index) ? 'rotate-180' : ''"
+                                      class="material-symbols-outlined text-xs text-gray-400 transition-transform duration-200">expand_more</span>
+                            </a>
+                            <div x-show="expandedBranches.includes(index)"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 -translate-y-2"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 -translate-y-2"
+                                 class="pr-9 space-y-1">
+                                <template x-for="(halqa, hIndex) in branch.halqas || []" :key="hIndex">
+                                    <a class="flex items-center gap-2 py-1.5 text-xs text-charcoal/70 hover:text-primary transition-colors"
+                                       href="#">
+                                        <span class="size-1.5 rounded-full bg-primary-light"></span>
+                                        <span x-text="halqa.name || halqa"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- System Section -->
+                <div class="pt-4">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-3">النظام</div>
+                    
+                    <a @click.prevent="navigateTo('reports')"
+                       :class="currentPage === 'reports' ? 'sidebar-active' : ''"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                       href="#">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>التقارير</span>
+                    </a>
+                    
+                    <a @click.prevent="navigateTo('settings')"
+                       :class="currentPage === 'settings' ? 'sidebar-active' : ''"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 hover:translate-x-1 cursor-pointer"
+                       href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- Support Card -->
+            <div class="p-4 border-t border-primary/10 dark:border-gray-800">
+                <div class="bg-gradient-to-br from-primary/10 to-primary/5 p-4 rounded-2xl border border-primary/20">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined">support_agent</span>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-primary">تحتاج مساعدة؟</p>
+                            <p class="text-[10px] text-primary-light">الدعم الفني متاح</p>
+                        </div>
+                    </div>
+                    <button @click="openSupportModal = true" class="w-full py-2 bg-primary text-white text-[10px] font-bold rounded-xl hover:bg-primary-dark transition-all hover:shadow-lg hover:shadow-primary/30">
+                        مركز الدعم
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:mr-72 transition-all duration-300">
+            <!-- Header -->
+            <header class="h-20 bg-white/80 dark:bg-[#0a150e]/80 backdrop-blur-md sticky top-0 z-20 border-b border-primary/10 dark:border-gray-800 px-4 lg:px-8 flex items-center justify-between">
+                <!-- Mobile Menu Button -->
+                <button @click="sidebarOpen = !sidebarOpen" 
+                        class="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                
+                <div class="flex items-center gap-4">
+                    <!-- User Profile -->
+                    <div class="flex items-center gap-3">
+                        <div class="size-10 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold shadow-lg shadow-primary/30">
+                            أ
+                        </div>
+                        <div class="hidden sm:flex flex-col text-right">
+                            <p class="text-sm font-bold leading-none text-primary">أحمد</p>
+                            <p class="text-[10px] text-primary-light mt-1">مدير النظام العام</p>
+                        </div>
+                    </div>
+                    
+                    <div class="h-8 w-[1px] bg-gray-200 dark:bg-gray-800 hidden sm:block"></div>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button @click="toggleDarkMode()" 
+                            class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors has-tooltip relative">
+                        <span class="material-symbols-outlined" x-text="isDarkMode ? 'light_mode' : 'dark_mode'"></span>
+                        <span class="tooltip absolute top-full mt-2 right-1/2 translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded-lg whitespace-nowrap">
+                            <span x-text="isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'"></span>
+                        </span>
+                    </button>
+                    
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button @click="notificationsOpen = !notificationsOpen"
+                                class="relative p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors">
+                            <span class="material-symbols-outlined">notifications</span>
+                            <span x-show="unreadNotifications > 0" 
+                                  x-text="unreadNotifications"
+                                  class="absolute -top-1 -right-1 min-w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-[#0a150e]">
+                            </span>
+                            <span x-show="unreadNotifications > 0" class="absolute top-2 right-2 size-2 bg-red-500 rounded-full notification-badge"></span>
+                        </button>
+                        
+                        <!-- Notifications Panel -->
+                        <div x-show="notificationsOpen"
+                             @click.away="notificationsOpen = false"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                             class="absolute left-0 top-full mt-2 w-80 bg-white dark:bg-[#0d1b12] rounded-2xl shadow-xl border border-primary/10 dark:border-gray-800 z-50 overflow-hidden">
+                            <div class="p-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                                <h4 class="font-bold text-primary">الإشعارات</h4>
+                                <button @click="markAllAsRead()" class="text-[10px] text-primary hover:underline">تحديد الكل كمقروء</button>
+                            </div>
+                            <div class="max-h-80 overflow-y-auto">
+                                <template x-for="(notification, index) in notifications" :key="index">
+                                    <div @click="markAsRead(index)"
+                                         :class="notification.read ? 'opacity-60' : 'bg-primary/5'"
+                                         class="p-4 border-b border-primary/5 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer">
+                                        <div class="flex items-start gap-3">
+                                            <div :class="notification.iconBg" class="size-9 rounded-lg flex items-center justify-center shrink-0">
+                                                <span :class="notification.iconColor" class="material-symbols-outlined text-lg" x-text="notification.icon"></span>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium text-charcoal dark:text-gray-200" x-text="notification.title"></p>
+                                                <p class="text-xs text-primary-light mt-0.5" x-text="notification.message"></p>
+                                                <p class="text-[10px] text-gray-400 mt-1" x-text="notification.time"></p>
+                                            </div>
+                                            <div x-show="!notification.read" class="size-2 bg-primary rounded-full mt-1"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="flex items-center gap-4 flex-1 justify-end max-w-xl">
+                    <div class="relative w-full">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary-light text-xl">search</span>
+                        <input x-model="searchQuery"
+                               @input="performSearch()"
+                               @focus="searchFocused = true"
+                               @blur="setTimeout(() => searchFocused = false, 200)"
+                               class="w-full pr-10 pl-4 py-2.5 bg-primary/5 dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary-light transition-all"
+                               placeholder="بحث عن طالب، معلم، أو فرع..."
+                               type="text"/>
+                        
+                        <!-- Search Results Dropdown -->
+                        <div x-show="searchFocused && searchResults.length > 0"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0d1b12] rounded-2xl shadow-xl border border-primary/10 dark:border-gray-800 z-50 overflow-hidden max-h-80 overflow-y-auto">
+                            <template x-for="(result, index) in searchResults" :key="index">
+                                <div @click="goToResult(result)"
+                                     class="p-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer flex items-center gap-3">
+                                    <div :class="result.iconBg" class="size-10 rounded-xl flex items-center justify-center">
+                                        <span :class="result.iconColor" class="material-symbols-outlined" x-text="result.icon"></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-charcoal dark:text-gray-200" x-text="result.title"></p>
+                                        <p class="text-xs text-primary-light" x-text="result.subtitle"></p>
+                                    </div>
+                                    <span class="material-symbols-outlined text-gray-400 text-sm">arrow_back</span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-4 lg:p-8" x-show="currentPage === 'dashboard'">
+                <!-- Welcome Section -->
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4 animate-fade-in">
+                    <div>
+                        <h2 class="text-2xl lg:text-3xl font-black tracking-tight mb-2 text-primary">
+                            <span x-text="getGreeting()"></span>، يا <span class="gradient-text">أحمد</span>
+                        </h2>
+                        <p class="text-primary-light flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-sm">calendar_month</span>
+                            <span x-text="getCurrentDate()"></span>
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="openAddBranchModal = true"
+                                class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">add_business</span>
+                            إضافة فرع جديد
+                        </button>
+                        <button @click="exportReport()"
+                                :disabled="exporting"
+                                class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-white/5 border border-primary/20 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all text-charcoal disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span class="material-symbols-outlined" :class="exporting ? 'animate-spin' : ''" x-text="exporting ? 'sync' : 'download'"></span>
+                            <span x-text="exporting ? 'جاري التصدير...' : 'تصدير التقرير'"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards Row 1 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
+                    <!-- Total Students -->
+                    <div class="stat-card bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                                    <span class="material-symbols-outlined">school</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">إجمالي الطلاب</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal dark:text-white" x-text="animatedStats.students"></h3>
+                                <span class="text-xs font-bold px-3 py-1 bg-blue-100 text-blue-700 rounded-full">طالب</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-1 text-xs text-green-600">
+                                <span class="material-symbols-outlined text-sm">trending_up</span>
+                                <span>+12% هذا الشهر</span>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 opacity-10">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-500"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-500"/>
+                                <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-500"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Total Teachers -->
+                    <div class="stat-card bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">إجمالي المعلمين</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal dark:text-white" x-text="animatedStats.teachers"></h3>
+                                <span class="text-xs font-bold px-3 py-1 bg-purple-100 text-purple-700 rounded-full">معلم</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-1 text-xs text-green-600">
+                                <span class="material-symbols-outlined text-sm">trending_up</span>
+                                <span>+5% هذا الشهر</span>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 opacity-10">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <polygon points="50,10 90,90 10,90" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-500"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Branches -->
+                    <div class="stat-card bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-12 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white shadow-lg shadow-primary/30">
+                                    <span class="material-symbols-outlined">mosque</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">عدد الأفرع</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal dark:text-white" x-text="animatedStats.branches"></h3>
+                                <span class="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full">فرع</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-1 text-xs text-gray-500">
+                                <span class="material-symbols-outlined text-sm">remove</span>
+                                <span>ثابت</span>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 opacity-10">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" stroke-width="2" class="text-primary"/>
+                                <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" class="text-primary"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Halqas -->
+                    <div class="stat-card bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+                                    <span class="material-symbols-outlined">auto_stories</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">عدد الحلقات</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal dark:text-white" x-text="animatedStats.halqas"></h3>
+                                <span class="text-xs font-bold px-3 py-1 bg-amber-100 text-amber-700 rounded-full">حلقة</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-1 text-xs text-green-600">
+                                <span class="material-symbols-outlined text-sm">trending_up</span>
+                                <span>+2 جديدة</span>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 opacity-10">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-500"/>
+                                <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" stroke-width="2" class="text-amber-500"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards Row 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-8">
+                    <!-- Memorization Tasks -->
+                    <div class="bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-5 rounded-2xl border border-primary/20 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-primary">menu_book</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-primary-light font-medium">مهام الحفظ</p>
+                                    <h3 class="text-2xl font-black text-primary" x-text="animatedStats.memorizationTasks"></h3>
+                                </div>
+                            </div>
+                            <a href="#" @click.prevent="navigateTo('tasks')" class="flex items-center gap-1 text-xs text-primary font-bold hover:underline group/link">
+                                <span>عرض</span>
+                                <span class="material-symbols-outlined text-sm transition-transform group-hover/link:-translate-x-1">arrow_back</span>
+                            </a>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-primary-light">مكتملة</span>
+                                <span class="font-bold text-primary">75%</span>
+                            </div>
+                            <div class="h-2 bg-white/50 dark:bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-1000" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recitation Tasks -->
+                    <div class="bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-900/30 dark:to-amber-900/20 p-5 rounded-2xl border border-amber-200/50 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-amber-600">record_voice_over</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-amber-600/70 font-medium">مهام التلاوة</p>
+                                    <h3 class="text-2xl font-black text-amber-600" x-text="animatedStats.recitationTasks"></h3>
+                                </div>
+                            </div>
+                            <a href="#" @click.prevent="navigateTo('tasks')" class="flex items-center gap-1 text-xs text-amber-600 font-bold hover:underline group/link">
+                                <span>عرض</span>
+                                <span class="material-symbols-outlined text-sm transition-transform group-hover/link:-translate-x-1">arrow_back</span>
+                            </a>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-amber-600/70">مكتملة</span>
+                                <span class="font-bold text-amber-600">60%</span>
+                            </div>
+                            <div class="h-2 bg-white/50 dark:bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transition-all duration-1000" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Students -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/30 dark:to-green-900/20 p-5 rounded-2xl border border-green-200/50 shadow-sm relative overflow-hidden group card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-green-600">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-green-600/70 font-medium">الطلاب النشطون</p>
+                                    <h3 class="text-2xl font-black text-green-600" x-text="animatedStats.activeStudents"></h3>
+                                </div>
+                            </div>
+                            <div class="relative size-14">
+                                <svg class="progress-ring w-14 h-14" viewBox="0 0 56 56">
+                                    <circle class="text-gray-200 dark:text-gray-700" stroke-width="4" stroke="currentColor" fill="transparent" r="24" cx="28" cy="28"/>
+                                    <circle class="progress-ring-circle text-green-500" 
+                                            stroke-width="4" 
+                                            stroke-linecap="round" 
+                                            stroke="currentColor" 
+                                            fill="transparent" 
+                                            r="24" 
+                                            cx="28" 
+                                            cy="28"
+                                            :stroke-dasharray="2 * Math.PI * 24"
+                                            :stroke-dashoffset="2 * Math.PI * 24 * (1 - (stats.activeStudents / (stats.students || 1)))"/>
+                                </svg>
+                                <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-green-600" 
+                                      x-text="stats.students > 0 ? Math.round((stats.activeStudents / stats.students) * 100) + '%' : '0%'"></span>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center gap-2">
+                            <span class="size-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span class="text-xs text-green-600">متصل الآن</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Student Progress Chart -->
+                    <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-blue-600">trending_up</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-primary">تقدم الطلاب</h4>
+                                    <p class="text-xs text-primary-light">أداء الطلاب خلال الأسبوع</p>
+                                </div>
+                            </div>
+                            <select class="text-xs bg-gray-100 dark:bg-white/5 border-none rounded-lg px-3 py-1.5 text-charcoal dark:text-gray-300 focus:ring-2 focus:ring-primary/20">
+                                <option>هذا الأسبوع</option>
+                                <option>الأسبوع الماضي</option>
+                                <option>هذا الشهر</option>
+                            </select>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="studentProgressChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Branch Distribution Chart -->
+                    <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-purple-600">pie_chart</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-primary">توزيع الطلاب</h4>
+                                    <p class="text-xs text-primary-light">حسب الفروع</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="branchDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                    <!-- Top Students -->
+                    <div class="lg:col-span-2 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-amber-600 fill-1">star</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-primary">الطلاب المتميزون</h4>
+                                    <p class="text-xs text-gray-400">الطلاب المتميزون لهذا الشهر</p>
+                                </div>
+                            </div>
+                            <a @click.prevent="showToast('جاري تحميل القائمة الكاملة...', 'info')" 
+                               class="text-xs text-primary font-bold hover:underline cursor-pointer" href="#">عرض الكل</a>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <template x-for="(student, index) in topStudents" :key="index">
+                                <div :class="index === 0 ? 'bg-gradient-to-l from-amber-50 to-transparent dark:from-amber-950/20 border-amber-200/50 dark:border-amber-900/30' : 
+                                              index === 1 ? 'bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-950/20 border-gray-200/50 dark:border-gray-800' :
+                                              index === 2 ? 'bg-gradient-to-l from-orange-50 to-transparent dark:from-orange-950/20 border-orange-200/50 dark:border-orange-900/30' :
+                                              'bg-gray-50 dark:bg-white/5 border-primary/10 dark:border-gray-800'"
+                                     class="flex items-center justify-between p-4 rounded-xl border hover:shadow-md transition-all cursor-pointer group">
+                                    <div class="flex items-center gap-4 flex-1">
+                                        <div :class="index === 0 ? 'bg-gradient-to-br from-amber-400 to-amber-600' : 
+                                                      index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
+                                                      index === 2 ? 'bg-gradient-to-br from-orange-300 to-orange-500' :
+                                                      'bg-primary/20 text-primary'"
+                                             class="size-12 rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                            <span x-text="index + 1"></span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-bold text-charcoal dark:text-gray-200 text-base" x-text="student.name"></p>
+                                            <div class="flex items-center gap-4 mt-1">
+                                                <span class="text-xs text-primary-light flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-sm">mosque</span>
+                                                    <span x-text="student.branch"></span>
+                                                </span>
+                                                <span class="text-xs text-primary-light flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                    <span x-text="student.halqa"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div :class="index === 0 ? 'bg-amber-500' : 
+                                                  index === 1 ? 'bg-gray-500' :
+                                                  index === 2 ? 'bg-orange-500' :
+                                                  'bg-primary'"
+                                         class="flex items-center gap-2 px-4 py-2 text-white rounded-lg font-bold group-hover:scale-105 transition-transform">
+                                        <span class="material-symbols-outlined">grade</span>
+                                        <span class="text-lg" x-text="student.points"></span>
+                                        <span class="text-xs opacity-80">نقطة</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-green-600">history</span>
+                                </div>
+                                <h4 class="font-bold text-primary">آخر النشاطات</h4>
+                            </div>
+                            <a @click.prevent="showToast('جاري تحميل جميع النشاطات...', 'info')" 
+                               class="text-xs text-primary font-bold hover:underline cursor-pointer" href="#">عرض الكل</a>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <template x-for="(activity, index) in recentActivities" :key="index">
+                                <div class="flex items-start gap-4 group cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 p-2 -mx-2 rounded-xl transition-colors">
+                                    <div :class="activity.iconBg" class="size-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                        <span :class="activity.iconColor" class="material-symbols-outlined text-xl" x-text="activity.icon"></span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-bold text-charcoal dark:text-gray-200" x-text="activity.title"></p>
+                                        <p class="text-xs text-primary-light" x-text="activity.description"></p>
+                                        <p class="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[10px]">schedule</span>
+                                            <span x-text="activity.time"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Teachers Table -->
+                <div class="mt-8 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary">emoji_events</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary">المعلمون المتميزون هذا الشهر</h4>
+                                <p class="text-xs text-primary-light">بناءً على نسبة الحضور والأداء</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-1">
+                            <template x-for="i in 3">
+                                <span class="material-symbols-outlined text-amber-500 fill-1">star</span>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-white/5 text-primary-light">
+                                    <th class="px-6 py-4 font-medium">المعلم</th>
+                                    <th class="px-6 py-4 font-medium">الفرع</th>
+                                    <th class="px-6 py-4 font-medium">الحلقة</th>
+                                    <th class="px-6 py-4 font-medium text-center">عدد الطلاب</th>
+                                    <th class="px-6 py-4 font-medium text-center">نسبة الحضور</th>
+                                    <th class="px-6 py-4 font-medium">الحالة</th>
+                                    <th class="px-6 py-4 font-medium text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-primary/10 dark:divide-gray-800">
+                                <template x-for="(teacher, index) in topTeachers" :key="index">
+                                    <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors group">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="size-10 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-sm">
+                                                    <span x-text="teacher.name.charAt(0)"></span>
+                                                </div>
+                                                <div class="flex flex-col">
+                                                    <span class="font-bold text-charcoal dark:text-gray-200" x-text="teacher.name"></span>
+                                                    <span class="text-[10px] text-primary-light" x-text="teacher.type"></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-col">
+                                                <span class="text-charcoal dark:text-gray-300" x-text="teacher.branch"></span>
+                                                <span class="text-[10px] text-gray-400">التعيين</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-charcoal dark:text-gray-300" x-text="teacher.halqa"></td>
+                                        <td class="px-6 py-4 text-center">
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+                                                <span class="material-symbols-outlined text-xs">school</span>
+                                                <span x-text="teacher.students"></span>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <div class="w-16 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full" 
+                                                         :style="`width: ${teacher.attendance}%`"></div>
+                                                </div>
+                                                <span class="text-xs font-bold text-green-600" x-text="teacher.attendance + '%'"></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span :class="teacher.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'"
+                                                  class="px-3 py-1 text-[10px] font-bold rounded-full flex items-center gap-1 w-fit">
+                                                <span :class="teacher.status === 'active' ? 'bg-green-500' : 'bg-gray-400'"
+                                                      class="size-1.5 rounded-full"></span>
+                                                <span x-text="teacher.status === 'active' ? 'نشط' : 'غير نشط'"></span>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button @click="viewTeacherDetails(teacher)"
+                                                    class="p-2 hover:bg-primary/10 rounded-lg transition-colors has-tooltip">
+                                                <span class="material-symbols-outlined text-primary">visibility</span>
+                                                <span class="tooltip absolute top-full mt-1 right-1/2 translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded-lg whitespace-nowrap">عرض التفاصيل</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Footer -->
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button @click="openAddBranchModal = true" class="p-4 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all text-center group">
+                        <div class="size-12 mx-auto mb-2 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-primary group-hover:text-white transition-colors">add_business</span>
+                        </div>
+                        <span class="text-sm font-bold text-charcoal dark:text-gray-200">إضافة فرع</span>
+                    </button>
+                    
+                    <button @click="navigateTo('students'); showToast('جاري فتح صفحة الطلاب...', 'info')" class="p-4 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all text-center group">
+                        <div class="size-12 mx-auto mb-2 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
+                            <span class="material-symbols-outlined text-blue-600 group-hover:text-white transition-colors">person_add</span>
+                        </div>
+                        <span class="text-sm font-bold text-charcoal dark:text-gray-200">تسجيل طالب</span>
+                    </button>
+                    
+                    <button @click="navigateTo('tasks'); showToast('جاري فتح صفحة المهام...', 'info')" class="p-4 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all text-center group">
+                        <div class="size-12 mx-auto mb-2 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
+                            <span class="material-symbols-outlined text-amber-600 group-hover:text-white transition-colors">assignment_add</span>
+                        </div>
+                        <span class="text-sm font-bold text-charcoal dark:text-gray-200">إضافة مهمة</span>
+                    </button>
+                    
+                    <button @click="exportReport()" class="p-4 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all text-center group">
+                        <div class="size-12 mx-auto mb-2 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
+                            <span class="material-symbols-outlined text-purple-600 group-hover:text-white transition-colors">assessment</span>
+                        </div>
+                        <span class="text-sm font-bold text-charcoal dark:text-gray-200">تقرير سريع</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Branch Modal -->
+    <div x-show="openAddBranchModal" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div @click.away="openAddBranchModal = false"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="p-6 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                <h3 class="font-bold text-primary text-lg">إضافة فرع جديد</h3>
+                <button @click="openAddBranchModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-charcoal dark:text-gray-300 mb-2">اسم الفرع</label>
+                    <input x-model="newBranch.name" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="مثال: جامع النور"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-charcoal dark:text-gray-300 mb-2">الموقع</label>
+                    <input x-model="newBranch.location" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="مثال: مسقط، الخوير"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-charcoal dark:text-gray-300 mb-2">رقم الهاتف</label>
+                    <input x-model="newBranch.phone" type="tel" class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="مثال: 9689xxxxxxxx+"/>
+                </div>
+            </div>
+            <div class="p-6 border-t border-primary/10 dark:border-gray-800 flex gap-3">
+                <button @click="addBranch()" class="flex-1 py-3 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 transition-all">
+                    إضافة الفرع
+                </button>
+                <button @click="openAddBranchModal = false" class="flex-1 py-3 bg-gray-100 dark:bg-white/5 text-charcoal dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-white/10 transition-all">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div x-show="openSupportModal"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div @click.away="openSupportModal = false"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="p-6 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                <h3 class="font-bold text-primary text-lg">مركز الدعم الفني</h3>
+                <button @click="openSupportModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="text-center">
+                    <div class="size-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-primary">support_agent</span>
+                    </div>
+                    <p class="text-charcoal dark:text-gray-200 font-medium">نحن هنا لمساعدتك!</p>
+                    <p class="text-sm text-primary-light mt-1">يمكنك التواصل معنا عبر القنوات التالية</p>
+                </div>
+                <div class="space-y-3">
+                    <a href="tel:+96890000000" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-white/5 rounded-xl hover:bg-primary/5 transition-colors">
+                        <div class="size-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-green-600">phone</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-charcoal dark:text-gray-200">الاتصال المباشر</p>
+                            <p class="text-sm text-primary-light">+968 9000 0000</p>
+                        </div>
+                    </a>
+                    <a href="mailto:support@example.com" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-white/5 rounded-xl hover:bg-primary/5 transition-colors">
+                        <div class="size-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600">email</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-charcoal dark:text-gray-200">البريد الإلكتروني</p>
+                            <p class="text-sm text-primary-light">support@example.com</p>
+                        </div>
+                    </a>
+                    <button @click="showToast('تم فتح الدردشة المباشرة', 'success'); openSupportModal = false" class="w-full flex items-center gap-3 p-4 bg-gray-50 dark:bg-white/5 rounded-xl hover:bg-primary/5 transition-colors">
+                        <div class="size-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-purple-600">chat</span>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-medium text-charcoal dark:text-gray-200">الدردشة المباشرة</p>
+                            <p class="text-sm text-primary-light">متاح الآن</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default data
+        const DEFAULT_DATA = {
+            students: [
+                { id: 1, name: 'عبدالله بن محمد الحارثي', branch: 'جامع السميع', halqa: 'حلقة الإتقان', status: 'active', points: 985 },
+                { id: 2, name: 'يوسف بن سالم البلوشي', branch: 'جامع السلام', halqa: 'حلقة النورانية', status: 'active', points: 942 },
+                { id: 3, name: 'محمد بن أحمد الزدجالي', branch: 'جامع السميع', halqa: 'حلقة التجويد', status: 'active', points: 918 },
+                { id: 4, name: 'سالم بن راشد المعمري', branch: 'جامع السلام', halqa: 'حلقة الفجر', status: 'active', points: 895 },
+                { id: 5, name: 'خالد بن عبدالله الشكيلي', branch: 'جامع السميع', halqa: 'حلقة الإتقان', status: 'inactive', points: 870 },
+                { id: 6, name: 'عمر بن سعيد الهنائي', branch: 'جامع السلام', halqa: 'حلقة النورانية', status: 'active', points: 856 },
+                { id: 7, name: 'فهد بن خالد البوسعيدي', branch: 'جامع السميع', halqa: 'حلقة التجويد', status: 'active', points: 834 },
+                { id: 8, name: 'ناصر بن علي الحبسي', branch: 'جامع السلام', halqa: 'حلقة الفجر', status: 'active', points: 821 }
+            ],
+            teachers: [
+                { id: 1, name: 'محمد بن سعيد الهاشمي', branch: 'جامع السميع', halqa: 'حلقة الإتقان', type: 'موظف', students: 18, attendance: 98, status: 'active' },
+                { id: 2, name: 'ناصر بن عبدالله الجابري', branch: 'جامع السلام', halqa: 'حلقة النورانية', type: 'متطوع', students: 24, attendance: 94, status: 'active' },
+                { id: 3, name: 'سالم بن راشد الكندي', branch: 'جامع السميع', halqa: 'حلقة التجويد', type: 'موظف', students: 15, attendance: 96, status: 'active' },
+                { id: 4, name: 'خالد بن عمر البلوشي', branch: 'جامع السلام', halqa: 'حلقة الفجر', type: 'متطوع', students: 20, attendance: 92, status: 'active' }
+            ],
+            branches: [
+                { id: 1, name: 'جامع السميع', location: 'مسقط', halqas: ['حلقة الإتقان', 'حلقة التجويد', 'حلقة المراجعة'] },
+                { id: 2, name: 'جامع السلام', location: 'الخوير', halqas: ['حلقة النورانية', 'حلقة الفجر', 'حلقة المساء'] },
+                { id: 3, name: 'جامع النور', location: 'بوشر', halqas: ['حلقة البراعم', 'حلقة الشباب'] }
+            ],
+            memorizationTasks: [
+                { id: 1, title: 'حفظ سورة البقرة', student: 'عبدالله الحارثي', progress: 75 },
+                { id: 2, title: 'حفظ سورة آل عمران', student: 'يوسف البلوشي', progress: 60 },
+                { id: 3, title: 'حفظ سورة النساء', student: 'محمد الزدجالي', progress: 45 },
+                { id: 4, title: 'حفظ سورة المائدة', student: 'سالم المعمري', progress: 30 }
+            ],
+            recitationTasks: [
+                { id: 1, title: 'تلاوة سورة الفاتحة', student: 'خالد الشكيلي', progress: 100 },
+                { id: 2, title: 'تلاوة سورة الإخلاص', student: 'عمر الهنائي', progress: 80 },
+                { id: 3, title: 'تلاوة سورة الفلق', student: 'فهد البوسعيدي', progress: 60 }
+            ]
+        };
+
+        function dashboardApp() {
+            return {
+                // State
+                sidebarOpen: false,
+                currentPage: 'dashboard',
+                isDarkMode: false,
+                notificationsOpen: false,
+                searchFocused: false,
+                searchQuery: '',
+                searchResults: [],
+                exporting: false,
+                openAddBranchModal: false,
+                openSupportModal: false,
+                expandedBranches: [],
+                
+                // Data
+                stats: {
+                    students: 0,
+                    teachers: 0,
+                    branches: 0,
+                    halqas: 0,
+                    memorizationTasks: 0,
+                    recitationTasks: 0,
+                    activeStudents: 0
+                },
+                animatedStats: {
+                    students: 0,
+                    teachers: 0,
+                    branches: 0,
+                    halqas: 0,
+                    memorizationTasks: 0,
+                    recitationTasks: 0,
+                    activeStudents: 0
+                },
+                students: [],
+                teachers: [],
+                branches: [],
+                memorizationTasks: [],
+                recitationTasks: [],
+                
+                // Notifications
+                notifications: [
+                    { id: 1, title: 'تم تسجيل طالب جديد', message: 'جامع السميع - حلقة الإتقان', time: 'منذ ١٠ دقائق', icon: 'person_add', iconBg: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600', read: false },
+                    { id: 2, title: 'تنبيه غياب متكرر', message: 'جامع السلام - فيصل بن علي', time: 'منذ ساعة واحدة', icon: 'assignment_late', iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600', read: false },
+                    { id: 3, title: 'تحديث بيانات الفرع', message: 'تم تحديث جدول الحلقات في جامع السلام', time: 'منذ ساعتين', icon: 'mosque', iconBg: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600', read: true },
+                    { id: 4, title: 'مهمة حفظ مكتملة', message: 'عبدالله الحارثي أنهى حفظ سورة البقرة', time: 'منذ ٣ ساعات', icon: 'check_circle', iconBg: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600', read: true }
+                ],
+                
+                // Top Students
+                topStudents: [
+                    { name: 'عبدالله بن محمد الحارثي', branch: 'جامع السميع', halqa: 'حلقة الإتقان', points: '٩٨٥' },
+                    { name: 'يوسف بن سالم البلوشي', branch: 'جامع السلام', halqa: 'حلقة النورانية', points: '٩٤٢' },
+                    { name: 'محمد بن أحمد الزدجالي', branch: 'جامع السميع', halqa: 'حلقة التجويد', points: '٩١٨' },
+                    { name: 'سالم بن راشد المعمري', branch: 'جامع السلام', halqa: 'حلقة الفجر', points: '٨٩٥' },
+                    { name: 'خالد بن عبدالله الشكيلي', branch: 'جامع السميع', halqa: 'حلقة الإتقان', points: '٨٧٠' }
+                ],
+                
+                // Recent Activities
+                recentActivities: [
+                    { title: 'تم تسجيل طالب جديد', description: 'جامع السميع - حلقة الإتقان', time: 'منذ ١٠ دقائق', icon: 'person_add', iconBg: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600' },
+                    { title: 'تنبيه غياب متكرر', description: 'جامع السلام - فيصل بن علي', time: 'منذ ساعة واحدة', icon: 'assignment_late', iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+                    { title: 'تحديث بيانات الفرع', description: 'تم تحديث جدول الحلقات في جامع السلام', time: 'منذ ساعتين', icon: 'mosque', iconBg: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+                    { title: 'مهمة حفظ مكتملة', description: 'عبدالله الحارثي أنهى حفظ سورة البقرة', time: 'منذ ٣ ساعات', icon: 'check_circle', iconBg: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600' },
+                    { title: 'إضافة معلم جديد', description: 'تم تعيين معلم جديد في جامع النور', time: 'منذ ٥ ساعات', icon: 'person_add', iconBg: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' }
+                ],
+                
+                // Top Teachers
+                topTeachers: [],
+                
+                // New Branch Form
+                newBranch: {
+                    name: '',
+                    location: '',
+                    phone: ''
+                },
+                
+                // Charts
+                studentProgressChart: null,
+                branchDistributionChart: null,
+                
+                init() {
+                    this.loadData();
+                    this.calculateStats();
+                    this.prepareTopTeachers();
+                    this.animateStats();
+                    this.initCharts();
+                    this.checkDarkMode();
+                    
+                    // Animate elements on load
+                    gsap.from('.stat-card', {
+                        y: 30,
+                        opacity: 0,
+                        duration: 0.6,
+                        stagger: 0.1,
+                        ease: 'power2.out'
+                    });
+                    
+                    // Simulate real-time updates
+                    setInterval(() => {
+                        this.simulateRealTimeUpdate();
+                    }, 30000);
+                },
+                
+                loadData() {
+                    const studentsData = localStorage.getItem('quranschool_students');
+                    this.students = studentsData ? JSON.parse(studentsData) : DEFAULT_DATA.students;
+                    
+                    const teachersData = localStorage.getItem('quranschool_teachers');
+                    this.teachers = teachersData ? JSON.parse(teachersData) : DEFAULT_DATA.teachers;
+                    
+                    const branchesData = localStorage.getItem('quranschool_branches');
+                    this.branches = branchesData ? JSON.parse(branchesData) : DEFAULT_DATA.branches;
+                    
+                    const memData = localStorage.getItem('quranschool_memorization_tasks');
+                    this.memorizationTasks = memData ? JSON.parse(memData) : DEFAULT_DATA.memorizationTasks;
+                    
+                    const recData = localStorage.getItem('quranschool_recitation_tasks');
+                    this.recitationTasks = recData ? JSON.parse(recData) : DEFAULT_DATA.recitationTasks;
+                },
+                
+                calculateStats() {
+                    this.stats.students = this.students.length;
+                    this.stats.teachers = this.teachers.length;
+                    this.stats.branches = this.branches.length;
+                    this.stats.memorizationTasks = this.memorizationTasks.length;
+                    this.stats.recitationTasks = this.recitationTasks.length;
+                    this.stats.activeStudents = this.students.filter(s => s.status === 'active').length;
+                    
+                    this.stats.halqas = this.branches.reduce((total, branch) => {
+                        return total + (branch.halqas ? branch.halqas.length : 0);
+                    }, 0);
+                },
+                
+                animateStats() {
+                    const duration = 1500;
+                    const steps = 30;
+                    const interval = duration / steps;
+                    
+                    Object.keys(this.stats).forEach(key => {
+                        let current = 0;
+                        const target = this.stats[key];
+                        const increment = target / steps;
+                        
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                current = target;
+                                clearInterval(timer);
+                            }
+                            this.animatedStats[key] = Math.floor(current);
+                        }, interval);
+                    });
+                },
+                
+                prepareTopTeachers() {
+                    this.topTeachers = this.teachers.slice(0, 4).map(t => ({
+                        ...t,
+                        attendance: Math.floor(Math.random() * 10) + 90
+                    }));
+                },
+                
+                initCharts() {
+                    // Student Progress Chart
+                    const ctx1 = document.getElementById('studentProgressChart');
+                    if (ctx1) {
+                        this.studentProgressChart = new Chart(ctx1, {
+                            type: 'line',
+                            data: {
+                                labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                                datasets: [{
+                                    label: 'الحضور',
+                                    data: [85, 88, 92, 87, 94, 90, 89],
+                                    borderColor: '#065F46',
+                                    backgroundColor: 'rgba(6, 95, 70, 0.1)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#065F46',
+                                    pointBorderColor: '#fff',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 7
+                                }, {
+                                    label: 'الحفظ',
+                                    data: [78, 82, 85, 80, 88, 85, 87],
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#10B981',
+                                    pointBorderColor: '#fff',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 7
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            font: { family: 'Cairo' },
+                                            padding: 20,
+                                            usePointStyle: true
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        grid: { color: 'rgba(0,0,0,0.05)' }
+                                    },
+                                    x: {
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Branch Distribution Chart
+                    const ctx2 = document.getElementById('branchDistributionChart');
+                    if (ctx2) {
+                        this.branchDistributionChart = new Chart(ctx2, {
+                            type: 'doughnut',
+                            data: {
+                                labels: this.branches.map(b => b.name),
+                                datasets: [{
+                                    data: this.branches.map(() => Math.floor(Math.random() * 20) + 15),
+                                    backgroundColor: ['#065F46', '#10B981', '#059669', '#34D399'],
+                                    borderWidth: 0,
+                                    hoverOffset: 10
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '65%',
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            font: { family: 'Cairo' },
+                                            padding: 15,
+                                            usePointStyle: true
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                
+                getGreeting() {
+                    const hour = new Date().getHours();
+                    if (hour < 12) return 'صباح الخير';
+                    if (hour < 18) return 'مساء الخير';
+                    return 'مساء الخير';
+                },
+                
+                getCurrentDate() {
+                    const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                    const now = new Date();
+                    const dayName = days[now.getDay()];
+                    const day = now.getDate();
+                    const month = months[now.getMonth()];
+                    const year = now.getFullYear();
+                    return `اليوم هو ${dayName}، ${day} ${month} ${year} م`;
+                },
+                
+                toggleDarkMode() {
+                    this.isDarkMode = !this.isDarkMode;
+                    document.documentElement.classList.toggle('dark', this.isDarkMode);
+                    document.documentElement.classList.toggle('light', !this.isDarkMode);
+                    localStorage.setItem('darkMode', this.isDarkMode);
+                },
+                
+                checkDarkMode() {
+                    const saved = localStorage.getItem('darkMode');
+                    if (saved !== null) {
+                        this.isDarkMode = saved === 'true';
+                        document.documentElement.classList.toggle('dark', this.isDarkMode);
+                        document.documentElement.classList.toggle('light', !this.isDarkMode);
+                    }
+                },
+                
+                navigateTo(page) {
+                    this.currentPage = page;
+                    this.sidebarOpen = false;
+                    this.showToast(`تم الانتقال إلى ${page}`, 'info');
+                },
+                
+                toggleBranch(index) {
+                    const i = this.expandedBranches.indexOf(index);
+                    if (i === -1) {
+                        this.expandedBranches.push(index);
+                    } else {
+                        this.expandedBranches.splice(i, 1);
+                    }
+                },
+                
+                performSearch() {
+                    if (!this.searchQuery.trim()) {
+                        this.searchResults = [];
+                        return;
+                    }
+                    
+                    const query = this.searchQuery.toLowerCase();
+                    this.searchResults = [];
+                    
+                    // Search students
+                    this.students.forEach(s => {
+                        if (s.name.toLowerCase().includes(query)) {
+                            this.searchResults.push({
+                                type: 'student',
+                                title: s.name,
+                                subtitle: `${s.branch} - ${s.halqa}`,
+                                icon: 'school',
+                                iconBg: 'bg-blue-100 dark:bg-blue-900/30',
+                                iconColor: 'text-blue-600'
+                            });
+                        }
+                    });
+                    
+                    // Search teachers
+                    this.teachers.forEach(t => {
+                        if (t.name.toLowerCase().includes(query)) {
+                            this.searchResults.push({
+                                type: 'teacher',
+                                title: t.name,
+                                subtitle: `${t.branch} - ${t.halqa}`,
+                                icon: 'person',
+                                iconBg: 'bg-purple-100 dark:bg-purple-900/30',
+                                iconColor: 'text-purple-600'
+                            });
+                        }
+                    });
+                    
+                    // Search branches
+                    this.branches.forEach(b => {
+                        if (b.name.toLowerCase().includes(query)) {
+                            this.searchResults.push({
+                                type: 'branch',
+                                title: b.name,
+                                subtitle: b.location,
+                                icon: 'mosque',
+                                iconBg: 'bg-primary/10',
+                                iconColor: 'text-primary'
+                            });
+                        }
+                    });
+                },
+                
+                goToResult(result) {
+                    this.showToast(`الانتقال إلى: ${result.title}`, 'success');
+                    this.searchFocused = false;
+                    this.searchQuery = '';
+                    this.searchResults = [];
+                },
+                
+                exportReport() {
+                    this.exporting = true;
+                    setTimeout(() => {
+                        this.exporting = false;
+                        this.showToast('تم تصدير التقرير بنجاح!', 'success');
+                        
+                        // Simulate download
+                        const link = document.createElement('a');
+                        link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('تقرير نظام الحلقات - ' + new Date().toLocaleDateString('ar-OM'));
+                        link.download = 'report.txt';
+                        link.click();
+                    }, 2000);
+                },
+                
+                addBranch() {
+                    if (!this.newBranch.name) {
+                        this.showToast('يرجى إدخال اسم الفرع', 'error');
+                        return;
+                    }
+                    
+                    this.branches.push({
+                        id: this.branches.length + 1,
+                        name: this.newBranch.name,
+                        location: this.newBranch.location,
+                        halqas: []
+                    });
+                    
+                    this.newBranch = { name: '', location: '', phone: '' };
+                    this.openAddBranchModal = false;
+                    this.calculateStats();
+                    this.animateStats();
+                    this.showToast('تم إضافة الفرع بنجاح!', 'success');
+                },
+                
+                viewTeacherDetails(teacher) {
+                    this.showToast(`عرض تفاصيل: ${teacher.name}`, 'info');
+                },
+                
+                markAsRead(index) {
+                    this.notifications[index].read = true;
+                },
+                
+                markAllAsRead() {
+                    this.notifications.forEach(n => n.read = true);
+                    this.showToast('تم تحديد جميع الإشعارات كمقروءة', 'success');
+                },
+                
+                get unreadNotifications() {
+                    return this.notifications.filter(n => !n.read).length;
+                },
+                
+                simulateRealTimeUpdate() {
+                    // Randomly update a stat
+                    const stats = ['students', 'teachers', 'activeStudents'];
+                    const stat = stats[Math.floor(Math.random() * stats.length)];
+                    const change = Math.random() > 0.5 ? 1 : -1;
+                    
+                    if (this.stats[stat] + change >= 0) {
+                        this.stats[stat] += change;
+                        this.animatedStats[stat] = this.stats[stat];
+                    }
+                },
+                
+                showToast(message, type = 'info') {
+                    const container = document.getElementById('toast-container');
+                    const toast = document.createElement('div');
+                    
+                    const colors = {
+                        success: 'bg-green-500',
+                        error: 'bg-red-500',
+                        info: 'bg-blue-500',
+                        warning: 'bg-amber-500'
+                    };
+                    
+                    const icons = {
+                        success: 'check_circle',
+                        error: 'error',
+                        info: 'info',
+                        warning: 'warning'
+                    };
+                    
+                    toast.className = `${colors[type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-x-full transition-transform duration-300`;
+                    toast.innerHTML = `
+                        <span class="material-symbols-outlined">${icons[type]}</span>
+                        <span class="text-sm font-medium">${message}</span>
+                    `;
+                    
+                    container.appendChild(toast);
+                    
+                    // Animate in
+                    setTimeout(() => toast.classList.remove('translate-x-full'), 10);
+                    
+                    // Remove after 3 seconds
+                    setTimeout(() => {
+                        toast.classList.add('translate-x-full');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+                }
+            };
+        }
+    </script>
+</body>
+</html>

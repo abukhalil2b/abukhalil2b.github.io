@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>إدارة الأفرع والحلقات - نظام الحلقات</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/data.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#065F46",
+                        "primary-light": "#10B981",
+                        "primary-dark": "#064E3B",
+                        "background-light": "#f7f7f6",
+                        "background-dark": "#1d1a15",
+                        "accent": "#059669",
+                        "charcoal": "#2D3748"
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif']
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: #2D3748;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(6, 95, 70, 0.08);
+            border-right: 4px solid #065F46;
+            color: #065F46 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #065F46;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-charcoal dark:text-gray-200 antialiased">
+    <div x-data="branchesApp()" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-[#0a150e] border-l border-primary/10 dark:border-gray-800 flex flex-col fixed h-full right-0 z-20">
+            <div class="p-6 flex flex-col items-center gap-2 border-b border-primary/10 dark:border-gray-800">
+                <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-4xl">auto_stories</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl leading-tight text-primary">نظام الحلقات</h1>
+                    <p class="text-[10px] text-primary-light font-medium">مؤسسة مستهيل الوقفية</p>
+                    <p class="text-[8px] text-primary-light">سلطنة عمان</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">القائمة الرئيسية</div>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="dashboard.html">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>لوحة التحكم</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="students.html">
+                    <span class="material-symbols-outlined">school</span>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="teachers.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>المعلمون</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg sidebar-active font-bold" href="branches.html">
+                    <span class="material-symbols-outlined">mosque</span>
+                    <span>الأفرع والحلقات</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="tasks.html">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span>مهام الحفظ والتلاوة</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>إدارة المسابقات</span>
+                </a>
+                
+                <div class="pt-6">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">النظام</div>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>التقارير</span>
+                    </a>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-primary/10 dark:border-gray-800">
+                <div class="bg-primary/10 p-3 rounded-xl border border-primary/20">
+                    <p class="text-xs font-bold text-primary mb-1 text-center">تحتاج مساعدة؟</p>
+                    <p class="text-[10px] text-primary-light mb-2 text-center">تواصل مع الدعم الفني للمدرسة</p>
+                    <button class="w-full py-1.5 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-primary-dark transition-colors">مركز الدعم</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 mr-64">
+            <!-- Header -->
+            <header class="h-20 bg-white/80 dark:bg-[#0a150e]/80 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10 dark:border-gray-800 px-8 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center overflow-hidden">
+                        <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                            <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                            <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                            <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                            <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <p class="text-sm font-bold leading-none text-primary">أحمد</p>
+                        <p class="text-[10px] text-primary-light mt-1">مدير النظام العام</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6 flex-1 justify-end">
+                    <div class="relative max-w-md w-full">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary-light text-xl">search</span>
+                        <input x-model="searchQuery" class="w-full pr-10 pl-4 py-2.5 bg-primary/5 dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary-light" placeholder="بحث عن فرع أو حلقة..." type="text"/>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-8">
+                <!-- Page Title -->
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight mb-2 text-primary">إدارة الأفرع والحلقات</h2>
+                        <p class="text-primary-light flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">mosque</span>
+                            إضافة وإدارة فروع الجوامع والحلقات القرآنية
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="showAddBranchModal = true" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">add_business</span>
+                            إضافة فرع جديد
+                        </button>
+                        <button @click="showAddHalqaModal = true" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-white/5 border border-primary/20 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors text-charcoal">
+                            <span class="material-symbols-outlined">add_circle</span>
+                            إضافة حلقة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">إجمالي الأفرع</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="branches.length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">mosque</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">إجمالي الحلقات</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="getTotalHalqas()"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">auto_stories</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">الأفرع النشطة</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="branches.filter(b => b.status === 'active').length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">check_circle</span>
+                    </div>
+                </div>
+
+                <!-- Branches Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <template x-for="branch in filteredBranches()" :key="branch.id">
+                        <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm overflow-hidden">
+                            <!-- Branch Header -->
+                            <div class="px-6 py-4 bg-gradient-to-l from-primary/5 to-transparent border-b border-primary/10 dark:border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                            <span class="material-symbols-outlined text-2xl">mosque</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-primary" x-text="branch.name"></h3>
+                                            <p class="text-xs text-primary-light" x-text="branch.location"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span :class="branch.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-2 py-1 text-[10px] font-bold rounded-full" x-text="branch.status === 'active' ? 'نشط' : 'غير نشط'"></span>
+                                        <div class="flex items-center gap-1">
+                                            <button @click="editBranch(branch)" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button @click="deleteBranch(branch.id)" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Branch Info -->
+                            <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800">
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <p class="text-2xl font-black text-primary" x-text="branch.halqas ? branch.halqas.length : 0"></p>
+                                        <p class="text-xs text-primary-light">الحلقات</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-primary" x-text="branch.teachersCount || 0"></p>
+                                        <p class="text-xs text-primary-light">المعلمون</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-primary" x-text="branch.studentsCount || 0"></p>
+                                        <p class="text-xs text-primary-light">الطلاب</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Halqas List -->
+                            <div class="px-6 py-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-charcoal">الحلقات المرتبطة</h4>
+                                    <button @click="openAddHalqaToBranch(branch)" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">add</span>
+                                        إضافة حلقة
+                                    </button>
+                                </div>
+                                
+                                <div class="space-y-2" x-show="branch.halqas && branch.halqas.length > 0">
+                                    <template x-for="(halqa, index) in branch.halqas" :key="index">
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                                            <div class="flex items-center gap-3">
+                                                <div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                                    <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-bold text-charcoal" x-text="halqa.name"></p>
+                                                    <p class="text-[10px] text-primary-light" x-text="halqa.time || 'لم يحدد الوقت'"></p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-primary-light" x-text="(halqa.studentsCount || 0) + ' طالب'"></span>
+                                                <button @click="removeHalqa(branch.id, index)" class="p-1 text-red-400 hover:text-red-600 transition-colors">
+                                                    <span class="material-symbols-outlined text-sm">close</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                
+                                <div x-show="!branch.halqas || branch.halqas.length === 0" class="text-center py-6 text-primary-light text-sm">
+                                    <span class="material-symbols-outlined text-3xl mb-2 block opacity-50">auto_stories</span>
+                                    لا توجد حلقات مسجلة
+                                </div>
+                            </div>
+                            
+                            <!-- Branch Contact -->
+                            <div class="px-6 py-3 bg-gray-50 dark:bg-white/5 border-t border-primary/10 dark:border-gray-800">
+                                <div class="flex items-center justify-between text-xs">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center gap-1 text-primary-light">
+                                            <span class="material-symbols-outlined text-sm">person</span>
+                                            <span x-text="branch.supervisor || 'لا يوجد مشرف'"></span>
+                                        </span>
+                                        <span class="flex items-center gap-1 text-primary-light" x-show="branch.phone">
+                                            <span class="material-symbols-outlined text-sm">phone</span>
+                                            <span x-text="branch.phone"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- Empty State -->
+                    <div x-show="filteredBranches().length === 0" class="lg:col-span-2 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-12 text-center">
+                        <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 block">mosque</span>
+                        <h3 class="text-lg font-bold text-charcoal mb-2">لا توجد أفرع</h3>
+                        <p class="text-sm text-primary-light mb-4">ابدأ بإضافة فرع جديد للنظام</p>
+                        <button @click="showAddBranchModal = true" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold">
+                            <span class="material-symbols-outlined">add_business</span>
+                            إضافة فرع جديد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add/Edit Branch Modal -->
+        <div x-show="showAddBranchModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="closeBranchModal()">
+            <div class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
+                <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#0d1b12]">
+                    <h3 class="text-lg font-bold text-primary" x-text="editBranchMode ? 'تعديل بيانات الفرع' : 'إضافة فرع جديد'"></h3>
+                    <button @click="closeBranchModal()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="saveBranch()" class="p-6 space-y-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">اسم الفرع (الجامع) <span class="text-red-500">*</span></label>
+                            <input x-model="branchForm.name" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: جامع السميع"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الموقع / العنوان <span class="text-red-500">*</span></label>
+                            <input x-model="branchForm.location" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="المنطقة - الولاية"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">المشرف المسؤول</label>
+                            <input x-model="branchForm.supervisor" type="text" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="اسم المشرف"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">رقم التواصل</label>
+                            <input x-model="branchForm.phone" type="tel" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: 96800000000"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الحالة</label>
+                            <select x-model="branchForm.status" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="active">نشط</option>
+                                <option value="inactive">غير نشط</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">ملاحظات</label>
+                            <textarea x-model="branchForm.notes" rows="3" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أي ملاحظات إضافية..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 pt-4 border-t border-primary/10">
+                        <button type="button" @click="closeBranchModal()" class="px-6 py-2.5 bg-gray-100 dark:bg-white/5 text-charcoal rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
+                            إلغاء
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+                            <span x-text="editBranchMode ? 'حفظ التعديلات' : 'إضافة الفرع'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Halqa Modal -->
+        <div x-show="showAddHalqaModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="closeHalqaModal()">
+            <div class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
+                <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#0d1b12]">
+                    <h3 class="text-lg font-bold text-primary">إضافة حلقة جديدة</h3>
+                    <button @click="closeHalqaModal()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="saveHalqa()" class="p-6 space-y-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">الفرع (الجامع) <span class="text-red-500">*</span></label>
+                            <select x-model="halqaForm.branchId" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="">اختر الفرع</option>
+                                <template x-for="branch in branches" :key="branch.id">
+                                    <option :value="branch.id" x-text="branch.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">اسم الحلقة <span class="text-red-500">*</span></label>
+                            <input x-model="halqaForm.name" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: حلقة الإتقان"/>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">المعلم المسؤول</label>
+                            <select x-model="halqaForm.teacherId" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="">اختر المعلم</option>
+                                <template x-for="teacher in teachers" :key="teacher.id">
+                                    <option :value="teacher.id" x-text="teacher.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-charcoal mb-2">وقت الحلقة</label>
+                                <select x-model="halqaForm.time" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                    <option value="">اختر الوقت</option>
+                                    <option value="بعد صلاة الفجر">بعد صلاة الفجر</option>
+                                    <option value="بعد صلاة الظهر">بعد صلاة الظهر</option>
+                                    <option value="بعد صلاة العصر">بعد صلاة العصر</option>
+                                    <option value="بعد صلاة المغرب">بعد صلاة المغرب</option>
+                                    <option value="بعد صلاة العشاء">بعد صلاة العشاء</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-charcoal mb-2">الأيام</label>
+                                <input x-model="halqaForm.days" type="text" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: السبت - الخميس"/>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-charcoal mb-2">الفئة العمرية</label>
+                                <input x-model="halqaForm.ageGroup" type="text" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: 10-15 سنة"/>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-charcoal mb-2">الحد الأقصى للطلاب</label>
+                                <input x-model="halqaForm.maxStudents" type="number" min="1" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="20"/>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">نوع الحلقة</label>
+                            <select x-model="halqaForm.type" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="memorization">حفظ</option>
+                                <option value="revision">مراجعة</option>
+                                <option value="tajweed">تجويد</option>
+                                <option value="mixed">مختلطة</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">ملاحظات</label>
+                            <textarea x-model="halqaForm.notes" rows="2" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="أي ملاحظات إضافية..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 pt-4 border-t border-primary/10">
+                        <button type="button" @click="closeHalqaModal()" class="px-6 py-2.5 bg-gray-100 dark:bg-white/5 text-charcoal rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
+                            إلغاء
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+                            إضافة الحلقة
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function branchesApp() {
+            return {
+                showAddBranchModal: false,
+                showAddHalqaModal: false,
+                editBranchMode: false,
+                editBranchId: null,
+                searchQuery: '',
+                branches: [],
+                teachers: [],
+                branchForm: {
+                    name: '',
+                    location: '',
+                    supervisor: '',
+                    phone: '',
+                    status: 'active',
+                    notes: '',
+                    halqas: []
+                },
+                halqaForm: {
+                    branchId: '',
+                    name: '',
+                    teacherId: '',
+                    time: '',
+                    days: '',
+                    ageGroup: '',
+                    maxStudents: '',
+                    type: 'memorization',
+                    notes: ''
+                },
+                
+                init() {
+                    this.loadBranches();
+                    this.loadTeachers();
+                },
+                
+                loadBranches() {
+                    const data = localStorage.getItem('quranschool_branches');
+                    this.branches = data ? JSON.parse(data) : (DEFAULT_DATA?.branches || []);
+                    if (!data && DEFAULT_DATA?.branches) {
+                        localStorage.setItem('quranschool_branches', JSON.stringify(DEFAULT_DATA.branches));
+                    }
+                },
+                
+                loadTeachers() {
+                    const data = localStorage.getItem('quranschool_teachers');
+                    this.teachers = data ? JSON.parse(data) : (DEFAULT_DATA?.teachers || []);
+                    if (!data && DEFAULT_DATA?.teachers) {
+                        localStorage.setItem('quranschool_teachers', JSON.stringify(DEFAULT_DATA.teachers));
+                    }
+                },
+                
+                saveBranches() {
+                    localStorage.setItem('quranschool_branches', JSON.stringify(this.branches));
+                },
+                
+                filteredBranches() {
+                    if (!this.searchQuery) return this.branches;
+                    const query = this.searchQuery.toLowerCase();
+                    return this.branches.filter(b => 
+                        b.name.toLowerCase().includes(query) ||
+                        b.location.toLowerCase().includes(query) ||
+                        (b.halqas && b.halqas.some(h => h.name.toLowerCase().includes(query)))
+                    );
+                },
+                
+                getTotalHalqas() {
+                    return this.branches.reduce((total, branch) => {
+                        return total + (branch.halqas ? branch.halqas.length : 0);
+                    }, 0);
+                },
+                
+                resetBranchForm() {
+                    this.branchForm = {
+                        name: '',
+                        location: '',
+                        supervisor: '',
+                        phone: '',
+                        status: 'active',
+                        notes: '',
+                        halqas: []
+                    };
+                },
+                
+                resetHalqaForm() {
+                    this.halqaForm = {
+                        branchId: '',
+                        name: '',
+                        teacherId: '',
+                        time: '',
+                        days: '',
+                        ageGroup: '',
+                        maxStudents: '',
+                        type: 'memorization',
+                        notes: ''
+                    };
+                },
+                
+                saveBranch() {
+                    if (this.editBranchMode) {
+                        const index = this.branches.findIndex(b => b.id === this.editBranchId);
+                        if (index !== -1) {
+                            const existingHalqas = this.branches[index].halqas || [];
+                            this.branches[index] = { 
+                                ...this.branchForm, 
+                                id: this.editBranchId, 
+                                halqas: existingHalqas,
+                                updatedAt: new Date().toISOString() 
+                            };
+                        }
+                    } else {
+                        const newBranch = {
+                            ...this.branchForm,
+                            id: Date.now(),
+                            halqas: [],
+                            teachersCount: 0,
+                            studentsCount: 0,
+                            createdAt: new Date().toISOString()
+                        };
+                        this.branches.push(newBranch);
+                    }
+                    this.saveBranches();
+                    this.closeBranchModal();
+                },
+                
+                editBranch(branch) {
+                    this.editBranchMode = true;
+                    this.editBranchId = branch.id;
+                    this.branchForm = { 
+                        name: branch.name,
+                        location: branch.location,
+                        supervisor: branch.supervisor || '',
+                        phone: branch.phone || '',
+                        status: branch.status,
+                        notes: branch.notes || ''
+                    };
+                    this.showAddBranchModal = true;
+                },
+                
+                deleteBranch(id) {
+                    if (confirm('هل أنت متأكد من حذف هذا الفرع وجميع الحلقات المرتبطة به؟')) {
+                        this.branches = this.branches.filter(b => b.id !== id);
+                        this.saveBranches();
+                    }
+                },
+                
+                closeBranchModal() {
+                    this.showAddBranchModal = false;
+                    this.editBranchMode = false;
+                    this.editBranchId = null;
+                    this.resetBranchForm();
+                },
+                
+                openAddHalqaToBranch(branch) {
+                    this.halqaForm.branchId = branch.id;
+                    this.showAddHalqaModal = true;
+                },
+                
+                saveHalqa() {
+                    const branchIndex = this.branches.findIndex(b => b.id == this.halqaForm.branchId);
+                    if (branchIndex !== -1) {
+                        if (!this.branches[branchIndex].halqas) {
+                            this.branches[branchIndex].halqas = [];
+                        }
+                        
+                        const teacher = this.teachers.find(t => t.id == this.halqaForm.teacherId);
+                        
+                        this.branches[branchIndex].halqas.push({
+                            name: this.halqaForm.name,
+                            teacherId: this.halqaForm.teacherId,
+                            teacherName: teacher ? teacher.name : '',
+                            time: this.halqaForm.time,
+                            days: this.halqaForm.days,
+                            ageGroup: this.halqaForm.ageGroup,
+                            maxStudents: this.halqaForm.maxStudents,
+                            type: this.halqaForm.type,
+                            notes: this.halqaForm.notes,
+                            studentsCount: 0,
+                            createdAt: new Date().toISOString()
+                        });
+                        
+                        this.saveBranches();
+                    }
+                    this.closeHalqaModal();
+                },
+                
+                removeHalqa(branchId, halqaIndex) {
+                    if (confirm('هل أنت متأكد من حذف هذه الحلقة؟')) {
+                        const branchIndex = this.branches.findIndex(b => b.id === branchId);
+                        if (branchIndex !== -1) {
+                            this.branches[branchIndex].halqas.splice(halqaIndex, 1);
+                            this.saveBranches();
+                        }
+                    }
+                },
+                
+                closeHalqaModal() {
+                    this.showAddHalqaModal = false;
+                    this.resetHalqaForm();
+                }
+            };
+        }
+    </script>
+</body>
+</html>

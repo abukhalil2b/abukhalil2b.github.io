@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>لوحة التحكم - إدارة الفروع والحلقات</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/data.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#065F46",
+                        "primary-light": "#10B981",
+                        "primary-dark": "#064E3B",
+                        "background-light": "#f7f7f6",
+                        "background-dark": "#1d1a15",
+                        "accent": "#059669",
+                        "charcoal": "#2D3748"
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif']
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: #2D3748;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(6, 95, 70, 0.08);
+            border-right: 4px solid #065F46;
+            color: #065F46 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #065F46;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-charcoal dark:text-gray-200 antialiased">
+    <div x-data="dashboardApp()" x-init="init()" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-[#0a150e] border-l border-primary/10 dark:border-gray-800 flex flex-col fixed h-full right-0 z-20">
+            <div class="p-6 flex flex-col items-center gap-2 border-b border-primary/10 dark:border-gray-800">
+                <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-4xl">auto_stories</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl leading-tight text-primary">نظام الحلقات</h1>
+                    <p class="text-[10px] text-primary-light font-medium">مؤسسة مستهيل الوقفية</p>
+                    <p class="text-[8px] text-primary-light">سلطنة عمان</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">القائمة الرئيسية</div>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg sidebar-active font-bold" href="#">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>لوحة التحكم</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="students.html">
+                    <span class="material-symbols-outlined">school</span>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="teachers.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>المعلمون</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="branches.html">
+                    <span class="material-symbols-outlined">mosque</span>
+                    <span>الأفرع والحلقات</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="tasks.html">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span>مهام الحفظ والتلاوة</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>إدارة المسابقات</span>
+                </a>
+                
+                <div class="pt-6">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">الفروع والمساجد</div>
+                    
+                    <div class="space-y-1 mb-2">
+                        <a class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">mosque</span>
+                                <span class="text-sm font-medium">جامع السميع</span>
+                            </div>
+                            <span class="material-symbols-outlined text-xs text-gray-400">expand_more</span>
+                        </a>
+                        <div class="pr-9 space-y-1">
+                            <a class="flex items-center gap-2 py-1 text-xs text-charcoal/70 hover:text-primary transition-colors" href="#">
+                                <span class="size-1.5 rounded-full bg-primary-light"></span>
+                                <span>الحلقات</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1 mb-2">
+                        <a class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">mosque</span>
+                                <span class="text-sm font-medium">جامع السلام</span>
+                            </div>
+                            <span class="material-symbols-outlined text-xs text-gray-400">expand_more</span>
+                        </a>
+                        <div class="pr-9 space-y-1">
+                            <a class="flex items-center gap-2 py-1 text-xs text-charcoal/70 hover:text-primary transition-colors" href="#">
+                                <span class="size-1.5 rounded-full bg-primary-light"></span>
+                                <span>الحلقات</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pt-6">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">النظام</div>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>التقارير</span>
+                    </a>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-primary/10 dark:border-gray-800">
+                <div class="bg-primary/10 p-3 rounded-xl border border-primary/20">
+                    <p class="text-xs font-bold text-primary mb-1 text-center">تحتاج مساعدة؟</p>
+                    <p class="text-[10px] text-primary-light mb-2 text-center">تواصل مع الدعم الفني للمدرسة</p>
+                    <button class="w-full py-1.5 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-primary-dark transition-colors">مركز الدعم</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 mr-64">
+            <!-- Header -->
+            <header class="h-20 bg-white/80 dark:bg-[#0a150e]/80 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10 dark:border-gray-800 px-8 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center overflow-hidden">
+                        <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                            <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                            <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                            <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                            <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <p class="text-sm font-bold leading-none text-primary">أحمد</p>
+                        <p class="text-[10px] text-primary-light mt-1">مدير النظام العام</p>
+                    </div>
+                    <div class="h-8 w-[1px] bg-gray-200 dark:bg-gray-800 mx-2"></div>
+                    <button class="relative p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#0a150e]"></span>
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-6 flex-1 justify-end">
+                    <div class="relative max-w-md w-full">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary-light text-xl">search</span>
+                        <input class="w-full pr-10 pl-4 py-2.5 bg-primary/5 dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary-light" placeholder="بحث عن طالب، معلم، أو فرع..." type="text"/>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-8">
+                <!-- Welcome Section -->
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight mb-2 text-primary">مرحباً بك مجدداً، يا أحمد</h2>
+                        <p class="text-primary-light flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">calendar_month</span>
+                            <span x-text="getCurrentDate()"></span>
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">add_business</span>
+                            إضافة فرع جديد
+                        </button>
+                        <button class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-white/5 border border-primary/20 dark:border-gray-800 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors text-charcoal">
+                            <span class="material-symbols-outlined">download</span>
+                            تصدير التقرير
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- إجمالي الطلاب -->
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group hover:shadow-lg hover:border-primary/30 transition-all">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-blue-600">school</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">إجمالي الطلاب</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal" x-text="stats.students"></h3>
+                                <span class="text-xs font-bold px-2 py-1 bg-blue-100 text-blue-700 rounded-full">طالب</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl text-blue-500/5 group-hover:text-blue-500/10 transition-colors">school</span>
+                    </div>
+
+                    <!-- إجمالي المعلمين -->
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group hover:shadow-lg hover:border-primary/30 transition-all">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-purple-600">person</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">إجمالي المعلمين</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal" x-text="stats.teachers"></h3>
+                                <span class="text-xs font-bold px-2 py-1 bg-purple-100 text-purple-700 rounded-full">معلم</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl text-purple-500/5 group-hover:text-purple-500/10 transition-colors">person</span>
+                    </div>
+
+                    <!-- عدد الأفرع -->
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group hover:shadow-lg hover:border-primary/30 transition-all">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary">mosque</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">عدد الأفرع</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal" x-text="stats.branches"></h3>
+                                <span class="text-xs font-bold px-2 py-1 bg-primary/10 text-primary rounded-full">فرع</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl text-primary/5 group-hover:text-primary/10 transition-colors">mosque</span>
+                    </div>
+
+                    <!-- عدد الحلقات -->
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden group hover:shadow-lg hover:border-primary/30 transition-all">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="size-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-amber-600">auto_stories</span>
+                                </div>
+                                <p class="text-sm text-primary-light font-medium">عدد الحلقات</p>
+                            </div>
+                            <div class="flex items-end justify-between">
+                                <h3 class="text-4xl font-black text-charcoal" x-text="stats.halqas"></h3>
+                                <span class="text-xs font-bold px-2 py-1 bg-amber-100 text-amber-700 rounded-full">حلقة</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl text-amber-500/5 group-hover:text-amber-500/10 transition-colors">auto_stories</span>
+                    </div>
+                </div>
+
+                <!-- Stats Cards - Row 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- مهام الحفظ -->
+                    <div class="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 p-5 rounded-2xl border border-primary/20 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-primary">menu_book</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-primary-light font-medium">مهام الحفظ</p>
+                                    <h3 class="text-2xl font-black text-primary" x-text="stats.memorizationTasks"></h3>
+                                </div>
+                            </div>
+                            <a href="tasks.html" class="flex items-center gap-1 text-xs text-primary font-bold hover:underline">
+                                <span>عرض</span>
+                                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- مهام التلاوة -->
+                    <div class="bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-900/20 dark:to-amber-900/10 p-5 rounded-2xl border border-amber-200/50 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-amber-600">record_voice_over</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-amber-600/70 font-medium">مهام التلاوة</p>
+                                    <h3 class="text-2xl font-black text-amber-600" x-text="stats.recitationTasks"></h3>
+                                </div>
+                            </div>
+                            <a href="tasks.html" class="flex items-center gap-1 text-xs text-amber-600 font-bold hover:underline">
+                                <span>عرض</span>
+                                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- الطلاب النشطون -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-900/10 p-5 rounded-2xl border border-green-200/50 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-12 rounded-xl bg-white dark:bg-[#0d1b12] flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl text-green-600">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-green-600/70 font-medium">الطلاب النشطون</p>
+                                    <h3 class="text-2xl font-black text-green-600" x-text="stats.activeStudents"></h3>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-full" x-text="stats.students > 0 ? Math.round((stats.activeStudents / stats.students) * 100) + '٪' : '٠٪'"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- الطلاب المتميزون -->
+                    <div class="lg:col-span-2 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-3xl text-amber-500 fill-1">star</span>
+                                <h4 class="text-lg font-bold text-primary">الطلاب المتميزون</h4>
+                            <span class="text-xs text-gray-400 mr-2">(الطلاب المتميزون لهذا الشهر، عدد الأجزاء المحفوظة، عدد النقاط)</span>
+
+                            </div>
+                            <a class="text-xs text-primary font-bold hover:underline" href="#">عرض الكل</a>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <!-- Student 1 -->
+                            <div class="flex items-center justify-between p-4 bg-gradient-to-l from-amber-50 to-transparent dark:from-amber-950/20 rounded-xl border border-amber-200/50 dark:border-amber-900/30 hover:shadow-md transition-all">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="size-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                        1
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-charcoal text-base">عبدالله بن محمد الحارثي</p>
+                                        <div class="flex items-center gap-4 mt-1">
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">mosque</span>
+                                                جامع السميع
+                                            </span>
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                حلقة الإتقان
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg font-bold">
+                                    <span class="material-symbols-outlined">grade</span>
+                                    <span class="text-lg">٩٨٥</span>
+                                    <span class="text-xs opacity-80">نقطة</span>
+                                </div>
+                            </div>
+
+                            <!-- Student 2 -->
+                            <div class="flex items-center justify-between p-4 bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-950/20 rounded-xl border border-gray-200/50 dark:border-gray-800 hover:shadow-md transition-all">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="size-12 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                        2
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-charcoal text-base">يوسف بن سالم البلوشي</p>
+                                        <div class="flex items-center gap-4 mt-1">
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">mosque</span>
+                                                جامع السلام
+                                            </span>
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                حلقة النورانية
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg font-bold">
+                                    <span class="material-symbols-outlined">grade</span>
+                                    <span class="text-lg">٩٤٢</span>
+                                    <span class="text-xs opacity-80">نقطة</span>
+                                </div>
+                            </div>
+
+                            <!-- Student 3 -->
+                            <div class="flex items-center justify-between p-4 bg-gradient-to-l from-orange-50 to-transparent dark:from-orange-950/20 rounded-xl border border-orange-200/50 dark:border-orange-900/30 hover:shadow-md transition-all">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="size-12 rounded-full bg-gradient-to-br from-orange-300 to-orange-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                        3
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-charcoal text-base">محمد بن أحمد الزدجالي</p>
+                                        <div class="flex items-center gap-4 mt-1">
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">mosque</span>
+                                                جامع السميع
+                                            </span>
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                حلقة التجويد
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-bold">
+                                    <span class="material-symbols-outlined">grade</span>
+                                    <span class="text-lg">٩١٨</span>
+                                    <span class="text-xs opacity-80">نقطة</span>
+                                </div>
+                            </div>
+
+                            <!-- Student 4 -->
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/10 dark:border-gray-800 hover:shadow-md transition-all">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-lg">
+                                        4
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-charcoal text-base">سالم بن راشد المعمري</p>
+                                        <div class="flex items-center gap-4 mt-1">
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">mosque</span>
+                                                جامع السلام
+                                            </span>
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                حلقة الفجر
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold">
+                                    <span class="material-symbols-outlined">grade</span>
+                                    <span class="text-lg">٨٩٥</span>
+                                    <span class="text-xs opacity-80">نقطة</span>
+                                </div>
+                            </div>
+
+                            <!-- Student 5 -->
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/10 dark:border-gray-800 hover:shadow-md transition-all">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-lg">
+                                        5
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-charcoal text-base">خالد بن عبدالله الشكيلي</p>
+                                        <div class="flex items-center gap-4 mt-1">
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">mosque</span>
+                                                جامع السميع
+                                            </span>
+                                            <span class="text-xs text-primary-light flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">auto_stories</span>
+                                                حلقة الإتقان
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold">
+                                    <span class="material-symbols-outlined">grade</span>
+                                    <span class="text-lg">٨٧٠</span>
+                                    <span class="text-xs opacity-80">نقطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- آخر النشاطات -->
+                    <div class="bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h4 class="text-lg font-bold text-primary">آخر النشاطات</h4>
+                            <a class="text-xs text-primary font-bold hover:underline" href="#">عرض الكل</a>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="size-9 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-xl">person_add</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-charcoal">تم تسجيل طالب جديد</p>
+                                    <p class="text-xs text-primary-light">جامع السميع - حلقة الإتقان</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">منذ ١٠ دقائق</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4">
+                                <div class="size-9 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">
+                                    <span class="material-symbols-outlined text-xl">assignment_late</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-charcoal">تنبيه غياب متكرر</p>
+                                    <p class="text-xs text-primary-light">جامع السلام - فيصل بن علي</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">منذ ساعة واحدة</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4">
+                                <div class="size-9 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-xl">mosque</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-charcoal">تحديث بيانات الفرع</p>
+                                    <p class="text-xs text-primary-light">تم تحديث جدول الحلقات في جامع السلام</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">منذ ساعتين</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المعلمون المتميزون -->
+                <div class="mt-8 bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-primary inline-block">المعلمون المتميزون هذا الشهر</h4>
+                        </div>
+                        <div class="flex gap-1">
+                            <span class="material-symbols-outlined text-amber-500 fill-1">star</span>
+                            <span class="material-symbols-outlined text-amber-500 fill-1">star</span>
+                            <span class="material-symbols-outlined text-amber-500 fill-1">star</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-white/5 text-primary-light">
+                                    <th class="px-6 py-3 font-medium">المعلم</th>
+                                    <th class="px-6 py-3 font-medium">الفرع</th>
+                                    <th class="px-6 py-3 font-medium">الحلقة</th>
+                                    <th class="px-6 py-3 font-medium text-center">عدد الطلاب</th>
+                                    <th class="px-6 py-3 font-medium text-center">نسبة الحضور</th>
+                                    <th class="px-6 py-3 font-medium">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-primary/10 dark:divide-gray-800">
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-bold">
+                                        <div class="flex items-center gap-3">
+                                            <div class="size-8 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center">
+                                                <svg class="w-full h-full" viewBox="0 0 100 100" fill="none">
+                                                    <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                                                    <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                                                    <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                                                    <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                                                    <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="text-charcoal">محمد بن سعيد الهاشمي</span>
+                                                <span class="text-[10px] text-primary-light font-normal">موظف</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-primary-light">جامع السميع</span>
+                                            <span class="text-[10px] text-gray-400">التعيين</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-charcoal">حلقة الإتقان</td>
+                                    <td class="px-6 py-4 text-center text-charcoal">١٨</td>
+                                    <td class="px-6 py-4 text-center text-charcoal">٩٨٪</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">نشط</span>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-bold">
+                                        <div class="flex items-center gap-3">
+                                            <div class="size-8 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center">
+                                                <svg class="w-full h-full" viewBox="0 0 100 100" fill="none">
+                                                    <circle cx="50" cy="50" r="48" fill="#E8F5E9"/>
+                                                    <circle cx="50" cy="38" r="18" fill="#065F46"/>
+                                                    <path d="M50 58 C25 58 20 83 20 98 L80 98 C80 83 75 58 50 58" fill="#065F46"/>
+                                                    <rect x="25" y="20" width="50" height="12" rx="2" fill="#065F46"/>
+                                                    <rect x="30" y="16" width="40" height="8" rx="2" fill="#065F46"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="text-charcoal">ناصر بن عبدالله الجابري</span>
+                                                <span class="text-[10px] text-primary-light font-normal">متطوع</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-primary-light">جامع السلام</span>
+                                            <span class="text-[10px] text-gray-400">التعيين</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-charcoal">حلقة النورانية</td>
+                                    <td class="px-6 py-4 text-center text-charcoal">٢٤</td>
+                                    <td class="px-6 py-4 text-center text-charcoal">٩٤٪</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">نشط</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function dashboardApp() {
+            return {
+                stats: {
+                    students: 0,
+                    teachers: 0,
+                    branches: 0,
+                    halqas: 0,
+                    memorizationTasks: 0,
+                    recitationTasks: 0,
+                    activeStudents: 0
+                },
+                students: [],
+                teachers: [],
+                branches: [],
+                memorizationTasks: [],
+                recitationTasks: [],
+                
+                init() {
+                    this.loadData();
+                    this.calculateStats();
+                },
+                
+                loadData() {
+                    // تحميل الطلاب
+                    const studentsData = localStorage.getItem('quranschool_students');
+                    this.students = studentsData ? JSON.parse(studentsData) : (DEFAULT_DATA?.students || []);
+                    
+                    // تحميل المعلمين
+                    const teachersData = localStorage.getItem('quranschool_teachers');
+                    this.teachers = teachersData ? JSON.parse(teachersData) : (DEFAULT_DATA?.teachers || []);
+                    
+                    // تحميل الأفرع
+                    const branchesData = localStorage.getItem('quranschool_branches');
+                    this.branches = branchesData ? JSON.parse(branchesData) : (DEFAULT_DATA?.branches || []);
+                    
+                    // تحميل مهام الحفظ
+                    const memData = localStorage.getItem('quranschool_memorization_tasks');
+                    this.memorizationTasks = memData ? JSON.parse(memData) : (DEFAULT_DATA?.memorizationTasks || []);
+                    
+                    // تحميل مهام التلاوة
+                    const recData = localStorage.getItem('quranschool_recitation_tasks');
+                    this.recitationTasks = recData ? JSON.parse(recData) : (DEFAULT_DATA?.recitationTasks || []);
+                },
+                
+                calculateStats() {
+                    this.stats.students = this.students.length;
+                    this.stats.teachers = this.teachers.length;
+                    this.stats.branches = this.branches.length;
+                    this.stats.memorizationTasks = this.memorizationTasks.length;
+                    this.stats.recitationTasks = this.recitationTasks.length;
+                    this.stats.activeStudents = this.students.filter(s => s.status === 'active').length;
+                    
+                    // حساب عدد الحلقات من جميع الأفرع
+                    this.stats.halqas = this.branches.reduce((total, branch) => {
+                        return total + (branch.halqas ? branch.halqas.length : 0);
+                    }, 0);
+                },
+                
+                getCurrentDate() {
+                    const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                    const now = new Date();
+                    const dayName = days[now.getDay()];
+                    const day = now.getDate();
+                    const month = months[now.getMonth()];
+                    const year = now.getFullYear();
+                    return `اليوم هو ${dayName}، ${day} ${month} ${year} م`;
+                },
+                
+                toArabicNumber(num) {
+                    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                    return num.toString().split('').map(d => arabicNumbers[parseInt(d)] || d).join('');
+                }
+            };
+        }
+    </script>
+</body>
+</html>

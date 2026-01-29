@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>إدارة مهام الحفظ والتلاوة - نظام الحلقات</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/data.js"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#065F46",
+                        "primary-light": "#10B981",
+                        "primary-dark": "#064E3B",
+                        "background-light": "#f7f7f6",
+                        "background-dark": "#1d1a15",
+                        "accent": "#059669",
+                        "charcoal": "#2D3748"
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif']
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: #2D3748;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: rgba(6, 95, 70, 0.08);
+            border-right: 4px solid #065F46;
+            color: #065F46 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #065F46;
+        }
+        .task-card {
+            background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(6, 95, 70, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-charcoal dark:text-gray-200 antialiased">
+    <div x-data="tasksApp()" x-init="init()" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-[#0a150e] border-l border-primary/10 dark:border-gray-800 flex flex-col fixed h-full right-0 z-20">
+            <div class="p-6 flex flex-col items-center gap-2 border-b border-primary/10 dark:border-gray-800">
+                <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-4xl">auto_stories</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl leading-tight text-primary">نظام الحلقات</h1>
+                    <p class="text-[10px] text-primary-light font-medium">مؤسسة مستهيل الوقفية</p>
+                    <p class="text-[8px] text-primary-light">سلطنة عمان</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">القائمة الرئيسية</div>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="dashboard.html">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>لوحة التحكم</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="students.html">
+                    <span class="material-symbols-outlined">school</span>
+                    <span>الطلاب</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="teachers.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>المعلمون</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="branches.html">
+                    <span class="material-symbols-outlined">mosque</span>
+                    <span>الأفرع والحلقات</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg sidebar-active font-bold" href="tasks.html">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span>مهام الحفظ والتلاوة</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>إدارة المسابقات</span>
+                </a>
+                
+                <div class="pt-6">
+                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-wider px-3 mb-2">النظام</div>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">analytics</span>
+                        <span>التقارير</span>
+                    </a>
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors" href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-primary/10 dark:border-gray-800">
+                <div class="bg-primary/10 p-3 rounded-xl border border-primary/20">
+                    <p class="text-xs font-bold text-primary mb-1 text-center">تحتاج مساعدة؟</p>
+                    <p class="text-[10px] text-primary-light mb-2 text-center">تواصل مع الدعم الفني للمدرسة</p>
+                    <button class="w-full py-1.5 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-primary-dark transition-colors">مركز الدعم</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 mr-64">
+            <!-- Header -->
+            <header class="h-20 bg-white/80 dark:bg-[#0a150e]/80 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10 dark:border-gray-800 px-8 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="size-10 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <p class="text-sm font-bold leading-none text-primary">أحمد</p>
+                        <p class="text-[10px] text-primary-light mt-1">مدير النظام العام</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6 flex-1 justify-end">
+                    <div class="relative max-w-md w-full">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary-light text-xl">search</span>
+                        <input x-model="searchQuery" class="w-full pr-10 pl-4 py-2.5 bg-primary/5 dark:bg-white/5 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary-light" placeholder="بحث عن مهمة..." type="text"/>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-8">
+                <!-- Page Title -->
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tight mb-2 text-primary">إدارة مهام الحفظ والتلاوة</h2>
+                        <p class="text-primary-light flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">task_alt</span>
+                            إنشاء وإدارة برامج الحفظ والتلاوة للطلاب
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="openAddModal('memorization')" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">menu_book</span>
+                            إضافة مهمة حفظ
+                        </button>
+                        <button @click="openAddModal('recitation')" class="flex items-center gap-2 px-5 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-amber-500/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            <span class="material-symbols-outlined">record_voice_over</span>
+                            إضافة مهمة تلاوة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-8 bg-white dark:bg-[#0d1b12] p-1.5 rounded-xl w-fit border border-primary/10">
+                    <button @click="activeTab = 'memorization'" :class="activeTab === 'memorization' ? 'bg-primary text-white shadow-lg' : 'text-charcoal hover:bg-gray-100'" class="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all">
+                        <span class="material-symbols-outlined">menu_book</span>
+                        مهام الحفظ
+                        <span class="px-2 py-0.5 rounded-full text-xs" :class="activeTab === 'memorization' ? 'bg-white/20' : 'bg-primary/10 text-primary'" x-text="memorizationTasks.length"></span>
+                    </button>
+                    <button @click="activeTab = 'recitation'" :class="activeTab === 'recitation' ? 'bg-amber-500 text-white shadow-lg' : 'text-charcoal hover:bg-gray-100'" class="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all">
+                        <span class="material-symbols-outlined">record_voice_over</span>
+                        مهام التلاوة
+                        <span class="px-2 py-0.5 rounded-full text-xs" :class="activeTab === 'recitation' ? 'bg-white/20' : 'bg-amber-500/10 text-amber-600'" x-text="recitationTasks.length"></span>
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">إجمالي المهام</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="memorizationTasks.length + recitationTasks.length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">task_alt</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">مهام الحفظ</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="memorizationTasks.length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">menu_book</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">مهام التلاوة</p>
+                            <h3 class="text-3xl font-black text-amber-500" x-text="recitationTasks.length"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-amber-500/5 opacity-50">record_voice_over</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#0d1b12] p-6 rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-sm text-primary-light font-medium mb-1">الطلاب المشاركون</p>
+                            <h3 class="text-3xl font-black text-primary" x-text="getTotalStudents()"></h3>
+                        </div>
+                        <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-primary/5 opacity-50">group</span>
+                    </div>
+                </div>
+
+                <!-- Tasks Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Memorization Tasks -->
+                    <template x-if="activeTab === 'memorization'">
+                        <template x-for="task in filteredTasks('memorization')" :key="task.id">
+                            <div class="task-card rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm overflow-hidden transition-all duration-300">
+                                <!-- Task Header -->
+                                <div class="p-5 border-b border-primary/10 dark:border-gray-800 bg-gradient-to-l from-primary/5 to-transparent">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-2xl text-primary">menu_book</span>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-lg text-primary" x-text="task.name"></h3>
+                                                <span class="text-xs px-2 py-0.5 rounded-full" :class="{
+                                                    'bg-green-100 text-green-700': task.level === 'beginner',
+                                                    'bg-amber-100 text-amber-700': task.level === 'intermediate',
+                                                    'bg-red-100 text-red-700': task.level === 'advanced'
+                                                }" x-text="getLevelLabel(task.level)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button @click="viewTask(task)" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">visibility</span>
+                                            </button>
+                                            <button @click="editTask(task)" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button x-show="task.studentsCount === 0" @click="deleteTask(task.id, 'memorization')" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                            <span x-show="task.studentsCount > 0" class="p-1.5 text-gray-300 cursor-not-allowed" title="لا يمكن حذف مهمة مرتبطة بطلاب">
+                                                <span class="material-symbols-outlined text-lg">lock</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-primary-light" x-text="task.description"></p>
+                                </div>
+                                
+                                <!-- Task Stats -->
+                                <div class="p-4 grid grid-cols-3 gap-4 text-center border-b border-primary/10 dark:border-gray-800">
+                                    <div>
+                                        <p class="text-2xl font-black text-primary" x-text="task.studentsCount"></p>
+                                        <p class="text-[10px] text-primary-light">طالب مشارك</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-primary" x-text="task.estimatedDays"></p>
+                                        <p class="text-[10px] text-primary-light">يوم متوقع</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-amber-500" x-text="task.totalPoints"></p>
+                                        <p class="text-[10px] text-primary-light">نقطة</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Subtasks Preview -->
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-sm font-bold text-charcoal">المهام الفرعية</h4>
+                                        <span class="text-xs text-primary-light" x-text="task.subtasks.length + ' مهمة'"></span>
+                                    </div>
+                                    <div class="space-y-2 max-h-32 overflow-y-auto">
+                                        <template x-for="(subtask, index) in task.subtasks.slice(0, 3)" :key="subtask.id">
+                                            <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-white/5 rounded-lg text-xs">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="size-5 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]" x-text="subtask.order"></span>
+                                                    <span class="text-charcoal" x-text="subtask.name"></span>
+                                                </div>
+                                                <span class="text-amber-500 font-bold flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">star</span>
+                                                    <span x-text="subtask.points"></span>
+                                                </span>
+                                            </div>
+                                        </template>
+                                        <div x-show="task.subtasks.length > 3" class="text-center text-xs text-primary-light py-1">
+                                            <span x-text="'+ ' + (task.subtasks.length - 3) + ' مهام أخرى'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    
+                    <!-- Recitation Tasks -->
+                    <template x-if="activeTab === 'recitation'">
+                        <template x-for="task in filteredTasks('recitation')" :key="task.id">
+                            <div class="task-card rounded-2xl border border-amber-200/50 dark:border-gray-800 shadow-sm overflow-hidden transition-all duration-300" style="background: linear-gradient(135deg, #fff 0%, #fffbeb 100%);">
+                                <!-- Task Header -->
+                                <div class="p-5 border-b border-amber-200/50 dark:border-gray-800 bg-gradient-to-l from-amber-50 to-transparent">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="size-12 rounded-xl bg-amber-100 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-2xl text-amber-600">record_voice_over</span>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-lg text-amber-700" x-text="task.name"></h3>
+                                                <span class="text-xs px-2 py-0.5 rounded-full" :class="{
+                                                    'bg-green-100 text-green-700': task.level === 'beginner',
+                                                    'bg-amber-100 text-amber-700': task.level === 'intermediate',
+                                                    'bg-red-100 text-red-700': task.level === 'advanced'
+                                                }" x-text="getLevelLabel(task.level)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button @click="viewTask(task)" class="p-1.5 text-amber-600 hover:bg-amber-100 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">visibility</span>
+                                            </button>
+                                            <button @click="editTask(task)" class="p-1.5 text-amber-600 hover:bg-amber-100 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">edit</span>
+                                            </button>
+                                            <button x-show="task.studentsCount === 0" @click="deleteTask(task.id, 'recitation')" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                                <span class="material-symbols-outlined text-lg">delete</span>
+                                            </button>
+                                            <span x-show="task.studentsCount > 0" class="p-1.5 text-gray-300 cursor-not-allowed" title="لا يمكن حذف مهمة مرتبطة بطلاب">
+                                                <span class="material-symbols-outlined text-lg">lock</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-amber-600/70" x-text="task.description"></p>
+                                </div>
+                                
+                                <!-- Task Stats -->
+                                <div class="p-4 grid grid-cols-3 gap-4 text-center border-b border-amber-200/50 dark:border-gray-800">
+                                    <div>
+                                        <p class="text-2xl font-black text-amber-600" x-text="task.studentsCount"></p>
+                                        <p class="text-[10px] text-amber-600/70">طالب مشارك</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-amber-600" x-text="task.estimatedDays"></p>
+                                        <p class="text-[10px] text-amber-600/70">يوم متوقع</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-black text-amber-500" x-text="task.totalPoints"></p>
+                                        <p class="text-[10px] text-amber-600/70">نقطة</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Subtasks Preview -->
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-sm font-bold text-charcoal">المهام الفرعية</h4>
+                                        <span class="text-xs text-amber-600/70" x-text="task.subtasks.length + ' مهمة'"></span>
+                                    </div>
+                                    <div class="space-y-2 max-h-32 overflow-y-auto">
+                                        <template x-for="(subtask, index) in task.subtasks.slice(0, 3)" :key="subtask.id">
+                                            <div class="flex items-center justify-between p-2 bg-amber-50 dark:bg-white/5 rounded-lg text-xs">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="size-5 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-[10px]" x-text="subtask.order"></span>
+                                                    <span class="text-charcoal" x-text="subtask.name"></span>
+                                                </div>
+                                                <span class="text-amber-500 font-bold flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">star</span>
+                                                    <span x-text="subtask.points"></span>
+                                                </span>
+                                            </div>
+                                        </template>
+                                        <div x-show="task.subtasks.length > 3" class="text-center text-xs text-amber-600/70 py-1">
+                                            <span x-text="'+ ' + (task.subtasks.length - 3) + ' مهام أخرى'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    
+                    <!-- Empty State -->
+                    <div x-show="(activeTab === 'memorization' && filteredTasks('memorization').length === 0) || (activeTab === 'recitation' && filteredTasks('recitation').length === 0)" class="col-span-full bg-white dark:bg-[#0d1b12] rounded-2xl border border-primary/10 dark:border-gray-800 shadow-sm p-12 text-center">
+                        <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 block" x-text="activeTab === 'memorization' ? 'menu_book' : 'record_voice_over'"></span>
+                        <h3 class="text-lg font-bold text-charcoal mb-2">لا توجد مهام</h3>
+                        <p class="text-sm text-primary-light mb-4" x-text="activeTab === 'memorization' ? 'ابدأ بإضافة مهمة حفظ جديدة' : 'ابدأ بإضافة مهمة تلاوة جديدة'"></p>
+                        <button @click="openAddModal(activeTab)" class="inline-flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold" :class="activeTab === 'memorization' ? 'bg-primary' : 'bg-amber-500'">
+                            <span class="material-symbols-outlined">add</span>
+                            <span x-text="activeTab === 'memorization' ? 'إضافة مهمة حفظ' : 'إضافة مهمة تلاوة'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add/Edit Task Modal -->
+        <div x-show="showTaskModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="closeTaskModal()">
+            <div class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
+                <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#0d1b12] z-10">
+                    <h3 class="text-lg font-bold" :class="taskForm.type === 'memorization' ? 'text-primary' : 'text-amber-600'" x-text="editTaskMode ? 'تعديل المهمة' : (taskForm.type === 'memorization' ? 'إضافة مهمة حفظ جديدة' : 'إضافة مهمة تلاوة جديدة')"></h3>
+                    <button @click="closeTaskModal()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="saveTask()" class="p-6 space-y-6">
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-charcoal mb-2">اسم المهمة <span class="text-red-500">*</span></label>
+                            <input x-model="taskForm.name" type="text" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="مثال: حفظ جزء عم"/>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-charcoal mb-2">الوصف</label>
+                            <textarea x-model="taskForm.description" rows="2" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="وصف مختصر للمهمة..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">المستوى <span class="text-red-500">*</span></label>
+                            <select x-model="taskForm.level" required class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <option value="beginner">مبتدئ</option>
+                                <option value="intermediate">متوسط</option>
+                                <option value="advanced">متقدم</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-charcoal mb-2">عدد الأيام المتوقعة</label>
+                            <input x-model="taskForm.estimatedDays" type="number" min="1" class="w-full px-4 py-2.5 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="30"/>
+                        </div>
+                    </div>
+                    
+                    <!-- Subtasks Section -->
+                    <div class="border-t border-primary/10 pt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-sm font-bold text-primary flex items-center gap-2">
+                                <span class="material-symbols-outlined">checklist</span>
+                                المهام الفرعية
+                            </h4>
+                            <button type="button" @click="addSubtask()" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                إضافة مهمة فرعية
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <template x-for="(subtask, index) in taskForm.subtasks" :key="index">
+                                <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/10">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-sm font-bold text-primary flex items-center gap-2">
+                                            <span class="size-6 rounded-full bg-primary/10 flex items-center justify-center text-xs" x-text="index + 1"></span>
+                                            المهمة الفرعية
+                                        </span>
+                                        <button type="button" @click="removeSubtask(index)" class="text-red-500 hover:text-red-700 transition-colors">
+                                            <span class="material-symbols-outlined text-lg">close</span>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                        <div class="md:col-span-2">
+                                            <input x-model="subtask.name" type="text" required class="w-full px-3 py-2 bg-white dark:bg-[#0d1b12] border border-primary/20 rounded-lg text-sm" placeholder="اسم المهمة"/>
+                                        </div>
+                                        <div>
+                                            <input x-model="subtask.surah" type="text" class="w-full px-3 py-2 bg-white dark:bg-[#0d1b12] border border-primary/20 rounded-lg text-sm" placeholder="السورة"/>
+                                        </div>
+                                        <div>
+                                            <input x-model="subtask.points" type="number" min="1" required class="w-full px-3 py-2 bg-white dark:bg-[#0d1b12] border border-primary/20 rounded-lg text-sm" placeholder="النقاط"/>
+                                        </div>
+                                        <div>
+                                            <input x-model="subtask.fromAyah" type="number" min="1" class="w-full px-3 py-2 bg-white dark:bg-[#0d1b12] border border-primary/20 rounded-lg text-sm" placeholder="من الآية"/>
+                                        </div>
+                                        <div>
+                                            <input x-model="subtask.toAyah" type="number" min="1" class="w-full px-3 py-2 bg-white dark:bg-[#0d1b12] border border-primary/20 rounded-lg text-sm" placeholder="إلى الآية"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <div x-show="taskForm.subtasks.length === 0" class="text-center py-8 text-primary-light">
+                                <span class="material-symbols-outlined text-3xl mb-2 block opacity-50">checklist</span>
+                                <p class="text-sm">لا توجد مهام فرعية، اضغط على "إضافة مهمة فرعية" للبدء</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Total Points -->
+                        <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200/50 flex items-center justify-between">
+                            <span class="text-sm font-bold text-amber-700">إجمالي النقاط:</span>
+                            <span class="text-2xl font-black text-amber-600" x-text="calculateTotalPoints()"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 pt-4 border-t border-primary/10">
+                        <button type="button" @click="closeTaskModal()" class="px-6 py-2.5 bg-gray-100 dark:bg-white/5 text-charcoal rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
+                            إلغاء
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 text-white rounded-xl text-sm font-bold shadow-lg transition-colors" :class="taskForm.type === 'memorization' ? 'bg-primary hover:bg-primary-dark shadow-primary/20' : 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/20'">
+                            <span x-text="editTaskMode ? 'حفظ التعديلات' : 'إضافة المهمة'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Task Modal -->
+        <div x-show="showViewModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="showViewModal = false">
+            <div class="bg-white dark:bg-[#0d1b12] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
+                <div class="px-6 py-4 border-b border-primary/10 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#0d1b12]">
+                    <h3 class="text-lg font-bold" :class="viewingTask?.type === 'memorization' ? 'text-primary' : 'text-amber-600'" x-text="viewingTask?.name"></h3>
+                    <button @click="showViewModal = false" class="p-1 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <div class="p-6" x-show="viewingTask">
+                    <!-- Task Info -->
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="text-center p-4 bg-gray-50 dark:bg-white/5 rounded-xl">
+                            <p class="text-2xl font-black" :class="viewingTask?.type === 'memorization' ? 'text-primary' : 'text-amber-600'" x-text="viewingTask?.studentsCount"></p>
+                            <p class="text-xs text-primary-light">طالب مشارك</p>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 dark:bg-white/5 rounded-xl">
+                            <p class="text-2xl font-black" :class="viewingTask?.type === 'memorization' ? 'text-primary' : 'text-amber-600'" x-text="viewingTask?.estimatedDays"></p>
+                            <p class="text-xs text-primary-light">يوم متوقع</p>
+                        </div>
+                        <div class="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+                            <p class="text-2xl font-black text-amber-600" x-text="viewingTask?.totalPoints"></p>
+                            <p class="text-xs text-amber-600/70">إجمالي النقاط</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-sm text-primary-light mb-6" x-text="viewingTask?.description"></p>
+                    
+                    <!-- Subtasks List -->
+                    <h4 class="text-sm font-bold text-charcoal mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">checklist</span>
+                        قائمة المهام الفرعية
+                    </h4>
+                    
+                    <div class="space-y-2">
+                        <template x-for="subtask in viewingTask?.subtasks" :key="subtask.id">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/10">
+                                <div class="flex items-center gap-3">
+                                    <span class="size-8 rounded-full flex items-center justify-center text-white font-bold text-sm" :class="viewingTask?.type === 'memorization' ? 'bg-primary' : 'bg-amber-500'" x-text="subtask.order"></span>
+                                    <div>
+                                        <p class="font-bold text-charcoal" x-text="subtask.name"></p>
+                                        <p class="text-xs text-primary-light" x-show="subtask.surah">
+                                            <span x-text="'سورة ' + subtask.surah"></span>
+                                            <span x-show="subtask.fromAyah" x-text="' (الآيات ' + subtask.fromAyah + ' - ' + subtask.toAyah + ')'"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg font-bold text-sm">
+                                    <span class="material-symbols-outlined text-base">star</span>
+                                    <span x-text="subtask.points + ' نقطة'"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function tasksApp() {
+            return {
+                activeTab: 'memorization',
+                searchQuery: '',
+                showTaskModal: false,
+                showViewModal: false,
+                editTaskMode: false,
+                editTaskId: null,
+                viewingTask: null,
+                memorizationTasks: [],
+                recitationTasks: [],
+                taskForm: {
+                    name: '',
+                    type: 'memorization',
+                    description: '',
+                    level: 'beginner',
+                    estimatedDays: 30,
+                    subtasks: []
+                },
+                
+                init() {
+                    this.loadTasks();
+                },
+                
+                loadTasks() {
+                    const memData = localStorage.getItem('quranschool_memorization_tasks');
+                    const recData = localStorage.getItem('quranschool_recitation_tasks');
+                    
+                    this.memorizationTasks = memData ? JSON.parse(memData) : (DEFAULT_DATA?.memorizationTasks || []);
+                    this.recitationTasks = recData ? JSON.parse(recData) : (DEFAULT_DATA?.recitationTasks || []);
+                    
+                    // Save defaults if not exists
+                    if (!memData && DEFAULT_DATA?.memorizationTasks) {
+                        localStorage.setItem('quranschool_memorization_tasks', JSON.stringify(DEFAULT_DATA.memorizationTasks));
+                    }
+                    if (!recData && DEFAULT_DATA?.recitationTasks) {
+                        localStorage.setItem('quranschool_recitation_tasks', JSON.stringify(DEFAULT_DATA.recitationTasks));
+                    }
+                },
+                
+                saveTasks(type) {
+                    if (type === 'memorization') {
+                        localStorage.setItem('quranschool_memorization_tasks', JSON.stringify(this.memorizationTasks));
+                    } else {
+                        localStorage.setItem('quranschool_recitation_tasks', JSON.stringify(this.recitationTasks));
+                    }
+                },
+                
+                filteredTasks(type) {
+                    const tasks = type === 'memorization' ? this.memorizationTasks : this.recitationTasks;
+                    if (!this.searchQuery) return tasks;
+                    const query = this.searchQuery.toLowerCase();
+                    return tasks.filter(t => 
+                        t.name.toLowerCase().includes(query) ||
+                        t.description.toLowerCase().includes(query)
+                    );
+                },
+                
+                getTotalStudents() {
+                    const memStudents = this.memorizationTasks.reduce((sum, t) => sum + (t.studentsCount || 0), 0);
+                    const recStudents = this.recitationTasks.reduce((sum, t) => sum + (t.studentsCount || 0), 0);
+                    return memStudents + recStudents;
+                },
+                
+                getLevelLabel(level) {
+                    const levels = {
+                        'beginner': 'مبتدئ',
+                        'intermediate': 'متوسط',
+                        'advanced': 'متقدم'
+                    };
+                    return levels[level] || level;
+                },
+                
+                openAddModal(type) {
+                    this.editTaskMode = false;
+                    this.editTaskId = null;
+                    this.taskForm = {
+                        name: '',
+                        type: type,
+                        description: '',
+                        level: 'beginner',
+                        estimatedDays: 30,
+                        subtasks: []
+                    };
+                    this.showTaskModal = true;
+                },
+                
+                editTask(task) {
+                    this.editTaskMode = true;
+                    this.editTaskId = task.id;
+                    this.taskForm = {
+                        name: task.name,
+                        type: task.type,
+                        description: task.description || '',
+                        level: task.level,
+                        estimatedDays: task.estimatedDays,
+                        subtasks: JSON.parse(JSON.stringify(task.subtasks))
+                    };
+                    this.showTaskModal = true;
+                },
+                
+                viewTask(task) {
+                    this.viewingTask = task;
+                    this.showViewModal = true;
+                },
+                
+                addSubtask() {
+                    this.taskForm.subtasks.push({
+                        id: Date.now(),
+                        name: '',
+                        surah: '',
+                        fromAyah: '',
+                        toAyah: '',
+                        points: 10,
+                        order: this.taskForm.subtasks.length + 1
+                    });
+                },
+                
+                removeSubtask(index) {
+                    this.taskForm.subtasks.splice(index, 1);
+                    // Update order numbers
+                    this.taskForm.subtasks.forEach((s, i) => s.order = i + 1);
+                },
+                
+                calculateTotalPoints() {
+                    return this.taskForm.subtasks.reduce((sum, s) => sum + (parseInt(s.points) || 0), 0);
+                },
+                
+                saveTask() {
+                    const totalPoints = this.calculateTotalPoints();
+                    
+                    if (this.editTaskMode) {
+                        const tasks = this.taskForm.type === 'memorization' ? this.memorizationTasks : this.recitationTasks;
+                        const index = tasks.findIndex(t => t.id === this.editTaskId);
+                        if (index !== -1) {
+                            tasks[index] = {
+                                ...tasks[index],
+                                name: this.taskForm.name,
+                                description: this.taskForm.description,
+                                level: this.taskForm.level,
+                                estimatedDays: parseInt(this.taskForm.estimatedDays) || 30,
+                                totalPoints: totalPoints,
+                                subtasks: this.taskForm.subtasks,
+                                updatedAt: new Date().toISOString()
+                            };
+                        }
+                    } else {
+                        const newTask = {
+                            id: Date.now(),
+                            name: this.taskForm.name,
+                            type: this.taskForm.type,
+                            description: this.taskForm.description,
+                            level: this.taskForm.level,
+                            estimatedDays: parseInt(this.taskForm.estimatedDays) || 30,
+                            totalPoints: totalPoints,
+                            studentsCount: 0,
+                            status: 'active',
+                            subtasks: this.taskForm.subtasks,
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        if (this.taskForm.type === 'memorization') {
+                            this.memorizationTasks.push(newTask);
+                        } else {
+                            this.recitationTasks.push(newTask);
+                        }
+                    }
+                    
+                    this.saveTasks(this.taskForm.type);
+                    this.closeTaskModal();
+                },
+                
+                deleteTask(id, type) {
+                    const tasks = type === 'memorization' ? this.memorizationTasks : this.recitationTasks;
+                    const task = tasks.find(t => t.id === id);
+                    
+                    if (task && task.studentsCount > 0) {
+                        alert('لا يمكن حذف هذه المهمة لأنها مرتبطة بطلاب');
+                        return;
+                    }
+                    
+                    if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+                        if (type === 'memorization') {
+                            this.memorizationTasks = this.memorizationTasks.filter(t => t.id !== id);
+                        } else {
+                            this.recitationTasks = this.recitationTasks.filter(t => t.id !== id);
+                        }
+                        this.saveTasks(type);
+                    }
+                },
+                
+                closeTaskModal() {
+                    this.showTaskModal = false;
+                    this.editTaskMode = false;
+                    this.editTaskId = null;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
